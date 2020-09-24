@@ -27,12 +27,12 @@
   },
   "autoload": {
     "psr-4": {
-      "podium\\api\\": "src/"
+      "Podium\\Api\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "podium\\tests\\": "tests/"
+      "Podium\\Tests\\": "tests/"
     }
   },
   "repositories": [
