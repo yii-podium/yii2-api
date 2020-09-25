@@ -54,7 +54,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
             $transaction->rollBack();
             Yii::error(['Exception while creating poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
@@ -85,7 +85,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
         try {
             $poll = $post->getPoll();
             if (!$poll->edit($answers, $data)) {
-                return PodiumResponse::error($post->getErrors());
+                return PodiumResponse::error($poll->getErrors());
             }
 
             $this->afterEdit($poll);
@@ -96,7 +96,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
             $transaction->rollBack();
             Yii::error(['Exception while editing poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 

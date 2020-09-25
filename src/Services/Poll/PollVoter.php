@@ -55,7 +55,7 @@ final class PollVoter extends Component implements VoterInterface
                 return PodiumResponse::error(['api' => Yii::t('podium.error', 'poll.one.vote.allowed')]);
             }
             if (!$poll->vote($member, $answers)) {
-                return PodiumResponse::error($post->getErrors());
+                return PodiumResponse::error($poll->getErrors());
             }
 
             $this->afterVote($poll);
@@ -66,7 +66,7 @@ final class PollVoter extends Component implements VoterInterface
             $transaction->rollBack();
             Yii::error(['Exception while voting in poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 

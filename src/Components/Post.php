@@ -13,7 +13,6 @@ use Podium\Api\Interfaces\PinnerInterface;
 use Podium\Api\Interfaces\PollBuilderInterface;
 use Podium\Api\Interfaces\PollPostInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
@@ -89,11 +88,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
      * @var string|array|ThumbRepositoryInterface
      */
     public $thumbRepositoryConfig;
-
-    /**
-     * @var string|array|PollRepositoryInterface
-     */
-    public $pollRepositoryConfig;
 
     private ?PostRepositoryInterface $repository = null;
 
@@ -350,22 +344,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
         }
 
         return $this->pollBuilder;
-    }
-
-    private ?PollRepositoryInterface $pollRepository = null;
-
-    /**
-     * @throws InvalidConfigException
-     */
-    public function getPollRepository(): PollRepositoryInterface
-    {
-        if (null === $this->pollRepository) {
-            /** @var PollRepositoryInterface $repository */
-            $repository = Instance::ensure($this->pollRepositoryConfig, PollRepositoryInterface::class);
-            $this->pollRepository = $repository;
-        }
-
-        return $this->pollRepository;
     }
 
     /**

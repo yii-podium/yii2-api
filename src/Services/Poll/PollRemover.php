@@ -6,12 +6,13 @@ namespace Podium\Api\Services\Poll;
 
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
-use Podium\Api\Interfaces\PollRepositoryInterface;
+use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class PollRemover extends Component implements RemoverInterface
 {
@@ -29,24 +30,28 @@ final class PollRemover extends Component implements RemoverInterface
     /**
      * Removes the poll.
      */
-    public function remove(RepositoryInterface $poll): PodiumResponse
+    public function remove(RepositoryInterface $post): PodiumResponse
     {
-        if (!$poll instanceof PollRepositoryInterface || !$this->beforeRemove()) {
+        if (!$post instanceof PollPostRepositoryInterface || !$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
-            if (!$poll->delete()) {
+            if (!$post->getPoll()->delete()) {
                 return PodiumResponse::error();
             }
 
             $this->afterRemove();
+            $transaction->commit();
 
             return PodiumResponse::success();
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while deleting poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
