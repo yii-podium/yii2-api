@@ -20,6 +20,9 @@ final class RankBuilder extends Component implements BuilderInterface
     public const EVENT_BEFORE_EDITING = 'podium.rank.editing.before';
     public const EVENT_AFTER_EDITING = 'podium.rank.editing.after';
 
+    /**
+     * Calls before creating a rank.
+     */
     public function beforeCreate(): bool
     {
         $event = new BuildEvent();
@@ -48,15 +51,21 @@ final class RankBuilder extends Component implements BuilderInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while creating rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after creating the rank successfully.
+     */
     public function afterCreate(RankRepositoryInterface $rank): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $rank]));
     }
 
+    /**
+     * Calls before editing the rank.
+     */
     public function beforeEdit(): bool
     {
         $event = new BuildEvent();
@@ -85,10 +94,13 @@ final class RankBuilder extends Component implements BuilderInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while editing rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after editing the rank successfully.
+     */
     public function afterEdit(RankRepositoryInterface $rank): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $rank]));

@@ -18,6 +18,9 @@ final class RankRemover extends Component implements RemoverInterface
     public const EVENT_BEFORE_REMOVING = 'podium.rank.removing.before';
     public const EVENT_AFTER_REMOVING = 'podium.rank.removing.after';
 
+    /**
+     * Calls before removing the rank.
+     */
     public function beforeRemove(): bool
     {
         $event = new RemoveEvent();
@@ -46,10 +49,13 @@ final class RankRemover extends Component implements RemoverInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while removing rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after removing the rank successfully.
+     */
     public function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);
