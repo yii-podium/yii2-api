@@ -6,7 +6,6 @@ namespace Podium\Api\Components;
 
 use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\GroupInterface;
-use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
@@ -38,12 +37,7 @@ final class Group extends Component implements GroupInterface
     /**
      * @var string|array|GroupRepositoryInterface
      */
-    public $groupRepositoryConfig;
-
-    /**
-     * @var string|array|GroupMemberRepositoryInterface
-     */
-    public $groupMemberRepositoryConfig;
+    public $repositoryConfig;
 
     private ?GroupRepositoryInterface $repository = null;
 
@@ -54,7 +48,7 @@ final class Group extends Component implements GroupInterface
     {
         if (null === $this->repository) {
             /** @var GroupRepositoryInterface $repository */
-            $repository = Instance::ensure($this->groupRepositoryConfig, GroupRepositoryInterface::class);
+            $repository = Instance::ensure($this->repositoryConfig, GroupRepositoryInterface::class);
             $this->repository = $repository;
         }
 

@@ -21,6 +21,9 @@ final class GroupKeeper extends Component implements KeeperInterface
     public const EVENT_BEFORE_LEAVING = 'podium.group.leaving.before';
     public const EVENT_AFTER_LEAVING = 'podium.group.leaving.after';
 
+    /**
+     * Calls before joining the group.
+     */
     public function beforeJoin(): bool
     {
         $event = new GroupEvent();
@@ -29,6 +32,9 @@ final class GroupKeeper extends Component implements KeeperInterface
         return $event->canJoin;
     }
 
+    /**
+     * Adds the member to the group.
+     */
     public function join(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse
     {
         if (!$this->beforeJoin()) {
@@ -52,15 +58,21 @@ final class GroupKeeper extends Component implements KeeperInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while joining group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after joining the group successfully.
+     */
     public function afterJoin(GroupMemberRepositoryInterface $groupMember): void
     {
         $this->trigger(self::EVENT_AFTER_JOINING, new GroupEvent(['repository' => $groupMember]));
     }
 
+    /**
+     * Calls before leaving the group.
+     */
     public function beforeLeave(): bool
     {
         $event = new GroupEvent();
@@ -69,6 +81,9 @@ final class GroupKeeper extends Component implements KeeperInterface
         return $event->canLeave;
     }
 
+    /**
+     * Removes the member from the group.
+     */
     public function leave(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse
     {
         if (!$this->beforeLeave()) {
@@ -92,10 +107,13 @@ final class GroupKeeper extends Component implements KeeperInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while leaving group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after leaving the group successfully.
+     */
     public function afterLeave(): void
     {
         $this->trigger(self::EVENT_AFTER_LEAVING);

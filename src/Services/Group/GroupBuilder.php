@@ -20,6 +20,9 @@ final class GroupBuilder extends Component implements BuilderInterface
     public const EVENT_BEFORE_EDITING = 'podium.group.editing.before';
     public const EVENT_AFTER_EDITING = 'podium.group.editing.after';
 
+    /**
+     * Calls before creating a group.
+     */
     public function beforeCreate(): bool
     {
         $event = new BuildEvent();
@@ -48,15 +51,21 @@ final class GroupBuilder extends Component implements BuilderInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while creating group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after creating the group successfully.
+     */
     public function afterCreate(GroupRepositoryInterface $group): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $group]));
     }
 
+    /**
+     * Calls before editing the group.
+     */
     public function beforeEdit(): bool
     {
         $event = new BuildEvent();
@@ -85,10 +94,13 @@ final class GroupBuilder extends Component implements BuilderInterface
         } catch (Throwable $exc) {
             Yii::error(['Exception while editing group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after editing the group successfully.
+     */
     public function afterEdit(GroupRepositoryInterface $group): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $group]));

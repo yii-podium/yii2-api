@@ -12,12 +12,16 @@ use Podium\Api\Interfaces\RepositoryInterface;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class GroupRemover extends Component implements RemoverInterface
 {
     public const EVENT_BEFORE_REMOVING = 'podium.group.removing.before';
     public const EVENT_AFTER_REMOVING = 'podium.group.removing.after';
 
+    /**
+     * Calls before removing the group.
+     */
     public function beforeRemove(): bool
     {
         $event = new RemoveEvent();
@@ -35,21 +39,28 @@ final class GroupRemover extends Component implements RemoverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$group->delete()) {
                 return PodiumResponse::error();
             }
 
             $this->afterRemove();
+            $transaction->commit();
 
             return PodiumResponse::success();
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while deleting group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
     }
 
+    /**
+     * Calls after removing the group successfully.
+     */
     public function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);

@@ -17,7 +17,8 @@ There are some rules:
 TODOs:
  - [x] Components
  - [x] PHPStan
- - [ ] Add getRepository in components
+ - [x] Add getRepository in components
+ - [ ] Add transactions in services
  - [X] Move repo config from services to components
  - [ ] Load repository after creating new AR
  - [ ] Split Podium and AR Podium
