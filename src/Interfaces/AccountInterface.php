@@ -25,7 +25,7 @@ interface AccountInterface
 
     public function createPost(ThreadRepositoryInterface $thread, array $data = []): PodiumResponse;
 
-    public function markPost(PostRepositoryInterface $post): PodiumResponse;
+    public function markThread(PostRepositoryInterface $post): PodiumResponse;
 
     public function subscribeThread(ThreadRepositoryInterface $thread): PodiumResponse;
 
@@ -46,6 +46,8 @@ interface AccountInterface
     public function unfriendMember(MemberRepositoryInterface $target): PodiumResponse;
 
     public function ignoreMember(MemberRepositoryInterface $target): PodiumResponse;
+
+    public function unignoreMember(MemberRepositoryInterface $target): PodiumResponse;
 
     public function sendMessage(
         MemberRepositoryInterface $receiver,
