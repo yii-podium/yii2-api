@@ -71,6 +71,7 @@ final class Account extends Component implements AccountInterface
         if (null === $this->member || $renew) {
             /** @var User $user */
             $user = Instance::ensure($this->userConfig, User::class);
+            /** @var int|string|null $userId */
             $userId = $user->getId();
             if (null === $userId) {
                 throw new DomainException('Invalid user ID!');
