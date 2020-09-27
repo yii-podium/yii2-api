@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Category;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Services\Category\CategoryBuilder;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class CategoryBuilderTest extends TestCase
+class CategoryBuilderTest extends AppTestCase
 {
     private CategoryBuilder $service;
 
@@ -19,6 +19,7 @@ class CategoryBuilderTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategoryBuilder();
         $this->eventsRaised = [];
     }

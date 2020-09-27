@@ -7,6 +7,8 @@ namespace Podium\Tests;
 use PHPUnit\Framework\TestCase;
 use Yii;
 use yii\console\Application;
+use yii\db\Connection;
+use yii\db\Transaction;
 use yii\i18n\PhpMessageSource;
 
 class AppTestCase extends TestCase
@@ -34,5 +36,12 @@ class AppTestCase extends TestCase
     public static function tearDownAfterClass(): void
     {
         Yii::$app = null;
+    }
+
+    protected function setUp(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
+        Yii::$app->set('db', $connection);
     }
 }

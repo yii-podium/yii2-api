@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Category;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Services\Category\CategoryArchiver;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class CategoryArchiverTest extends TestCase
+class CategoryArchiverTest extends AppTestCase
 {
     private CategoryArchiver $service;
 
@@ -18,6 +18,7 @@ class CategoryArchiverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategoryArchiver();
         $this->eventsRaised = [];
     }

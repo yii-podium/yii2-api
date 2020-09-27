@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Forum;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Services\Forum\ForumBuilder;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ForumBuilderTest extends TestCase
+class ForumBuilderTest extends AppTestCase
 {
     private ForumBuilder $service;
 
@@ -20,6 +20,7 @@ class ForumBuilderTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumBuilder();
         $this->eventsRaised = [];
     }

@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Group;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Group\GroupBuilder;
+use Podium\Tests\AppTestCase;
 
-class GroupBuilderTest extends TestCase
+class GroupBuilderTest extends AppTestCase
 {
     private GroupBuilder $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new GroupBuilder();
     }
 

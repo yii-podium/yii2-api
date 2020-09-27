@@ -9,9 +9,6 @@ use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Group\GroupRemover;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class GroupRemoverTest extends AppTestCase
 {
@@ -19,10 +16,8 @@ class GroupRemoverTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new GroupRemover();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeRemoveShouldReturnTrue(): void

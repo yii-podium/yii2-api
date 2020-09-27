@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Rank;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Services\Rank\RankBuilder;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class RankBuilderTest extends TestCase
+class RankBuilderTest extends AppTestCase
 {
     private RankBuilder $service;
 
@@ -18,6 +18,7 @@ class RankBuilderTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new RankBuilder();
         $this->eventsRaised = [];
     }

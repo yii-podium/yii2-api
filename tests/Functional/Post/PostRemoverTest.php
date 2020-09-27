@@ -10,10 +10,7 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Post\PostRemover;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PostRemoverTest extends AppTestCase
 {
@@ -23,11 +20,9 @@ class PostRemoverTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostRemover();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testRemoveShouldTriggerBeforeAndAfterEventsWhenRemovingIsDone(): void

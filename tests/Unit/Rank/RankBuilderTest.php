@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Rank;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Rank\RankBuilder;
+use Podium\Tests\AppTestCase;
 
-class RankBuilderTest extends TestCase
+class RankBuilderTest extends AppTestCase
 {
     private RankBuilder $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new RankBuilder();
     }
 

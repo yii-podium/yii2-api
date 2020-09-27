@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Thread;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadArchiver;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ThreadArchiverTest extends TestCase
+class ThreadArchiverTest extends AppTestCase
 {
     private ThreadArchiver $service;
 
@@ -18,6 +18,7 @@ class ThreadArchiverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadArchiver();
         $this->eventsRaised = [];
     }

@@ -9,10 +9,7 @@ use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadRemover;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class ThreadRemoverTest extends AppTestCase
 {
@@ -22,11 +19,9 @@ class ThreadRemoverTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadRemover();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testRemoveShouldTriggerBeforeAndAfterEventsWhenRemovingIsDone(): void

@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Post;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Post\PostPinner;
+use Podium\Tests\AppTestCase;
 
-class PostPinnerTest extends TestCase
+class PostPinnerTest extends AppTestCase
 {
     private PostPinner $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostPinner();
     }
 

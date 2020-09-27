@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Category;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Services\Category\CategoryBuilder;
+use Podium\Tests\AppTestCase;
 
-class CategoryBuilderTest extends TestCase
+class CategoryBuilderTest extends AppTestCase
 {
     private CategoryBuilder $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategoryBuilder();
     }
 

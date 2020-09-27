@@ -10,9 +10,6 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThumbRepositoryInterface;
 use Podium\Api\Services\Post\PostLiker;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PostLikerTest extends AppTestCase
 {
@@ -20,10 +17,8 @@ class PostLikerTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostLiker();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeThumbUpShouldReturnTrue(): void

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Rank;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Services\Rank\RankRemover;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class RankRemoverTest extends TestCase
+class RankRemoverTest extends AppTestCase
 {
     private RankRemover $service;
 
@@ -18,6 +18,7 @@ class RankRemoverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new RankRemover();
         $this->eventsRaised = [];
     }

@@ -9,10 +9,7 @@ use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollRemover;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PollRemoverTest extends AppTestCase
 {
@@ -22,11 +19,9 @@ class PollRemoverTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PollRemover();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testRemoveShouldTriggerBeforeAndAfterEventsWhenRemovingIsDone(): void

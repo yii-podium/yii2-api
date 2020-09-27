@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Thread;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\SubscriptionEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\SubscriptionRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadSubscriber;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ThreadSubscriberTest extends TestCase
+class ThreadSubscriberTest extends AppTestCase
 {
     private ThreadSubscriber $service;
 
@@ -20,6 +20,7 @@ class ThreadSubscriberTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadSubscriber();
         $this->eventsRaised = [];
     }

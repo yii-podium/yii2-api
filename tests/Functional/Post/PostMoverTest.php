@@ -10,10 +10,7 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Post\PostMover;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PostMoverTest extends AppTestCase
 {
@@ -23,11 +20,9 @@ class PostMoverTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostMover();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testMoveShouldTriggerBeforeAndAfterEventsWhenMovingIsDone(): void

@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Group;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Services\Group\GroupKeeper;
+use Podium\Tests\AppTestCase;
 
-class GroupKeeperTest extends TestCase
+class GroupKeeperTest extends AppTestCase
 {
     private GroupKeeper $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new GroupKeeper();
     }
 

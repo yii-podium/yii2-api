@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Thread;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadLocker;
+use Podium\Tests\AppTestCase;
 
-class ThreadLockerTest extends TestCase
+class ThreadLockerTest extends AppTestCase
 {
     private ThreadLocker $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadLocker();
     }
 

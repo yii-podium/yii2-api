@@ -11,9 +11,6 @@ use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadBuilder;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class ThreadBuilderTest extends AppTestCase
 {
@@ -21,10 +18,8 @@ class ThreadBuilderTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadBuilder();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeCreateShouldReturnTrue(): void

@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Thread;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\SubscriptionRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadSubscriber;
+use Podium\Tests\AppTestCase;
 
-class ThreadSubscriberTest extends TestCase
+class ThreadSubscriberTest extends AppTestCase
 {
     private ThreadSubscriber $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadSubscriber();
     }
 

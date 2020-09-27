@@ -12,9 +12,6 @@ use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Post\PostBuilder;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PostBuilderTest extends AppTestCase
 {
@@ -22,10 +19,8 @@ class PostBuilderTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostBuilder();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeCreateShouldReturnTrue(): void

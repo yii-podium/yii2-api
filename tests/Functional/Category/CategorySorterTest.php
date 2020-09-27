@@ -8,10 +8,7 @@ use Podium\Api\Events\SortEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Services\Category\CategorySorter;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class CategorySorterTest extends AppTestCase
 {
@@ -21,11 +18,9 @@ class CategorySorterTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategorySorter();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testReplaceShouldTriggerBeforeAndAfterEventsWhenReplacingIsDone(): void

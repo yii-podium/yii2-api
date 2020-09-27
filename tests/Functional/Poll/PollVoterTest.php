@@ -10,10 +10,7 @@ use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollVoter;
 use Podium\Tests\AppTestCase;
-use Yii;
 use yii\base\Event;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PollVoterTest extends AppTestCase
 {
@@ -23,11 +20,9 @@ class PollVoterTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PollVoter();
         $this->eventsRaised = [];
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testVoteShouldTriggerBeforeAndAfterEventsWhenVotingIsDone(): void

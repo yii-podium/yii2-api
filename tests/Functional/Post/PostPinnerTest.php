@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Post;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Services\Post\PostPinner;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class PostPinnerTest extends TestCase
+class PostPinnerTest extends AppTestCase
 {
     private PostPinner $service;
 
@@ -18,6 +18,7 @@ class PostPinnerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostPinner();
         $this->eventsRaised = [];
     }

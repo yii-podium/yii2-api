@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Thread;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadArchiver;
+use Podium\Tests\AppTestCase;
 
-class ThreadArchiverTest extends TestCase
+class ThreadArchiverTest extends AppTestCase
 {
     private ThreadArchiver $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadArchiver();
     }
 

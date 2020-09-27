@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Thread;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\BookmarkEvent;
 use Podium\Api\Interfaces\BookmarkRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadBookmarker;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ThreadBookmarkerTest extends TestCase
+class ThreadBookmarkerTest extends AppTestCase
 {
     private ThreadBookmarker $service;
 
@@ -21,6 +21,7 @@ class ThreadBookmarkerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadBookmarker();
         $this->eventsRaised = [];
     }

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Forum;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Services\Forum\ForumRemover;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ForumRemoverTest extends TestCase
+class ForumRemoverTest extends AppTestCase
 {
     private ForumRemover $service;
 
@@ -18,6 +18,7 @@ class ForumRemoverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumRemover();
         $this->eventsRaised = [];
     }

@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Forum;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Forum\ForumMover;
+use Podium\Tests\AppTestCase;
 
-class ForumMoverTest extends TestCase
+class ForumMoverTest extends AppTestCase
 {
     private ForumMover $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumMover();
     }
 

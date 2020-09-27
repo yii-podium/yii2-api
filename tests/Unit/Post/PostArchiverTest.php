@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Post;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Post\PostArchiver;
+use Podium\Tests\AppTestCase;
 
-class PostArchiverTest extends TestCase
+class PostArchiverTest extends AppTestCase
 {
     private PostArchiver $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostArchiver();
     }
 

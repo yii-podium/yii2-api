@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Group;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\GroupEvent;
 use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Services\Group\GroupKeeper;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class GroupKeeperTest extends TestCase
+class GroupKeeperTest extends AppTestCase
 {
     private GroupKeeper $service;
 
@@ -20,6 +20,7 @@ class GroupKeeperTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new GroupKeeper();
         $this->eventsRaised = [];
     }

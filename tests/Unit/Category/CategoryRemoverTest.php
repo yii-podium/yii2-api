@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Category;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Category\CategoryRemover;
+use Podium\Tests\AppTestCase;
 
-class CategoryRemoverTest extends TestCase
+class CategoryRemoverTest extends AppTestCase
 {
     private CategoryRemover $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategoryRemover();
     }
 

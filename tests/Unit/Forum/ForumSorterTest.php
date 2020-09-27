@@ -9,9 +9,6 @@ use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Forum\ForumSorter;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class ForumSorterTest extends AppTestCase
 {
@@ -19,10 +16,8 @@ class ForumSorterTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumSorter();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeReplaceShouldReturnTrue(): void

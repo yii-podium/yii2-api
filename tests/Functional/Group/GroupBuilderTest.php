@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Group;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Services\Group\GroupBuilder;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class GroupBuilderTest extends TestCase
+class GroupBuilderTest extends AppTestCase
 {
     private GroupBuilder $service;
 
@@ -18,6 +18,7 @@ class GroupBuilderTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new GroupBuilder();
         $this->eventsRaised = [];
     }

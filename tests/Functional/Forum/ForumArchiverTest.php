@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Forum;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Services\Forum\ForumArchiver;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ForumArchiverTest extends TestCase
+class ForumArchiverTest extends AppTestCase
 {
     private ForumArchiver $service;
 
@@ -18,6 +18,7 @@ class ForumArchiverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumArchiver();
         $this->eventsRaised = [];
     }

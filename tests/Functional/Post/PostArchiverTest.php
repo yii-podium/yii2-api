@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Post;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Services\Post\PostArchiver;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class PostArchiverTest extends TestCase
+class PostArchiverTest extends AppTestCase
 {
     private PostArchiver $service;
 
@@ -18,6 +18,7 @@ class PostArchiverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PostArchiver();
         $this->eventsRaised = [];
     }

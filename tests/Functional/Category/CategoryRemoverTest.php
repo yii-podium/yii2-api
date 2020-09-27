@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Category;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Services\Category\CategoryRemover;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class CategoryRemoverTest extends TestCase
+class CategoryRemoverTest extends AppTestCase
 {
     private CategoryRemover $service;
 
@@ -18,6 +18,7 @@ class CategoryRemoverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new CategoryRemover();
         $this->eventsRaised = [];
     }

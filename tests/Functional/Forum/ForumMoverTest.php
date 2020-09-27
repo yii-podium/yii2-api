@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Forum;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\MoveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Services\Forum\ForumMover;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ForumMoverTest extends TestCase
+class ForumMoverTest extends AppTestCase
 {
     private ForumMover $service;
 
@@ -19,6 +19,7 @@ class ForumMoverTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumMover();
         $this->eventsRaised = [];
     }

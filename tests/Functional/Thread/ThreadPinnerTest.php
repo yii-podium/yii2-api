@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Tests\Functional\Thread;
 
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Services\Thread\ThreadPinner;
+use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class ThreadPinnerTest extends TestCase
+class ThreadPinnerTest extends AppTestCase
 {
     private ThreadPinner $service;
 
@@ -18,6 +18,7 @@ class ThreadPinnerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ThreadPinner();
         $this->eventsRaised = [];
     }

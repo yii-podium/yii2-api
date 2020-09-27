@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Forum;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Forum\ForumArchiver;
+use Podium\Tests\AppTestCase;
 
-class ForumArchiverTest extends TestCase
+class ForumArchiverTest extends AppTestCase
 {
     private ForumArchiver $service;
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new ForumArchiver();
     }
 

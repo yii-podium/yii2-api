@@ -9,9 +9,6 @@ use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollBuilder;
 use Podium\Tests\AppTestCase;
-use Yii;
-use yii\db\Connection;
-use yii\db\Transaction;
 
 class PollBuilderTest extends AppTestCase
 {
@@ -19,10 +16,8 @@ class PollBuilderTest extends AppTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->service = new PollBuilder();
-        $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
-        Yii::$app->set('db', $connection);
     }
 
     public function testBeforeCreateShouldReturnTrue(): void
