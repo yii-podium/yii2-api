@@ -9,9 +9,11 @@ use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\PinnerInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class PostPinner extends Component implements PinnerInterface
 {
@@ -40,19 +42,28 @@ final class PostPinner extends Component implements PinnerInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$post->pin()) {
-                return PodiumResponse::error($post->getErrors());
+                throw new ServiceException($post->getErrors());
             }
 
-            $this->afterPin($post);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while pinning post', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterPin($post);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -83,19 +94,28 @@ final class PostPinner extends Component implements PinnerInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$post->unpin()) {
-                return PodiumResponse::error($post->getErrors());
+                throw new ServiceException($post->getErrors());
             }
 
-            $this->afterUnpin($post);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while unpinning post', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterUnpin($post);
+
+        return PodiumResponse::success();
     }
 
     /**

@@ -9,6 +9,7 @@ use Podium\Api\Events\SortEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\SorterInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -57,10 +58,7 @@ final class CategorySorter extends Component implements SorterInterface
                 throw new Exception('Error while setting new category order!');
             }
 
-            $this->afterReplace();
             $transaction->commit();
-
-            return PodiumResponse::success();
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(
@@ -70,6 +68,10 @@ final class CategorySorter extends Component implements SorterInterface
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterReplace();
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -104,13 +106,14 @@ final class CategorySorter extends Component implements SorterInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$category->sort()) {
-                return PodiumResponse::error();
+                throw new ServiceException($category->getErrors());
             }
 
-            $this->afterSort();
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(
@@ -120,6 +123,10 @@ final class CategorySorter extends Component implements SorterInterface
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterSort();
+
+        return PodiumResponse::success();
     }
 
     /**

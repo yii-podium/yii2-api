@@ -8,9 +8,11 @@ use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\MemberBuilderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class MemberBuilder extends Component implements MemberBuilderInterface
 {
@@ -40,19 +42,28 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->register($id, $data)) {
-                return PodiumResponse::error($member->getErrors());
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterRegister($member);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while registering member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterRegister($member);
+
+        return PodiumResponse::success();
     }
 
     public function afterRegister(MemberRepositoryInterface $member): void
@@ -77,19 +88,28 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->edit($data)) {
-                return PodiumResponse::error($member->getErrors());
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterEdit($member);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while editing member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterEdit($member);
+
+        return PodiumResponse::success();
     }
 
     public function afterEdit(MemberRepositoryInterface $member): void
@@ -114,19 +134,28 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->activate()) {
-                return PodiumResponse::error($member->getErrors());
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterActivate($member);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while activating member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterActivate($member);
+
+        return PodiumResponse::success();
     }
 
     public function afterActivate(MemberRepositoryInterface $member): void

@@ -9,9 +9,11 @@ use Podium\Api\Events\AcquaintanceEvent;
 use Podium\Api\Interfaces\AcquaintanceInterface;
 use Podium\Api\Interfaces\AcquaintanceRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class MemberAcquaintance extends Component implements AcquaintanceInterface
 {
@@ -41,22 +43,31 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$acquaintance->fetchOne($member, $target)) {
                 $acquaintance->prepare($member, $target);
             }
             if (!$acquaintance->befriend()) {
-                return PodiumResponse::error($acquaintance->getErrors());
+                throw new ServiceException($acquaintance->getErrors());
             }
 
-            $this->afterBefriend($acquaintance);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while befriending member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterBefriend($acquaintance);
+
+        return PodiumResponse::success();
     }
 
     public function afterBefriend(AcquaintanceRepositoryInterface $acquaintance): void
@@ -81,26 +92,35 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$acquaintance->fetchOne($member, $target)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
             }
             if ($acquaintance->isIgnoring()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'member.ignores.target')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.ignores.target')]);
             }
 
             if (!$acquaintance->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($acquaintance->getErrors());
             }
 
-            $this->afterUnfriend();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while unfriending member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterUnfriend();
+
+        return PodiumResponse::success();
     }
 
     public function afterUnfriend(): void
@@ -125,22 +145,31 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$acquaintance->fetchOne($member, $target)) {
                 $acquaintance->prepare($member, $target);
             }
             if (!$acquaintance->ignore()) {
-                return PodiumResponse::error($acquaintance->getErrors());
+                throw new ServiceException($acquaintance->getErrors());
             }
 
-            $this->afterIgnore($acquaintance);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while ignoring member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterIgnore($acquaintance);
+
+        return PodiumResponse::success();
     }
 
     public function afterIgnore(AcquaintanceRepositoryInterface $acquaintance): void
@@ -165,26 +194,35 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$acquaintance->fetchOne($member, $target)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
             }
             if ($acquaintance->isFriend()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'member.befriends.target')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.befriends.target')]);
             }
 
             if (!$acquaintance->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($acquaintance->getErrors());
             }
 
-            $this->afterUnignore();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while unignoring member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterUnignore();
+
+        return PodiumResponse::success();
     }
 
     public function afterUnignore(): void

@@ -9,9 +9,11 @@ use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ForumRemover extends Component implements RemoverInterface
 {
@@ -38,23 +40,32 @@ final class ForumRemover extends Component implements RemoverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$forum->isArchived()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'forum.must.be.archived')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'forum.must.be.archived')]);
             }
 
             if (!$forum->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($forum->getErrors());
             }
 
-            $this->afterRemove();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while deleting forum', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     /**

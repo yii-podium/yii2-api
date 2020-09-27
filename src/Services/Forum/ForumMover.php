@@ -10,9 +10,11 @@ use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ForumMover extends Component implements MoverInterface
 {
@@ -43,19 +45,28 @@ final class ForumMover extends Component implements MoverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$forum->move($category)) {
-                return PodiumResponse::error($forum->getErrors());
+                throw new ServiceException($forum->getErrors());
             }
 
-            $this->afterMove($forum);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while moving forum', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterMove($forum);
+
+        return PodiumResponse::success();
     }
 
     /**

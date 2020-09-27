@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -56,23 +57,28 @@ final class ThreadBuilder extends Component implements CategorisedBuilderInterfa
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->create($author, $forum, $data)) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
             if (!$forum->updateCounters(1, 0)) {
                 throw new Exception('Error while updating forum counters!');
             }
 
-            $this->afterCreate($thread);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while creating thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterCreate($thread);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -103,19 +109,28 @@ final class ThreadBuilder extends Component implements CategorisedBuilderInterfa
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->edit($data)) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
-            $this->afterEdit($thread);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while editing thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($thread);
+
+        return PodiumResponse::success();
     }
 
     /**

@@ -9,9 +9,11 @@ use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ThreadArchiver extends Component implements ArchiverInterface
 {
@@ -40,19 +42,28 @@ final class ThreadArchiver extends Component implements ArchiverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->archive()) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
-            $this->afterArchive($thread);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while archiving thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterArchive($thread);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -83,19 +94,28 @@ final class ThreadArchiver extends Component implements ArchiverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->revive()) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
-            $this->afterRevive($thread);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while reviving thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRevive($thread);
+
+        return PodiumResponse::success();
     }
 
     /**

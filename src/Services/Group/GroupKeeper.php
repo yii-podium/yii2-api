@@ -10,9 +10,11 @@ use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class GroupKeeper extends Component implements KeeperInterface
 {
@@ -41,25 +43,34 @@ final class GroupKeeper extends Component implements KeeperInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $groupMember = $group->getGroupMember();
 
             if ($groupMember->fetchOne($group, $member)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'group.already.joined')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'group.already.joined')]);
             }
 
             if (!$groupMember->create($group, $member)) {
-                return PodiumResponse::error($groupMember->getErrors());
+                throw new ServiceException($groupMember->getErrors());
             }
 
-            $this->afterJoin($groupMember);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while joining group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterJoin($groupMember);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -90,25 +101,34 @@ final class GroupKeeper extends Component implements KeeperInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $groupMember = $group->getGroupMember();
 
             if (!$groupMember->fetchOne($group, $member)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'group.not.joined')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'group.not.joined')]);
             }
 
             if (!$groupMember->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($groupMember->getErrors());
             }
 
-            $this->afterLeave();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while leaving group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterLeave();
+
+        return PodiumResponse::success();
     }
 
     /**

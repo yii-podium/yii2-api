@@ -9,9 +9,11 @@ use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class CategoryArchiver extends Component implements ArchiverInterface
 {
@@ -40,19 +42,28 @@ final class CategoryArchiver extends Component implements ArchiverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$category->archive()) {
-                return PodiumResponse::error($category->getErrors());
+                throw new ServiceException($category->getErrors());
             }
 
-            $this->afterArchive($category);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while archiving category', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterArchive($category);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -83,19 +94,28 @@ final class CategoryArchiver extends Component implements ArchiverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$category->revive()) {
-                return PodiumResponse::error($category->getErrors());
+                throw new ServiceException($category->getErrors());
             }
 
-            $this->afterRevive($category);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while reviving category', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRevive($category);
+
+        return PodiumResponse::success();
     }
 
     /**

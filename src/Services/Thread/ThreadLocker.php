@@ -8,9 +8,11 @@ use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\LockEvent;
 use Podium\Api\Interfaces\LockerInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ThreadLocker extends Component implements LockerInterface
 {
@@ -39,19 +41,28 @@ final class ThreadLocker extends Component implements LockerInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->lock()) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
-            $this->afterLock($thread);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while locking thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterLock($thread);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -82,19 +93,28 @@ final class ThreadLocker extends Component implements LockerInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thread->unlock()) {
-                return PodiumResponse::error($thread->getErrors());
+                throw new ServiceException($thread->getErrors());
             }
 
-            $this->afterUnlock($thread);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while unlocking thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterUnlock($thread);
+
+        return PodiumResponse::success();
     }
 
     /**

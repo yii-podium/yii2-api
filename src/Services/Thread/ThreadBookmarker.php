@@ -11,9 +11,11 @@ use Podium\Api\Interfaces\BookmarkRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ThreadBookmarker extends Component implements BookmarkerInterface
 {
@@ -43,6 +45,8 @@ final class ThreadBookmarker extends Component implements BookmarkerInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             /** @var ThreadRepositoryInterface $thread */
             $thread = $post->getParent();
@@ -52,17 +56,24 @@ final class ThreadBookmarker extends Component implements BookmarkerInterface
 
             $postCreatedTime = $post->getCreatedAt();
             if ($bookmark->getLastSeen() < $postCreatedTime && !$bookmark->mark($postCreatedTime)) {
-                return PodiumResponse::error($bookmark->getErrors());
+                throw new ServiceException($bookmark->getErrors());
             }
 
-            $this->afterMark($bookmark);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while bookmarking thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterMark($bookmark);
+
+        return PodiumResponse::success();
     }
 
     /**

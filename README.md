@@ -18,7 +18,7 @@ TODOs:
  - [x] Components
  - [x] PHPStan
  - [x] Add getRepository in components
- - [ ] Add transactions in services
+ - [x] Add transactions in services
  - [X] Move repo config from services to components
  - [ ] Load repository after creating new AR
  - [ ] Split Podium and AR Podium

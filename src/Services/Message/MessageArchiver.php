@@ -9,9 +9,11 @@ use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageArchiverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class MessageArchiver extends Component implements MessageArchiverInterface
 {
@@ -37,25 +39,34 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $messageSide = $message->getParticipant($participant);
 
             if ($messageSide->isArchived()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'message.already.archived')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.already.archived')]);
             }
 
             if (!$messageSide->archive()) {
-                return PodiumResponse::error($messageSide->getErrors());
+                throw new ServiceException($messageSide->getErrors());
             }
 
-            $this->afterArchive($message);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while archiving message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterArchive($message);
+
+        return PodiumResponse::success();
     }
 
     public function afterArchive(MessageRepositoryInterface $message): void
@@ -80,25 +91,34 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $messageSide = $message->getParticipant($participant);
 
             if (!$messageSide->isArchived()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'message.not.archived')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.not.archived')]);
             }
 
             if (!$messageSide->revive()) {
-                return PodiumResponse::error($messageSide->getErrors());
+                throw new ServiceException($messageSide->getErrors());
             }
 
-            $this->afterRevive($message);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while reviving message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterRevive($message);
+
+        return PodiumResponse::success();
     }
 
     public function afterRevive(MessageRepositoryInterface $message): void

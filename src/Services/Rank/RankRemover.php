@@ -9,9 +9,11 @@ use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class RankRemover extends Component implements RemoverInterface
 {
@@ -38,19 +40,28 @@ final class RankRemover extends Component implements RemoverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$rank->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($rank->getErrors());
             }
 
-            $this->afterRemove();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while removing rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     /**

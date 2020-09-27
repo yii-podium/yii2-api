@@ -10,9 +10,11 @@ use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\SubscriberInterface;
 use Podium\Api\Interfaces\SubscriptionRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ThreadSubscriber extends Component implements SubscriberInterface
 {
@@ -44,23 +46,32 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if ($subscription->isMemberSubscribed($member, $thread)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'thread.already.subscribed')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.already.subscribed')]);
             }
 
             if (!$subscription->subscribe($member, $thread)) {
-                return PodiumResponse::error($subscription->getErrors());
+                throw new ServiceException($subscription->getErrors());
             }
 
-            $this->afterSubscribe($subscription);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while subscribing thread', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterSubscribe($subscription);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -94,19 +105,24 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$subscription->fetchOne($member, $thread)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'thread.not.subscribed')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.not.subscribed')]);
             }
 
             if (!$subscription->delete()) {
-                return PodiumResponse::error($subscription->getErrors());
+                throw new ServiceException($subscription->getErrors());
             }
 
-            $this->afterUnsubscribe();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(
                 ['Exception while unsubscribing thread', $exc->getMessage(), $exc->getTraceAsString()],
                 'podium'
@@ -114,6 +130,10 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterUnsubscribe();
+
+        return PodiumResponse::success();
     }
 
     /**

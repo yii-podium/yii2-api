@@ -9,9 +9,11 @@ use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class MemberRemover extends Component implements RemoverInterface
 {
@@ -32,19 +34,28 @@ final class MemberRemover extends Component implements RemoverInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterRemove();
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while removing member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     public function afterRemove(): void

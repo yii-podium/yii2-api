@@ -9,6 +9,7 @@ use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\PollBuilderInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -43,19 +44,24 @@ final class PollBuilder extends Component implements PollBuilderInterface
         try {
             $poll = $post->getPoll();
             if (!$poll->create($answers, $data)) {
-                return PodiumResponse::error($poll->getErrors());
+                throw new ServiceException($poll->getErrors());
             }
 
-            $this->afterCreate($poll);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while creating poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterCreate($poll);
+
+        return PodiumResponse::success();
     }
 
     public function afterCreate(PollRepositoryInterface $poll): void
@@ -85,19 +91,24 @@ final class PollBuilder extends Component implements PollBuilderInterface
         try {
             $poll = $post->getPoll();
             if (!$poll->edit($answers, $data)) {
-                return PodiumResponse::error($poll->getErrors());
+                throw new ServiceException($poll->getErrors());
             }
 
-            $this->afterEdit($poll);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while editing poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($poll);
+
+        return PodiumResponse::success();
     }
 
     public function afterEdit(PollRepositoryInterface $poll): void

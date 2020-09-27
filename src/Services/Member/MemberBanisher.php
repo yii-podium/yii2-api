@@ -8,9 +8,11 @@ use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BanEvent;
 use Podium\Api\Interfaces\BanisherInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class MemberBanisher extends Component implements BanisherInterface
 {
@@ -33,19 +35,28 @@ final class MemberBanisher extends Component implements BanisherInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->ban()) {
-                return PodiumResponse::error($member->getErrors());
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterBan($member);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while banning member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterBan($member);
+
+        return PodiumResponse::success();
     }
 
     public function afterBan(MemberRepositoryInterface $member): void
@@ -67,19 +78,28 @@ final class MemberBanisher extends Component implements BanisherInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$member->unban()) {
-                return PodiumResponse::error($member->getErrors());
+                throw new ServiceException($member->getErrors());
             }
 
-            $this->afterUnban($member);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while unbanning member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterUnban($member);
+
+        return PodiumResponse::success();
     }
 
     public function afterUnban(MemberRepositoryInterface $member): void

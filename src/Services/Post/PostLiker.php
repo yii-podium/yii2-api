@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\LikerInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThumbRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -57,11 +58,11 @@ final class PostLiker extends Component implements LikerInterface
                 $rated = false;
             }
             if ($thumb->isUp()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'post.already.liked')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.already.liked')]);
             }
 
             if (!$thumb->up()) {
-                return PodiumResponse::error($thumb->getErrors());
+                throw new ServiceException($thumb->getErrors());
             }
             if ($rated && !$post->updateCounters(1, -1)) {
                 throw new Exception('Error while updating post counters!');
@@ -70,16 +71,21 @@ final class PostLiker extends Component implements LikerInterface
                 throw new Exception('Error while updating post counters!');
             }
 
-            $this->afterThumbUp($thumb);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while giving thumb up', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterThumbUp($thumb);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -122,11 +128,11 @@ final class PostLiker extends Component implements LikerInterface
                 $rated = false;
             }
             if ($thumb->isDown()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'post.already.disliked')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.already.disliked')]);
             }
 
             if (!$thumb->down()) {
-                return PodiumResponse::error($thumb->getErrors());
+                throw new ServiceException($thumb->getErrors());
             }
             if ($rated && !$post->updateCounters(-1, 1)) {
                 throw new Exception('Error while updating post counters!');
@@ -135,16 +141,21 @@ final class PostLiker extends Component implements LikerInterface
                 throw new Exception('Error while updating post counters!');
             }
 
-            $this->afterThumbDown($thumb);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while giving thumb down', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterThumbDown($thumb);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -182,13 +193,13 @@ final class PostLiker extends Component implements LikerInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$thumb->fetchOne($member, $post)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'post.not.rated')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.not.rated')]);
             }
 
             $isUp = $thumb->isUp();
 
             if (!$thumb->reset()) {
-                return PodiumResponse::error();
+                throw new ServiceException($thumb->getErrors());
             }
             if ($isUp && !$post->updateCounters(-1, 0)) {
                 throw new Exception('Error while updating post counters!');
@@ -197,16 +208,21 @@ final class PostLiker extends Component implements LikerInterface
                 throw new Exception('Error while updating post counters!');
             }
 
-            $this->afterThumbReset();
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while resetting thumb', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterThumbReset();
+
+        return PodiumResponse::success();
     }
 
     /**

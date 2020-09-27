@@ -9,6 +9,7 @@ use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -43,19 +44,24 @@ final class GroupRemover extends Component implements RemoverInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$group->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($group->getErrors());
             }
 
-            $this->afterRemove();
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while deleting group', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     /**

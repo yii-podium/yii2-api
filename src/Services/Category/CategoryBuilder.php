@@ -9,9 +9,11 @@ use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategoryBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class CategoryBuilder extends Component implements CategoryBuilderInterface
 {
@@ -43,19 +45,28 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$category->create($author, $data)) {
-                return PodiumResponse::error($category->getErrors());
+                throw new ServiceException($category->getErrors());
             }
 
-            $this->afterCreate($category);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while creating category', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterCreate($category);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -86,19 +97,28 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$category->edit($data)) {
-                return PodiumResponse::error($category->getErrors());
+                throw new ServiceException($category->getErrors());
             }
 
-            $this->afterEdit($category);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while editing category', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($category);
+
+        return PodiumResponse::success();
     }
 
     /**

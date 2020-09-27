@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -43,11 +44,11 @@ final class PostRemover extends Component implements RemoverInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$post->isArchived()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'post.must.be.archived')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.must.be.archived')]);
             }
 
             if (!$post->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($post->getErrors());
             }
 
             /** @var ThreadRepositoryInterface $thread */
@@ -62,16 +63,21 @@ final class PostRemover extends Component implements RemoverInterface
                 throw new Exception('Error while updating forum counters!');
             }
 
-            $this->afterRemove();
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while deleting post', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     public function afterRemove(): void

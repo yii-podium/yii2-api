@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Interfaces\VoterInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -49,25 +50,30 @@ final class PollVoter extends Component implements VoterInterface
             $poll = $post->getPoll();
 
             if ($poll->hasMemberVoted($member)) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'poll.already.voted')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'poll.already.voted')]);
             }
             if ($answersCount > 1 && $poll->isSingleChoice()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'poll.one.vote.allowed')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'poll.one.vote.allowed')]);
             }
             if (!$poll->vote($member, $answers)) {
-                return PodiumResponse::error($poll->getErrors());
+                throw new ServiceException($poll->getErrors());
             }
 
-            $this->afterVote($poll);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while voting in poll', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterVote($poll);
+
+        return PodiumResponse::success();
     }
 
     public function afterVote(PollRepositoryInterface $poll): void

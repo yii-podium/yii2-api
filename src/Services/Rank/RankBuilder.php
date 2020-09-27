@@ -9,9 +9,11 @@ use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class RankBuilder extends Component implements BuilderInterface
 {
@@ -40,19 +42,28 @@ final class RankBuilder extends Component implements BuilderInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$rank->create($data)) {
-                return PodiumResponse::error($rank->getErrors());
+                throw new ServiceException($rank->getErrors());
             }
 
-            $this->afterCreate($rank);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while creating rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterCreate($rank);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -83,19 +94,28 @@ final class RankBuilder extends Component implements BuilderInterface
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$rank->edit($data)) {
-                return PodiumResponse::error($rank->getErrors());
+                throw new ServiceException($rank->getErrors());
             }
 
-            $this->afterEdit($rank);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while editing rank', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($rank);
+
+        return PodiumResponse::success();
     }
 
     /**

@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -52,7 +53,7 @@ final class PostMover extends Component implements MoverInterface
             /** @var ForumRepositoryInterface $threadParent */
             $threadParent = $thread->getParent();
             if (!$post->move($thread)) {
-                return PodiumResponse::error($post->getErrors());
+                throw new ServiceException($post->getErrors());
             }
 
             /** @var ThreadRepositoryInterface $postParent */
@@ -72,16 +73,21 @@ final class PostMover extends Component implements MoverInterface
                 throw new Exception('Error while updating new forum counters!');
             }
 
-            $this->afterMove($post);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while moving post', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterMove($post);
+
+        return PodiumResponse::success();
     }
 
     /**

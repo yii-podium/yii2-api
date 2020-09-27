@@ -9,6 +9,7 @@ use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
 use Podium\Api\Interfaces\MessengerInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -45,19 +46,24 @@ final class MessageMessenger extends Component implements MessengerInterface
         $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$message->send($sender, $receiver, $replyTo, $data)) {
-                return PodiumResponse::error($message->getErrors());
+                throw new ServiceException($message->getErrors());
             }
 
-            $this->afterSend($message);
             $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while sending message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterSend($message);
+
+        return PodiumResponse::success();
     }
 
     public function afterSend(MessageRepositoryInterface $message): void

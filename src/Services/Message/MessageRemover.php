@@ -9,10 +9,10 @@ use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageRemoverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
-use yii\db\Exception;
 use yii\db\Transaction;
 
 final class MessageRemover extends Component implements MessageRemoverInterface
@@ -40,27 +40,32 @@ final class MessageRemover extends Component implements MessageRemoverInterface
             $messageSide = $message->getParticipant($participant);
 
             if (!$messageSide->isArchived()) {
-                return PodiumResponse::error(['api' => Yii::t('podium.error', 'message.must.be.archived')]);
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.must.be.archived')]);
             }
 
             if (!$messageSide->delete()) {
-                return PodiumResponse::error();
+                throw new ServiceException($messageSide->getErrors());
             }
 
             if ($message->isCompletelyDeleted() && !$message->delete()) {
-                throw new Exception('Error while deleting the message!');
+                throw new ServiceException($message->getErrors());
             }
 
             $transaction->commit();
-            $this->afterRemove();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
             Yii::error(['Exception while removing message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error();
         }
+
+        $this->afterRemove();
+
+        return PodiumResponse::success();
     }
 
     public function afterRemove(): void

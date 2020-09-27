@@ -11,9 +11,11 @@ use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
 use yii\base\Component;
+use yii\db\Transaction;
 
 final class ForumBuilder extends Component implements CategorisedBuilderInterface
 {
@@ -50,19 +52,28 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$forum->create($author, $category, $data)) {
-                return PodiumResponse::error($forum->getErrors());
+                throw new ServiceException($forum->getErrors());
             }
 
-            $this->afterCreate($forum);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while creating forum', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterCreate($forum);
+
+        return PodiumResponse::success();
     }
 
     /**
@@ -93,19 +104,28 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
             return PodiumResponse::error();
         }
 
+        /** @var Transaction $transaction */
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             if (!$forum->edit($data)) {
-                return PodiumResponse::error($forum->getErrors());
+                throw new ServiceException($forum->getErrors());
             }
 
-            $this->afterEdit($forum);
+            $transaction->commit();
+        } catch (ServiceException $exc) {
+            $transaction->rollBack();
 
-            return PodiumResponse::success();
+            return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
+            $transaction->rollBack();
             Yii::error(['Exception while editing forum', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($forum);
+
+        return PodiumResponse::success();
     }
 
     /**
