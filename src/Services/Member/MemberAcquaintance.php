@@ -26,6 +26,9 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     public const EVENT_BEFORE_UNIGNORING = 'podium.acquaintance.unignoring.before';
     public const EVENT_AFTER_UNIGNORING = 'podium.acquaintance.unignoring.after';
 
+    /**
+     * Calls before befriending the member.
+     */
     public function beforeBefriend(): bool
     {
         $event = new AcquaintanceEvent();
@@ -34,6 +37,9 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return $event->canBeFriends;
     }
 
+    /**
+     * Befriends the member.
+     */
     public function befriend(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
@@ -62,7 +68,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             $transaction->rollBack();
             Yii::error(['Exception while befriending member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterBefriend($acquaintance);
@@ -70,11 +76,17 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after befriending the member successfully.
+     */
     public function afterBefriend(AcquaintanceRepositoryInterface $acquaintance): void
     {
         $this->trigger(self::EVENT_AFTER_BEFRIENDING, new AcquaintanceEvent(['repository' => $acquaintance]));
     }
 
+    /**
+     * Calls before unfriending the member.
+     */
     public function beforeUnfriend(): bool
     {
         $event = new AcquaintanceEvent();
@@ -83,6 +95,9 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return $event->canUnfriend;
     }
 
+    /**
+     * Unfriends the member.
+     */
     public function unfriend(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
@@ -115,7 +130,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             $transaction->rollBack();
             Yii::error(['Exception while unfriending member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterUnfriend();
@@ -123,11 +138,17 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after unfriending the member successfully.
+     */
     public function afterUnfriend(): void
     {
         $this->trigger(self::EVENT_AFTER_UNFRIENDING);
     }
 
+    /**
+     * Calls before ignoring the member.
+     */
     public function beforeIgnore(): bool
     {
         $event = new AcquaintanceEvent();
@@ -136,6 +157,9 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return $event->canIgnore;
     }
 
+    /**
+     * Ignores the member.
+     */
     public function ignore(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
@@ -164,7 +188,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             $transaction->rollBack();
             Yii::error(['Exception while ignoring member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterIgnore($acquaintance);
@@ -172,19 +196,28 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after ignoring the member successfully.
+     */
     public function afterIgnore(AcquaintanceRepositoryInterface $acquaintance): void
     {
         $this->trigger(self::EVENT_AFTER_IGNORING, new AcquaintanceEvent(['repository' => $acquaintance]));
     }
 
+    /**
+     * Calls before unignoring the member.
+     */
     public function beforeUnignore(): bool
     {
         $event = new AcquaintanceEvent();
         $this->trigger(self::EVENT_BEFORE_UNIGNORING, $event);
 
-        return $event->canUnfriend;
+        return $event->canUnignore;
     }
 
+    /**
+     * Unignores the member.
+     */
     public function unignore(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
@@ -217,7 +250,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             $transaction->rollBack();
             Yii::error(['Exception while unignoring member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterUnignore();
@@ -225,6 +258,9 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after unignoring the member successfully.
+     */
     public function afterUnignore(): void
     {
         $this->trigger(self::EVENT_AFTER_UNIGNORING);

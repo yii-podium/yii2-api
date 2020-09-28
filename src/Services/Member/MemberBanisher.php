@@ -21,6 +21,9 @@ final class MemberBanisher extends Component implements BanisherInterface
     public const EVENT_BEFORE_UNBANNING = 'podium.member.unbanning.before';
     public const EVENT_AFTER_UNBANNING = 'podium.member.unbanning.after';
 
+    /**
+     * Calls before banning the member.
+     */
     public function beforeBan(): bool
     {
         $event = new BanEvent();
@@ -29,6 +32,9 @@ final class MemberBanisher extends Component implements BanisherInterface
         return $event->canBan;
     }
 
+    /**
+     * Bans the member.
+     */
     public function ban(MemberRepositoryInterface $member): PodiumResponse
     {
         if (!$this->beforeBan()) {
@@ -51,7 +57,7 @@ final class MemberBanisher extends Component implements BanisherInterface
             $transaction->rollBack();
             Yii::error(['Exception while banning member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterBan($member);
@@ -59,11 +65,17 @@ final class MemberBanisher extends Component implements BanisherInterface
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after banning the member successfully.
+     */
     public function afterBan(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_BANNING, new BanEvent(['repository' => $member]));
     }
 
+    /**
+     * Calls before unbanning the member.
+     */
     public function beforeUnban(): bool
     {
         $event = new BanEvent();
@@ -72,6 +84,9 @@ final class MemberBanisher extends Component implements BanisherInterface
         return $event->canUnban;
     }
 
+    /**
+     * Unbans the member.
+     */
     public function unban(MemberRepositoryInterface $member): PodiumResponse
     {
         if (!$this->beforeUnban()) {
@@ -94,7 +109,7 @@ final class MemberBanisher extends Component implements BanisherInterface
             $transaction->rollBack();
             Yii::error(['Exception while unbanning member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterUnban($member);
@@ -102,6 +117,9 @@ final class MemberBanisher extends Component implements BanisherInterface
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after unbanning the member successfully.
+     */
     public function afterUnban(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_UNBANNING, new BanEvent(['repository' => $member]));

@@ -17,9 +17,12 @@ use yii\db\Transaction;
 
 final class MemberRemover extends Component implements RemoverInterface
 {
-    public const EVENT_BEFORE_REMOVING = 'podium.forum.removing.before';
-    public const EVENT_AFTER_REMOVING = 'podium.forum.removing.after';
+    public const EVENT_BEFORE_REMOVING = 'podium.member.removing.before';
+    public const EVENT_AFTER_REMOVING = 'podium.member.removing.after';
 
+    /**
+     * Calls before removing the member.
+     */
     public function beforeRemove(): bool
     {
         $event = new RemoveEvent();
@@ -28,6 +31,9 @@ final class MemberRemover extends Component implements RemoverInterface
         return $event->canRemove;
     }
 
+    /**
+     * Removes the member.
+     */
     public function remove(RepositoryInterface $member): PodiumResponse
     {
         if (!$member instanceof MemberRepositoryInterface || !$this->beforeRemove()) {
@@ -50,7 +56,7 @@ final class MemberRemover extends Component implements RemoverInterface
             $transaction->rollBack();
             Yii::error(['Exception while removing member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterRemove();
@@ -58,6 +64,9 @@ final class MemberRemover extends Component implements RemoverInterface
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after removing the member successfully.
+     */
     public function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);

@@ -103,16 +103,6 @@ final class Member extends Component implements MemberInterface
         return $this->getBuilder()->edit($member, $data);
     }
 
-    /**
-     * Activates member.
-     *
-     * @throws InvalidConfigException
-     */
-    public function activate(MemberRepositoryInterface $member): PodiumResponse
-    {
-        return $this->getBuilder()->activate($member);
-    }
-
     private ?AcquaintanceInterface $acquaintance = null;
 
     /**
