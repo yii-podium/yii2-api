@@ -15,8 +15,6 @@ There are some rules:
  - components operate on repositories, not on identifiers.
 
 TODOs:
- - [ ] Unit tests
- - [ ] Functional tests
  - [ ] Infection
  - [ ] Clean messages
 

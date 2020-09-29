@@ -102,10 +102,24 @@ class PostLikerTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testThumbUpShouldReturnErrorWhenUpdateCountersErrored(): void
+    public function testThumbUpShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsOld(): void
     {
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
+        $thumb->method('isUp')->willReturn(false);
+        $thumb->method('up')->willReturn(true);
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('updateCounters')->willReturn(false);
+        $result = $this->service->thumbUp($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testThumbUpShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsNew(): void
+    {
+        $thumb = $this->createMock(ThumbRepositoryInterface::class);
+        $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isUp')->willReturn(false);
         $thumb->method('up')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
@@ -197,10 +211,24 @@ class PostLikerTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testThumbDownShouldReturnErrorWhenUpdateCountersErrored(): void
+    public function testThumbDownShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsOld(): void
     {
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
+        $thumb->method('isDown')->willReturn(false);
+        $thumb->method('down')->willReturn(true);
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('updateCounters')->willReturn(false);
+        $result = $this->service->thumbDown($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testThumbDownShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsNew(): void
+    {
+        $thumb = $this->createMock(ThumbRepositoryInterface::class);
+        $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isDown')->willReturn(false);
         $thumb->method('down')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
@@ -285,11 +313,26 @@ class PostLikerTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testThumbResetShouldReturnErrorWhenUpdateCountersErrored(): void
+    public function testThumbResetShouldReturnErrorWhenUpdateCountersErroredWhileThumbWasUp(): void
     {
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
+        $thumb->method('isUp')->willReturn(true);
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('updateCounters')->willReturn(false);
+        $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testThumbResetShouldReturnErrorWhenUpdateCountersErroredWhileThumbWasDown(): void
+    {
+        $thumb = $this->createMock(ThumbRepositoryInterface::class);
+        $thumb->method('fetchOne')->willReturn(true);
+        $thumb->method('reset')->willReturn(true);
+        $thumb->method('isUp')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
         $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));

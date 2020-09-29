@@ -138,4 +138,24 @@ class PodiumTest extends AppTestCase
     {
         self::assertInstanceOf(ThreadInterface::class, $this->podium->getThread());
     }
+
+    public function testGetVersion(): void
+    {
+        self::assertMatchesRegularExpression('/[\d+]\.[\d+]\.[\d+]/', $this->podium->getVersion());
+    }
+
+    public function testAddingClassToComponentConfig(): void
+    {
+        $podium = new Podium(
+            [
+                'components' => [
+                    'category' => [
+                        'test' => true,
+                    ],
+                ],
+            ]
+        );
+
+        self::assertSame(Category::class, $podium->getComponents()['category']['class']);
+    }
 }
