@@ -36,6 +36,7 @@ class PostArchiverTest extends AppTestCase
         Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(false);
         $post->method('archive')->willReturn(true);
         $post->method('getId')->willReturn(99);
         $this->service->archive($post);
@@ -59,7 +60,30 @@ class PostArchiverTest extends AppTestCase
         Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(false);
         $post->method('archive')->willReturn(false);
+        $this->service->archive($post);
+
+        self::assertTrue($this->eventsRaised[PostArchiver::EVENT_BEFORE_ARCHIVING]);
+        self::assertArrayNotHasKey(PostArchiver::EVENT_AFTER_ARCHIVING, $this->eventsRaised);
+
+        Event::off(PostArchiver::class, PostArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        Event::off(PostArchiver::class, PostArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+    }
+
+    public function testArchiveShouldOnlyTriggerBeforeEventWhenPostIsAlreadyArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[PostArchiver::EVENT_BEFORE_ARCHIVING] = true;
+        };
+        Event::on(PostArchiver::class, PostArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[PostArchiver::EVENT_AFTER_ARCHIVING] = true;
+        };
+        Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(true);
         $this->service->archive($post);
 
         self::assertTrue($this->eventsRaised[PostArchiver::EVENT_BEFORE_ARCHIVING]);
@@ -96,6 +120,7 @@ class PostArchiverTest extends AppTestCase
         Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(true);
         $post->method('revive')->willReturn(true);
         $post->method('getId')->willReturn(101);
         $this->service->revive($post);
@@ -119,7 +144,30 @@ class PostArchiverTest extends AppTestCase
         Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(true);
         $post->method('revive')->willReturn(false);
+        $this->service->revive($post);
+
+        self::assertTrue($this->eventsRaised[PostArchiver::EVENT_BEFORE_REVIVING]);
+        self::assertArrayNotHasKey(PostArchiver::EVENT_AFTER_REVIVING, $this->eventsRaised);
+
+        Event::off(PostArchiver::class, PostArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        Event::off(PostArchiver::class, PostArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+    }
+
+    public function testReviveShouldOnlyTriggerBeforeEventWhenPostIsNotArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[PostArchiver::EVENT_BEFORE_REVIVING] = true;
+        };
+        Event::on(PostArchiver::class, PostArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[PostArchiver::EVENT_AFTER_REVIVING] = true;
+        };
+        Event::on(PostArchiver::class, PostArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('isArchived')->willReturn(false);
         $this->service->revive($post);
 
         self::assertTrue($this->eventsRaised[PostArchiver::EVENT_BEFORE_REVIVING]);

@@ -45,6 +45,10 @@ final class CategoryArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($category->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'category.already.archived')]);
+            }
+
             if (!$category->archive()) {
                 throw new ServiceException($category->getErrors());
             }
@@ -97,6 +101,10 @@ final class CategoryArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$category->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'category.not.archived')]);
+            }
+
             if (!$category->revive()) {
                 throw new ServiceException($category->getErrors());
             }

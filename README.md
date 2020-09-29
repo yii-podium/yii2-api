@@ -15,16 +15,9 @@ There are some rules:
  - components operate on repositories, not on identifiers.
 
 TODOs:
- - [x] Components
- - [x] PHPStan
- - [x] Add getRepository in components
- - [x] Add transactions in services
- - [X] Move repo config from services to components
- - [x] Logger Component
- - [ ] Split Podium and AR Podium
- - [X] Move Podium to separate Github repo
  - [ ] Unit tests
  - [ ] Functional tests
  - [ ] Infection
+ - [ ] Clean messages
 
 When API is ready, I'll start preparing the client.

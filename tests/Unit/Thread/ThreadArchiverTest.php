@@ -36,6 +36,7 @@ class ThreadArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $thread->method('archive')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
         $result = $this->service->archive($thread);
@@ -44,9 +45,20 @@ class ThreadArchiverTest extends AppTestCase
         self::assertSame([1], $result->getErrors());
     }
 
+    public function testArchiveShouldReturnErrorWhenThreadIsAlreadyArchived(): void
+    {
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
+        $result = $this->service->archive($thread);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('thread.already.archived', $result->getErrors()['api']);
+    }
+
     public function testArchiveShouldReturnSuccessWhenArchivingIsDone(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $thread->method('archive')->willReturn(true);
         $result = $this->service->archive($thread);
 
@@ -56,6 +68,7 @@ class ThreadArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $thread->method('archive')->willThrowException(new Exception('exc'));
         $result = $this->service->archive($thread);
 
@@ -79,6 +92,7 @@ class ThreadArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $thread->method('revive')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
         $result = $this->service->revive($thread);
@@ -90,6 +104,7 @@ class ThreadArchiverTest extends AppTestCase
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $thread->method('revive')->willReturn(true);
         $result = $this->service->revive($thread);
 
@@ -99,6 +114,7 @@ class ThreadArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $thread->method('revive')->willThrowException(new Exception('exc'));
         $result = $this->service->revive($thread);
 

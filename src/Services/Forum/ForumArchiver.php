@@ -45,6 +45,10 @@ final class ForumArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($forum->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'forum.already.archived')]);
+            }
+
             if (!$forum->archive()) {
                 throw new ServiceException($forum->getErrors());
             }
@@ -97,6 +101,10 @@ final class ForumArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$forum->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'forum.not.archived')]);
+            }
+
             if (!$forum->revive()) {
                 throw new ServiceException($forum->getErrors());
             }

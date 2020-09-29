@@ -36,6 +36,7 @@ class ThreadArchiverTest extends AppTestCase
         Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $thread->method('archive')->willReturn(true);
         $thread->method('getId')->willReturn(99);
         $this->service->archive($thread);
@@ -59,7 +60,30 @@ class ThreadArchiverTest extends AppTestCase
         Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $thread->method('archive')->willReturn(false);
+        $this->service->archive($thread);
+
+        self::assertTrue($this->eventsRaised[ThreadArchiver::EVENT_BEFORE_ARCHIVING]);
+        self::assertArrayNotHasKey(ThreadArchiver::EVENT_AFTER_ARCHIVING, $this->eventsRaised);
+
+        Event::off(ThreadArchiver::class, ThreadArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        Event::off(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+    }
+
+    public function testArchiveShouldOnlyTriggerBeforeEventWhenThreadIsAlreadyArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[ThreadArchiver::EVENT_BEFORE_ARCHIVING] = true;
+        };
+        Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[ThreadArchiver::EVENT_AFTER_ARCHIVING] = true;
+        };
+        Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $this->service->archive($thread);
 
         self::assertTrue($this->eventsRaised[ThreadArchiver::EVENT_BEFORE_ARCHIVING]);
@@ -96,6 +120,7 @@ class ThreadArchiverTest extends AppTestCase
         Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $thread->method('revive')->willReturn(true);
         $thread->method('getId')->willReturn(101);
         $this->service->revive($thread);
@@ -119,7 +144,30 @@ class ThreadArchiverTest extends AppTestCase
         Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(true);
         $thread->method('revive')->willReturn(false);
+        $this->service->revive($thread);
+
+        self::assertTrue($this->eventsRaised[ThreadArchiver::EVENT_BEFORE_REVIVING]);
+        self::assertArrayNotHasKey(ThreadArchiver::EVENT_AFTER_REVIVING, $this->eventsRaised);
+
+        Event::off(ThreadArchiver::class, ThreadArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        Event::off(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+    }
+
+    public function testReviveShouldOnlyTriggerBeforeEventWhenThreadIsNotArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[ThreadArchiver::EVENT_BEFORE_REVIVING] = true;
+        };
+        Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[ThreadArchiver::EVENT_AFTER_REVIVING] = true;
+        };
+        Event::on(ThreadArchiver::class, ThreadArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
         $this->service->revive($thread);
 
         self::assertTrue($this->eventsRaised[ThreadArchiver::EVENT_BEFORE_REVIVING]);

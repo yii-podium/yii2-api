@@ -36,6 +36,7 @@ class ForumArchiverTest extends AppTestCase
         Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willReturn(true);
         $forum->method('getId')->willReturn(99);
         $this->service->archive($forum);
@@ -59,7 +60,30 @@ class ForumArchiverTest extends AppTestCase
         Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willReturn(false);
+        $this->service->archive($forum);
+
+        self::assertTrue($this->eventsRaised[ForumArchiver::EVENT_BEFORE_ARCHIVING]);
+        self::assertArrayNotHasKey(ForumArchiver::EVENT_AFTER_ARCHIVING, $this->eventsRaised);
+
+        Event::off(ForumArchiver::class, ForumArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        Event::off(ForumArchiver::class, ForumArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+    }
+
+    public function testArchiveShouldOnlyTriggerBeforeEventWhenForumIsAlreadyArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[ForumArchiver::EVENT_BEFORE_ARCHIVING] = true;
+        };
+        Event::on(ForumArchiver::class, ForumArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[ForumArchiver::EVENT_AFTER_ARCHIVING] = true;
+        };
+        Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+
+        $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $this->service->archive($forum);
 
         self::assertTrue($this->eventsRaised[ForumArchiver::EVENT_BEFORE_ARCHIVING]);
@@ -96,6 +120,7 @@ class ForumArchiverTest extends AppTestCase
         Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(true);
         $forum->method('getId')->willReturn(101);
         $this->service->revive($forum);
@@ -119,7 +144,30 @@ class ForumArchiverTest extends AppTestCase
         Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(false);
+        $this->service->revive($forum);
+
+        self::assertTrue($this->eventsRaised[ForumArchiver::EVENT_BEFORE_REVIVING]);
+        self::assertArrayNotHasKey(ForumArchiver::EVENT_AFTER_REVIVING, $this->eventsRaised);
+
+        Event::off(ForumArchiver::class, ForumArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        Event::off(ForumArchiver::class, ForumArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+    }
+
+    public function testReviveShouldOnlyTriggerBeforeEventWhenForumIsNotArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[ForumArchiver::EVENT_BEFORE_REVIVING] = true;
+        };
+        Event::on(ForumArchiver::class, ForumArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[ForumArchiver::EVENT_AFTER_REVIVING] = true;
+        };
+        Event::on(ForumArchiver::class, ForumArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+
+        $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
         $this->service->revive($forum);
 
         self::assertTrue($this->eventsRaised[ForumArchiver::EVENT_BEFORE_REVIVING]);

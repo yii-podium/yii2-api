@@ -45,6 +45,10 @@ final class PostArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($post->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.already.archived')]);
+            }
+
             if (!$post->archive()) {
                 throw new ServiceException($post->getErrors());
             }
@@ -97,6 +101,10 @@ final class PostArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$post->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'post.not.archived')]);
+            }
+
             if (!$post->revive()) {
                 throw new ServiceException($post->getErrors());
             }

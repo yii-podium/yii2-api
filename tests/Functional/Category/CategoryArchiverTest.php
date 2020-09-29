@@ -36,6 +36,7 @@ class CategoryArchiverTest extends AppTestCase
         Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(false);
         $category->method('archive')->willReturn(true);
         $category->method('getId')->willReturn(99);
         $this->service->archive($category);
@@ -59,7 +60,30 @@ class CategoryArchiverTest extends AppTestCase
         Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(false);
         $category->method('archive')->willReturn(false);
+        $this->service->archive($category);
+
+        self::assertTrue($this->eventsRaised[CategoryArchiver::EVENT_BEFORE_ARCHIVING]);
+        self::assertArrayNotHasKey(CategoryArchiver::EVENT_AFTER_ARCHIVING, $this->eventsRaised);
+
+        Event::off(CategoryArchiver::class, CategoryArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        Event::off(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+    }
+
+    public function testArchiveShouldOnlyTriggerBeforeEventWhenCategoryIsAlreadyArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[CategoryArchiver::EVENT_BEFORE_ARCHIVING] = true;
+        };
+        Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_BEFORE_ARCHIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[CategoryArchiver::EVENT_AFTER_ARCHIVING] = true;
+        };
+        Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_ARCHIVING, $afterHandler);
+
+        $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(true);
         $this->service->archive($category);
 
         self::assertTrue($this->eventsRaised[CategoryArchiver::EVENT_BEFORE_ARCHIVING]);
@@ -96,6 +120,7 @@ class CategoryArchiverTest extends AppTestCase
         Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(true);
         $category->method('revive')->willReturn(true);
         $category->method('getId')->willReturn(101);
         $this->service->revive($category);
@@ -119,7 +144,30 @@ class CategoryArchiverTest extends AppTestCase
         Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_REVIVING, $afterHandler);
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(true);
         $category->method('revive')->willReturn(false);
+        $this->service->revive($category);
+
+        self::assertTrue($this->eventsRaised[CategoryArchiver::EVENT_BEFORE_REVIVING]);
+        self::assertArrayNotHasKey(CategoryArchiver::EVENT_AFTER_REVIVING, $this->eventsRaised);
+
+        Event::off(CategoryArchiver::class, CategoryArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        Event::off(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+    }
+
+    public function testReviveShouldOnlyTriggerBeforeEventWhenCategoryIsNotArchived(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[CategoryArchiver::EVENT_BEFORE_REVIVING] = true;
+        };
+        Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_BEFORE_REVIVING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[CategoryArchiver::EVENT_AFTER_REVIVING] = true;
+        };
+        Event::on(CategoryArchiver::class, CategoryArchiver::EVENT_AFTER_REVIVING, $afterHandler);
+
+        $category = $this->createMock(CategoryRepositoryInterface::class);
+        $category->method('isArchived')->willReturn(false);
         $this->service->revive($category);
 
         self::assertTrue($this->eventsRaised[CategoryArchiver::EVENT_BEFORE_REVIVING]);

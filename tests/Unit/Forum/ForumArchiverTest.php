@@ -36,12 +36,23 @@ class ForumArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willReturn(false);
         $forum->method('getErrors')->willReturn([1]);
         $result = $this->service->archive($forum);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testArchiveShouldReturnErrorWhenForumIsAlreadyArchived(): void
+    {
+        $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
+        $result = $this->service->archive($forum);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('forum.already.archived', $result->getErrors()['api']);
     }
 
     public function testArchiveShouldReturnSuccessWhenArchivingIsDone(): void
@@ -56,6 +67,7 @@ class ForumArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willThrowException(new Exception('exc'));
         $result = $this->service->archive($forum);
 
@@ -79,6 +91,7 @@ class ForumArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
     {
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(false);
         $forum->method('getErrors')->willReturn([1]);
         $result = $this->service->revive($forum);
@@ -87,9 +100,20 @@ class ForumArchiverTest extends AppTestCase
         self::assertSame([1], $result->getErrors());
     }
 
+    public function testReviveShouldReturnErrorWhenForumIsNotArchived(): void
+    {
+        $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(false);
+        $result = $this->service->revive($forum);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('forum.not.archived', $result->getErrors()['api']);
+    }
+
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(true);
         $result = $this->service->revive($forum);
 
@@ -99,6 +123,7 @@ class ForumArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willThrowException(new Exception('exc'));
         $result = $this->service->revive($forum);
 

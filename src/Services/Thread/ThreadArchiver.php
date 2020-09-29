@@ -45,6 +45,10 @@ final class ThreadArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($thread->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.already.archived')]);
+            }
+
             if (!$thread->archive()) {
                 throw new ServiceException($thread->getErrors());
             }
@@ -97,6 +101,10 @@ final class ThreadArchiver extends Component implements ArchiverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$thread->isArchived()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.not.archived')]);
+            }
+
             if (!$thread->revive()) {
                 throw new ServiceException($thread->getErrors());
             }
