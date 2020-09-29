@@ -15,6 +15,7 @@ use Podium\Api\Interfaces\ForumInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\GroupInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
+use Podium\Api\Interfaces\LoggerInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageInterface;
@@ -376,5 +377,17 @@ class AccountComponentTest extends TestCase
         $this->component->setPodium($podium);
 
         $this->component->reviveMessage($this->createMock(MessageRepositoryInterface::class));
+    }
+
+    public function testLogShouldCallLoggerComponentCreate(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
+
+        $podium = $this->createMock(Module::class);
+        $podium->expects(self::once())->method('getLogger')->willReturn($logger);
+        $this->component->setPodium($podium);
+
+        $this->component->log('action');
     }
 }

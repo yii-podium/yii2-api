@@ -12,6 +12,7 @@ use Podium\Api\Interfaces\ForumInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\GroupInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
+use Podium\Api\Interfaces\LoggerInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageInterface;
@@ -63,8 +64,7 @@ final class Account extends Component implements AccountInterface
     private ?MemberRepositoryInterface $member = null;
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function getMembership(bool $renew = false): MemberRepositoryInterface
     {
@@ -89,8 +89,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function joinGroup(GroupRepositoryInterface $group): PodiumResponse
     {
@@ -101,8 +100,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function leaveGroup(GroupRepositoryInterface $group): PodiumResponse
     {
@@ -113,8 +111,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function createCategory(array $data = []): PodiumResponse
     {
@@ -125,8 +122,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function createForum(CategoryRepositoryInterface $category, array $data = []): PodiumResponse
     {
@@ -137,8 +133,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function createThread(ForumRepositoryInterface $forum, array $data = []): PodiumResponse
     {
@@ -149,8 +144,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function createPost(ThreadRepositoryInterface $thread, array $data = []): PodiumResponse
     {
@@ -161,8 +155,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function markThread(PostRepositoryInterface $post): PodiumResponse
     {
@@ -173,8 +166,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function subscribeThread(ThreadRepositoryInterface $thread): PodiumResponse
     {
@@ -185,8 +177,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function unsubscribeThread(ThreadRepositoryInterface $thread): PodiumResponse
     {
@@ -197,8 +188,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function thumbUpPost(PostRepositoryInterface $post): PodiumResponse
     {
@@ -209,8 +199,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function thumbDownPost(PostRepositoryInterface $post): PodiumResponse
     {
@@ -221,8 +210,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function thumbResetPost(PostRepositoryInterface $post): PodiumResponse
     {
@@ -233,8 +221,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function votePoll(PollPostRepositoryInterface $post, array $answer): PodiumResponse
     {
@@ -245,8 +232,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function edit(array $data = []): PodiumResponse
     {
@@ -257,8 +243,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function befriendMember(MemberRepositoryInterface $target): PodiumResponse
     {
@@ -269,8 +254,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function unfriendMember(MemberRepositoryInterface $target): PodiumResponse
     {
@@ -281,8 +265,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function ignoreMember(MemberRepositoryInterface $target): PodiumResponse
     {
@@ -293,8 +276,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function unignoreMember(MemberRepositoryInterface $target): PodiumResponse
     {
@@ -305,8 +287,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function sendMessage(
         MemberRepositoryInterface $receiver,
@@ -320,8 +301,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function removeMessage(MessageRepositoryInterface $message): PodiumResponse
     {
@@ -332,8 +312,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function archiveMessage(MessageRepositoryInterface $message): PodiumResponse
     {
@@ -344,8 +323,7 @@ final class Account extends Component implements AccountInterface
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NoMembershipException
+     * @throws InvalidConfigException|NoMembershipException
      */
     public function reviveMessage(MessageRepositoryInterface $message): PodiumResponse
     {
@@ -353,5 +331,16 @@ final class Account extends Component implements AccountInterface
         $messageComponent = $this->getPodium()->getMessage();
 
         return $messageComponent->revive($message, $this->getMembership());
+    }
+
+    /**
+     * @throws InvalidConfigException|NoMembershipException
+     */
+    public function log(string $action, array $data = []): PodiumResponse
+    {
+        /** @var LoggerInterface $loggerComponent */
+        $loggerComponent = $this->getPodium()->getLogger();
+
+        return $loggerComponent->create($this->getMembership(), $action, $data);
     }
 }

@@ -16,10 +16,10 @@ use yii\db\Transaction;
 
 final class MemberBanisher extends Component implements BanisherInterface
 {
-    public const EVENT_BEFORE_BANNING = 'podium.member.banning.before';
-    public const EVENT_AFTER_BANNING = 'podium.member.banning.after';
-    public const EVENT_BEFORE_UNBANNING = 'podium.member.unbanning.before';
-    public const EVENT_AFTER_UNBANNING = 'podium.member.unbanning.after';
+    public const EVENT_BEFORE_BANNING = 'podium.banning.before';
+    public const EVENT_AFTER_BANNING = 'podium.banning.after';
+    public const EVENT_BEFORE_UNBANNING = 'podium.unbanning.before';
+    public const EVENT_AFTER_UNBANNING = 'podium.unbanning.after';
 
     /**
      * Calls before banning the member.

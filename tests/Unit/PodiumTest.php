@@ -8,11 +8,22 @@ use Podium\Api\Components\Account;
 use Podium\Api\Components\Category;
 use Podium\Api\Components\Forum;
 use Podium\Api\Components\Group;
+use Podium\Api\Components\Logger;
 use Podium\Api\Components\Member;
 use Podium\Api\Components\Message;
 use Podium\Api\Components\Post;
 use Podium\Api\Components\Rank;
 use Podium\Api\Components\Thread;
+use Podium\Api\Interfaces\AccountInterface;
+use Podium\Api\Interfaces\CategoryInterface;
+use Podium\Api\Interfaces\ForumInterface;
+use Podium\Api\Interfaces\GroupInterface;
+use Podium\Api\Interfaces\LoggerInterface;
+use Podium\Api\Interfaces\MemberInterface;
+use Podium\Api\Interfaces\MessageInterface;
+use Podium\Api\Interfaces\PostInterface;
+use Podium\Api\Interfaces\RankInterface;
+use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Module as Podium;
 use Podium\Tests\AppTestCase;
 use Yii;
@@ -37,6 +48,7 @@ class PodiumTest extends AppTestCase
                 'category' => ['class' => Category::class],
                 'forum' => ['class' => Forum::class],
                 'group' => ['class' => Group::class],
+                'logger' => ['class' => Logger::class],
                 'member' => ['class' => Member::class],
                 'message' => ['class' => Message::class],
                 'post' => ['class' => Post::class],
@@ -79,46 +91,51 @@ class PodiumTest extends AppTestCase
 
     public function testGetAccount(): void
     {
-        self::assertInstanceOf(Account::class, $this->podium->getAccount());
+        self::assertInstanceOf(AccountInterface::class, $this->podium->getAccount());
     }
 
     public function testGetCategory(): void
     {
-        self::assertInstanceOf(Category::class, $this->podium->getCategory());
+        self::assertInstanceOf(CategoryInterface::class, $this->podium->getCategory());
     }
 
     public function testGetForum(): void
     {
-        self::assertInstanceOf(Forum::class, $this->podium->getForum());
+        self::assertInstanceOf(ForumInterface::class, $this->podium->getForum());
     }
 
     public function testGetGroup(): void
     {
-        self::assertInstanceOf(Group::class, $this->podium->getGroup());
+        self::assertInstanceOf(GroupInterface::class, $this->podium->getGroup());
+    }
+
+    public function testGetLogger(): void
+    {
+        self::assertInstanceOf(LoggerInterface::class, $this->podium->getLogger());
     }
 
     public function testGetMember(): void
     {
-        self::assertInstanceOf(Member::class, $this->podium->getMember());
+        self::assertInstanceOf(MemberInterface::class, $this->podium->getMember());
     }
 
     public function testGetMessage(): void
     {
-        self::assertInstanceOf(Message::class, $this->podium->getMessage());
+        self::assertInstanceOf(MessageInterface::class, $this->podium->getMessage());
     }
 
     public function testGetPost(): void
     {
-        self::assertInstanceOf(Post::class, $this->podium->getPost());
+        self::assertInstanceOf(PostInterface::class, $this->podium->getPost());
     }
 
     public function testGetRank(): void
     {
-        self::assertInstanceOf(Rank::class, $this->podium->getRank());
+        self::assertInstanceOf(RankInterface::class, $this->podium->getRank());
     }
 
     public function testGetThread(): void
     {
-        self::assertInstanceOf(Thread::class, $this->podium->getThread());
+        self::assertInstanceOf(ThreadInterface::class, $this->podium->getThread());
     }
 }

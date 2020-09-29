@@ -4,8 +4,8 @@
 
 **[Work In Progress]**
 
-Podium is divided into the components (not to be mistaken by Yii's components although these are implemented as them) 
-that take care of main aspects of forum structure. Each component is responsible for the actions (again, not Yii's 
+Podium is divided into components (not to be mistaken by Yii's components although these are implemented as them) 
+that take care of main aspects of forum structure. Each component is responsible for actions (again, not Yii's 
 actions) concerning its aspect, and these actions are implemented as services that operate on repositories. As for the 
 repositories - these are objects that know about the storage of data they can handle and how to work with them.
 
@@ -20,7 +20,7 @@ TODOs:
  - [x] Add getRepository in components
  - [x] Add transactions in services
  - [X] Move repo config from services to components
- - [ ] Load repository after creating new AR
+ - [x] Logger Component
  - [ ] Split Podium and AR Podium
  - [X] Move Podium to separate Github repo
  - [ ] Unit tests

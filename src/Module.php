@@ -8,11 +8,22 @@ use Podium\Api\Components\Account;
 use Podium\Api\Components\Category;
 use Podium\Api\Components\Forum;
 use Podium\Api\Components\Group;
+use Podium\Api\Components\Logger;
 use Podium\Api\Components\Member;
 use Podium\Api\Components\Message;
 use Podium\Api\Components\Post;
 use Podium\Api\Components\Rank;
 use Podium\Api\Components\Thread;
+use Podium\Api\Interfaces\AccountInterface;
+use Podium\Api\Interfaces\CategoryInterface;
+use Podium\Api\Interfaces\ForumInterface;
+use Podium\Api\Interfaces\GroupInterface;
+use Podium\Api\Interfaces\LoggerInterface;
+use Podium\Api\Interfaces\MemberInterface;
+use Podium\Api\Interfaces\MessageInterface;
+use Podium\Api\Interfaces\PostInterface;
+use Podium\Api\Interfaces\RankInterface;
+use Podium\Api\Interfaces\ThreadInterface;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\ServiceLocator;
@@ -31,26 +42,24 @@ use function is_array;
  *
  * @license Apache License 2.0
  *
- * https://github.com/bizley/yii2-podium-api
+ * https://github.com/yii-podium/yii2-api
  * Please report all issues at GitHub
- * https://github.com/bizley/yii2-podium-api/issues
+ * https://github.com/yii-podium/yii2-api/issues
  *
  * Podium requires Yii 2
  * http://www.yiiframework.com
  * https://github.com/yiisoft/yii2
  *
- * For Podium API documentation go to
- * https://github.com/bizley/yii2-podium-api/wiki
- *
- * @property Account  $account
- * @property Category $category
- * @property Forum    $forum
- * @property Group    $group
- * @property Member   $member
- * @property Message  $message
- * @property Post     $post
- * @property Rank     $rank
- * @property Thread   $thread
+ * @property AccountInterface  $account
+ * @property CategoryInterface $category
+ * @property ForumInterface    $forum
+ * @property GroupInterface    $group
+ * @property LoggerInterface   $logger
+ * @property MemberInterface   $member
+ * @property MessageInterface  $message
+ * @property PostInterface     $post
+ * @property RankInterface     $rank
+ * @property ThreadInterface   $thread
  */
 class Module extends ServiceLocator
 {
@@ -98,6 +107,7 @@ class Module extends ServiceLocator
             'category' => ['class' => Category::class],
             'forum' => ['class' => Forum::class],
             'group' => ['class' => Group::class],
+            'logger' => ['class' => Logger::class],
             'member' => ['class' => Member::class],
             'message' => ['class' => Message::class],
             'post' => ['class' => Post::class],
@@ -109,7 +119,7 @@ class Module extends ServiceLocator
     /**
      * Returns account component.
      *
-     * @return Account|object|null
+     * @return AccountInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -121,7 +131,7 @@ class Module extends ServiceLocator
     /**
      * Returns category component.
      *
-     * @return Category|object|null
+     * @return CategoryInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -133,7 +143,7 @@ class Module extends ServiceLocator
     /**
      * Returns forum component.
      *
-     * @return Forum|object|null
+     * @return ForumInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -145,7 +155,7 @@ class Module extends ServiceLocator
     /**
      * Returns group component.
      *
-     * @return Group|object|null
+     * @return GroupInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -155,9 +165,21 @@ class Module extends ServiceLocator
     }
 
     /**
+     * Returns logger component.
+     *
+     * @return LoggerInterface|object|null
+     *
+     * @throws InvalidConfigException
+     */
+    public function getLogger()
+    {
+        return $this->get('logger');
+    }
+
+    /**
      * Returns member component.
      *
-     * @return Member|object|null
+     * @return MemberInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -169,7 +191,7 @@ class Module extends ServiceLocator
     /**
      * Returns message component.
      *
-     * @return Message|object|null
+     * @return MessageInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -181,7 +203,7 @@ class Module extends ServiceLocator
     /**
      * Returns post component.
      *
-     * @return Post|object|null
+     * @return PostInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -193,7 +215,7 @@ class Module extends ServiceLocator
     /**
      * Returns rank component.
      *
-     * @return Rank|object|null
+     * @return RankInterface|object|null
      *
      * @throws InvalidConfigException
      */
@@ -205,7 +227,7 @@ class Module extends ServiceLocator
     /**
      * Returns thread component.
      *
-     * @return Thread|object|null
+     * @return ThreadInterface|object|null
      *
      * @throws InvalidConfigException
      */

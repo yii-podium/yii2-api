@@ -60,4 +60,6 @@ interface AccountInterface
     public function archiveMessage(MessageRepositoryInterface $message): PodiumResponse;
 
     public function reviveMessage(MessageRepositoryInterface $message): PodiumResponse;
+
+    public function log(string $action, array $data = []): PodiumResponse;
 }
