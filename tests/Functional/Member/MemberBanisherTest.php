@@ -36,6 +36,7 @@ class MemberBanisherTest extends AppTestCase
         Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_BANNING, $afterHandler);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $member->method('ban')->willReturn(true);
         $member->method('getId')->willReturn(99);
         $this->service->ban($member);
@@ -59,7 +60,30 @@ class MemberBanisherTest extends AppTestCase
         Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_BANNING, $afterHandler);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $member->method('ban')->willReturn(false);
+        $this->service->ban($member);
+
+        self::assertTrue($this->eventsRaised[MemberBanisher::EVENT_BEFORE_BANNING]);
+        self::assertArrayNotHasKey(MemberBanisher::EVENT_AFTER_BANNING, $this->eventsRaised);
+
+        Event::off(MemberBanisher::class, MemberBanisher::EVENT_BEFORE_BANNING, $beforeHandler);
+        Event::off(MemberBanisher::class, MemberBanisher::EVENT_AFTER_BANNING, $afterHandler);
+    }
+
+    public function testBanShouldOnlyTriggerBeforeEventWhenMemberIsAlreadyBanned(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[MemberBanisher::EVENT_BEFORE_BANNING] = true;
+        };
+        Event::on(MemberBanisher::class, MemberBanisher::EVENT_BEFORE_BANNING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[MemberBanisher::EVENT_AFTER_BANNING] = true;
+        };
+        Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_BANNING, $afterHandler);
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
         $this->service->ban($member);
 
         self::assertTrue($this->eventsRaised[MemberBanisher::EVENT_BEFORE_BANNING]);
@@ -96,6 +120,7 @@ class MemberBanisherTest extends AppTestCase
         Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_UNBANNING, $afterHandler);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
         $member->method('unban')->willReturn(true);
         $member->method('getId')->willReturn(101);
         $this->service->unban($member);
@@ -119,7 +144,30 @@ class MemberBanisherTest extends AppTestCase
         Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_UNBANNING, $afterHandler);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
         $member->method('unban')->willReturn(false);
+        $this->service->unban($member);
+
+        self::assertTrue($this->eventsRaised[MemberBanisher::EVENT_BEFORE_UNBANNING]);
+        self::assertArrayNotHasKey(MemberBanisher::EVENT_AFTER_UNBANNING, $this->eventsRaised);
+
+        Event::off(MemberBanisher::class, MemberBanisher::EVENT_BEFORE_UNBANNING, $beforeHandler);
+        Event::off(MemberBanisher::class, MemberBanisher::EVENT_AFTER_UNBANNING, $afterHandler);
+    }
+
+    public function testUnbanShouldOnlyTriggerBeforeEventWhenMamberWasNotBanned(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[MemberBanisher::EVENT_BEFORE_UNBANNING] = true;
+        };
+        Event::on(MemberBanisher::class, MemberBanisher::EVENT_BEFORE_UNBANNING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[MemberBanisher::EVENT_AFTER_UNBANNING] = true;
+        };
+        Event::on(MemberBanisher::class, MemberBanisher::EVENT_AFTER_UNBANNING, $afterHandler);
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $this->service->unban($member);
 
         self::assertTrue($this->eventsRaised[MemberBanisher::EVENT_BEFORE_UNBANNING]);

@@ -44,6 +44,10 @@ final class MemberBanisher extends Component implements BanisherInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.already.banned')]);
+            }
+
             if (!$member->ban()) {
                 throw new ServiceException($member->getErrors());
             }
@@ -96,6 +100,10 @@ final class MemberBanisher extends Component implements BanisherInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.not.banned')]);
+            }
+
             if (!$member->unban()) {
                 throw new ServiceException($member->getErrors());
             }

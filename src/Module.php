@@ -238,11 +238,11 @@ class Module extends ServiceLocator
 
     public function prepareTranslations(): void
     {
-        Yii::$app->getI18n()->translations['podium.*'] = [
+        Yii::$app->getI18n()->translations['podium.error'] = [
             'class' => PhpMessageSource::class,
             'sourceLanguage' => 'en',
             'forceTranslation' => true,
-            'basePath' => __DIR__.'/messages',
+            'basePath' => __DIR__.'/Messages',
         ];
     }
 

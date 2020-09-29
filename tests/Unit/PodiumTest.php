@@ -61,12 +61,12 @@ class PodiumTest extends AppTestCase
 
     public function testI18nInit(): void
     {
-        $translations = Yii::$app->getI18n()->translations['podium.*'];
+        $translations = Yii::$app->getI18n()->translations['podium.error'];
 
         self::assertSame('yii\i18n\PhpMessageSource', $translations['class']);
         self::assertSame('en', $translations['sourceLanguage']);
         self::assertTrue($translations['forceTranslation']);
-        self::assertStringEndsWith('/src/messages', $translations['basePath']);
+        self::assertStringEndsWith('/src/Messages', $translations['basePath']);
     }
 
     public function testCompleteComponent(): void
