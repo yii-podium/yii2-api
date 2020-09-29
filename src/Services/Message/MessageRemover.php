@@ -20,6 +20,9 @@ final class MessageRemover extends Component implements MessageRemoverInterface
     public const EVENT_BEFORE_REMOVING = 'podium.message.removing.before';
     public const EVENT_AFTER_REMOVING = 'podium.message.removing.after';
 
+    /**
+     * Calls before removing the message.
+     */
     public function beforeRemove(): bool
     {
         $event = new RemoveEvent();
@@ -28,6 +31,9 @@ final class MessageRemover extends Component implements MessageRemoverInterface
         return $event->canRemove;
     }
 
+    /**
+     * Removes the message (or just its side).
+     */
     public function remove(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse
     {
         if (!$this->beforeRemove()) {
@@ -60,7 +66,7 @@ final class MessageRemover extends Component implements MessageRemoverInterface
             $transaction->rollBack();
             Yii::error(['Exception while removing message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterRemove();
@@ -68,6 +74,9 @@ final class MessageRemover extends Component implements MessageRemoverInterface
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after removing the message successfully.
+     */
     public function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);

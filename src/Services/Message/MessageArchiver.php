@@ -22,6 +22,9 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     public const EVENT_BEFORE_REVIVING = 'podium.message.reviving.before';
     public const EVENT_AFTER_REVIVING = 'podium.message.reviving.after';
 
+    /**
+     * Calls before archiving the message side.
+     */
     public function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
@@ -31,7 +34,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     }
 
     /**
-     * Archives the message.
+     * Archives the message side.
      */
     public function archive(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse
     {
@@ -61,7 +64,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
             $transaction->rollBack();
             Yii::error(['Exception while archiving message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterArchive($message);
@@ -69,11 +72,17 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after archiving the message successfully.
+     */
     public function afterArchive(MessageRepositoryInterface $message): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $message]));
     }
 
+    /**
+     * Calls before reviving the message side.
+     */
     public function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
@@ -83,7 +92,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     }
 
     /**
-     * Revives the message.
+     * Revives the message side.
      */
     public function revive(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse
     {
@@ -113,7 +122,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
             $transaction->rollBack();
             Yii::error(['Exception while reviving message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterRevive($message);
@@ -121,6 +130,9 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after reviving the message successfully.
+     */
     public function afterRevive(MessageRepositoryInterface $message): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $message]));

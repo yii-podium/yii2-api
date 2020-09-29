@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Message;
 
 use Podium\Api\Components\PodiumResponse;
-use Podium\Api\Events\ArchiveEvent;
+use Podium\Api\Events\SendEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
 use Podium\Api\Interfaces\MessengerInterface;
@@ -20,12 +20,15 @@ final class MessageMessenger extends Component implements MessengerInterface
     public const EVENT_BEFORE_SENDING = 'podium.message.sending.before';
     public const EVENT_AFTER_SENDING = 'podium.message.sending.after';
 
+    /**
+     * Calls before sending the message.
+     */
     public function beforeSend(): bool
     {
-        $event = new ArchiveEvent();
+        $event = new SendEvent();
         $this->trigger(self::EVENT_BEFORE_SENDING, $event);
 
-        return $event->canArchive;
+        return $event->canSend;
     }
 
     /**
@@ -58,7 +61,7 @@ final class MessageMessenger extends Component implements MessengerInterface
             $transaction->rollBack();
             Yii::error(['Exception while sending message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return PodiumResponse::error();
+            return PodiumResponse::error(['exception' => $exc]);
         }
 
         $this->afterSend($message);
@@ -66,8 +69,11 @@ final class MessageMessenger extends Component implements MessengerInterface
         return PodiumResponse::success();
     }
 
+    /**
+     * Calls after sending the message successfully.
+     */
     public function afterSend(MessageRepositoryInterface $message): void
     {
-        $this->trigger(self::EVENT_AFTER_SENDING, new ArchiveEvent(['repository' => $message]));
+        $this->trigger(self::EVENT_AFTER_SENDING, new SendEvent(['repository' => $message]));
     }
 }
