@@ -16,6 +16,5 @@ There are some rules:
 
 TODOs:
  - [ ] Infection
- - [ ] Clean messages
 
 When API is ready, I'll start preparing the client.

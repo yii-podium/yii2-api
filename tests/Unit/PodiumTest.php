@@ -158,4 +158,17 @@ class PodiumTest extends AppTestCase
 
         self::assertSame(Category::class, $podium->getComponents()['category']['class']);
     }
+
+    public function testAddingJustClassToComponentConfig(): void
+    {
+        $podium = new Podium(
+            [
+                'components' => [
+                    'category' => Category::class,
+                ],
+            ]
+        );
+
+        self::assertSame(Category::class, $podium->getComponents()['category']);
+    }
 }

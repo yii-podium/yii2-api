@@ -27,6 +27,8 @@ class LoggerBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('create')->willReturn(false);
         $log->method('getErrors')->willReturn([1]);
@@ -38,6 +40,8 @@ class LoggerBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('create')->willReturn(true);
         $result = $this->service->create($log, $this->createMock(MemberRepositoryInterface::class), 'action');
@@ -47,6 +51,8 @@ class LoggerBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create($log, $this->createMock(MemberRepositoryInterface::class), 'action');

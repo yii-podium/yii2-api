@@ -13,6 +13,8 @@ use yii\i18n\PhpMessageSource;
 
 class AppTestCase extends TestCase
 {
+    public Transaction $transaction;
+
     public static function setUpBeforeClass(): void
     {
         new Application(
@@ -40,8 +42,9 @@ class AppTestCase extends TestCase
 
     protected function setUp(): void
     {
+        $this->transaction = $this->createMock(Transaction::class);
         $connection = $this->createMock(Connection::class);
-        $connection->method('beginTransaction')->willReturn($this->createMock(Transaction::class));
+        $connection->method('beginTransaction')->willReturn($this->transaction);
         Yii::$app->set('db', $connection);
     }
 }

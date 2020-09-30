@@ -35,6 +35,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testPinShouldReturnErrorWhenPinningErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('pin')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -46,6 +48,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testPinShouldReturnSuccessWhenPinningIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('pin')->willReturn(true);
         $result = $this->service->pin($thread);
@@ -55,6 +59,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testPinShouldReturnErrorWhenPinningThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('pin')->willThrowException(new Exception('exc'));
         $result = $this->service->pin($thread);
@@ -78,6 +84,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnErrorWhenUnpinningErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unpin')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -89,6 +97,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnSuccessWhenUnpinningIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unpin')->willReturn(true);
         $result = $this->service->unpin($thread);
@@ -98,6 +108,8 @@ class ThreadPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnErrorWhenUnpinningThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unpin')->willThrowException(new Exception('exc'));
         $result = $this->service->unpin($thread);

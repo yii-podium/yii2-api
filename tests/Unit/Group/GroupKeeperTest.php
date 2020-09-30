@@ -28,6 +28,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testJoinShouldReturnErrorWhenMemberAlreadyJoined(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(true);
         $group = $this->createMock(GroupRepositoryInterface::class);
@@ -40,6 +42,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testJoinShouldReturnErrorWhenGroupMemberCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(false);
         $groupMember->method('create')->willReturn(false);
@@ -54,6 +58,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testJoinShouldReturnSuccessWhenCreatingGroupMemberIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(false);
         $groupMember->method('create')->willReturn(true);
@@ -67,6 +73,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingGroupMemberThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(false);
         $groupMember->method('create')->willThrowException(new Exception('exc'));
@@ -85,6 +93,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenMemberNotJoinedBefore(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(false);
         $group = $this->createMock(GroupRepositoryInterface::class);
@@ -97,6 +107,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenDeletingGroupMemberErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(true);
         $groupMember->method('delete')->willReturn(false);
@@ -110,6 +122,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenDeletingGroupMemberIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(true);
         $groupMember->method('delete')->willReturn(true);
@@ -122,6 +136,8 @@ class GroupKeeperTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenDeletingGroupMemberThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(true);
         $groupMember->method('delete')->willThrowException(new Exception('exc'));

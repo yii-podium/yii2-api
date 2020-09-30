@@ -40,6 +40,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -55,6 +57,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
@@ -66,6 +70,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create(
@@ -80,6 +86,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
@@ -104,6 +112,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('edit')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -115,6 +125,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('edit')->willReturn(true);
         $result = $this->service->edit($thread);
@@ -124,6 +136,8 @@ class ThreadBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($thread);

@@ -269,4 +269,13 @@ class PostComponentTest extends TestCase
             []
         );
     }
+
+    public function testGetThumbRepositoryShouldThrowExceptionWhenThumbRepositoryIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->thumbRepositoryConfig = '';
+
+        $this->component->getThumbRepository();
+    }
 }

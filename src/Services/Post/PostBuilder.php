@@ -122,9 +122,7 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
                 throw new ServiceException($post->getErrors());
             }
 
-            $this->afterEdit($post);
-
-            return PodiumResponse::success();
+            $transaction->commit();
         } catch (ServiceException $exc) {
             $transaction->rollBack();
 
@@ -135,6 +133,10 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
 
             return PodiumResponse::error(['exception' => $exc]);
         }
+
+        $this->afterEdit($post);
+
+        return PodiumResponse::success();
     }
 
     /**

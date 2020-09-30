@@ -239,4 +239,31 @@ class ThreadComponentTest extends TestCase
             $this->createMock(MemberRepositoryInterface::class)
         );
     }
+
+    public function testGetRepositoryShouldThrowExceptionWhenRepositoryIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->threadRepositoryConfig = '';
+
+        $this->component->getRepository();
+    }
+
+    public function testGetSubscriptionRepositoryShouldThrowExceptionWhenSubscriptionRepositoryIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->subscriptionRepositoryConfig = '';
+
+        $this->component->getSubscriptionRepository();
+    }
+
+    public function testGetBookmarkRepositoryShouldThrowExceptionWhenBookmarkRepositoryIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->bookmarkRepositoryConfig = '';
+
+        $this->component->getBookmarkRepository();
+    }
 }

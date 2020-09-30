@@ -49,6 +49,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenSettingFirstOrderErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('getOrder')->willReturn(1);
         $forum->method('setOrder')->willReturn(false);
@@ -59,6 +61,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenSettingSecondOrderErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum1 = $this->createMock(ForumRepositoryInterface::class);
         $forum1->method('getOrder')->willReturn(1);
         $forum1->method('setOrder')->willReturn(true);
@@ -72,6 +76,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testReplaceShouldReturnSuccessWhenReplacingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('getOrder')->willReturn(1);
         $forum->method('setOrder')->willReturn(true);
@@ -82,6 +88,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenReplacingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('getOrder')->willReturn(1);
         $forum->method('setOrder')->willThrowException(new Exception('exc'));
@@ -98,6 +106,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('sort')->willReturn(false);
         $result = $this->service->sort($forum);
@@ -107,6 +117,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testSortShouldReturnSuccessWhenSortingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('sort')->willReturn(true);
         $result = $this->service->sort($forum);
@@ -116,6 +128,8 @@ class ForumSorterTest extends AppTestCase
 
     public function testSortShouldReturnErrorWhenSortingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('sort')->willThrowException(new Exception('exc'));
         $result = $this->service->sort($forum);

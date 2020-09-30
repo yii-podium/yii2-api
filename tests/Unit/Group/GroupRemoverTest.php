@@ -35,6 +35,8 @@ class GroupRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('delete')->willReturn(false);
         $result = $this->service->remove($group);
@@ -45,6 +47,8 @@ class GroupRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('delete')->willReturn(true);
         $result = $this->service->remove($group);
@@ -54,6 +58,8 @@ class GroupRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('delete')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($group);

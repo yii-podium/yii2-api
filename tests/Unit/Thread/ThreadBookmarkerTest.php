@@ -29,6 +29,8 @@ class ThreadBookmarkerTest extends AppTestCase
 
     public function testMarkShouldReturnTrueIfMarkingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
         $bookmark->method('fetchOne')->willReturn(true);
         $bookmark->expects(self::never())->method('prepare');
@@ -46,6 +48,8 @@ class ThreadBookmarkerTest extends AppTestCase
 
     public function testMarkShouldReturnTrueIfBookmarkIsSeenAfterPostCreation(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
         $bookmark->method('fetchOne')->willReturn(true);
         $bookmark->expects(self::never())->method('prepare');
@@ -63,6 +67,8 @@ class ThreadBookmarkerTest extends AppTestCase
 
     public function testMarkShouldPrepareBookmarkWhenItDoesntExist(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
         $bookmark->method('fetchOne')->willReturn(false);
         $bookmark->expects(self::once())->method('prepare');
@@ -80,6 +86,8 @@ class ThreadBookmarkerTest extends AppTestCase
 
     public function testMarkShouldReturnErrorWhenMarkingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
         $bookmark->method('fetchOne')->willReturn(true);
         $bookmark->expects(self::never())->method('prepare');

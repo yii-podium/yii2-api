@@ -36,6 +36,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
         $thread->method('delete')->willReturn(false);
@@ -47,6 +49,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenThreadIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(false);
         $thread->method('delete')->willReturn(true);
@@ -58,6 +62,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
         $thread->method('delete')->willReturn(true);
@@ -71,6 +77,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
         $thread->method('delete')->willThrowException(new Exception('exc'));
@@ -82,6 +90,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($thread);
@@ -92,6 +102,8 @@ class ThreadRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
         $thread->method('delete')->willReturn(true);

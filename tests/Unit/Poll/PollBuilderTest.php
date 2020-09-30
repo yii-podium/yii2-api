@@ -27,6 +27,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('create')->willReturn(false);
         $poll->method('getErrors')->willReturn([1]);
@@ -40,6 +42,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('create')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -51,6 +55,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('create')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -68,6 +74,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('edit')->willReturn(false);
         $poll->method('getErrors')->willReturn([1]);
@@ -81,6 +89,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('edit')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -92,6 +102,8 @@ class PollBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('edit')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);

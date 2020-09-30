@@ -35,6 +35,8 @@ class ForumRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('delete')->willReturn(false);
@@ -46,6 +48,8 @@ class ForumRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenForumIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(false);
         $forum->method('delete')->willReturn(true);
@@ -57,6 +61,8 @@ class ForumRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('delete')->willReturn(true);
@@ -67,6 +73,8 @@ class ForumRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('delete')->willThrowException(new Exception('exc'));
@@ -78,6 +86,8 @@ class ForumRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($forum);

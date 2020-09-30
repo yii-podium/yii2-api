@@ -35,6 +35,8 @@ class PostPinnerTest extends AppTestCase
 
     public function testPinShouldReturnErrorWhenPinningErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('pin')->willReturn(false);
         $post->method('getErrors')->willReturn([1]);
@@ -46,6 +48,8 @@ class PostPinnerTest extends AppTestCase
 
     public function testPinShouldReturnSuccessWhenPinningIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('pin')->willReturn(true);
         $result = $this->service->pin($post);
@@ -55,6 +59,8 @@ class PostPinnerTest extends AppTestCase
 
     public function testPinShouldReturnErrorWhenPinningThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('pin')->willThrowException(new Exception('exc'));
         $result = $this->service->pin($post);
@@ -78,10 +84,12 @@ class PostPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnErrorWhenUnpinningErrored(): void
     {
-        $thread = $this->createMock(PostRepositoryInterface::class);
-        $thread->method('unpin')->willReturn(false);
-        $thread->method('getErrors')->willReturn([1]);
-        $result = $this->service->unpin($thread);
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('unpin')->willReturn(false);
+        $post->method('getErrors')->willReturn([1]);
+        $result = $this->service->unpin($post);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
@@ -89,6 +97,8 @@ class PostPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnSuccessWhenUnpinningIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('unpin')->willReturn(true);
         $result = $this->service->unpin($post);
@@ -98,6 +108,8 @@ class PostPinnerTest extends AppTestCase
 
     public function testUnpinShouldReturnErrorWhenUnpinningThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('unpin')->willThrowException(new Exception('exc'));
         $result = $this->service->unpin($post);

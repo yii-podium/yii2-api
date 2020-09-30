@@ -27,6 +27,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('create')->willReturn(false);
         $group->method('getErrors')->willReturn([1]);
@@ -46,6 +48,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('create')->willReturn(true);
         $result = $this->service->create($group);
@@ -55,6 +59,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create($group);
@@ -70,6 +76,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('edit')->willReturn(false);
         $group->method('getErrors')->willReturn([1]);
@@ -89,6 +97,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('edit')->willReturn(true);
         $result = $this->service->edit($group);
@@ -98,6 +108,8 @@ class GroupBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(GroupRepositoryInterface::class);
         $rank->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($rank);

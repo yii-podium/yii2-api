@@ -36,6 +36,8 @@ class PollRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('delete')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -48,6 +50,8 @@ class PollRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('delete')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -59,6 +63,8 @@ class PollRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('delete')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);

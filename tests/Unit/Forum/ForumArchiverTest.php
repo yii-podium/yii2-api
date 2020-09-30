@@ -35,6 +35,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willReturn(false);
@@ -47,6 +49,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenForumIsAlreadyArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $result = $this->service->archive($forum);
@@ -57,6 +61,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnSuccessWhenArchivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('archive')->willReturn(true);
         $result = $this->service->archive($forum);
@@ -66,6 +72,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(false);
         $forum->method('archive')->willThrowException(new Exception('exc'));
@@ -90,6 +98,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(false);
@@ -102,6 +112,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenForumIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(false);
         $result = $this->service->revive($forum);
@@ -112,6 +124,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willReturn(true);
@@ -122,6 +136,8 @@ class ForumArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('isArchived')->willReturn(true);
         $forum->method('revive')->willThrowException(new Exception('exc'));

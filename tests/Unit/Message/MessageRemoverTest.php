@@ -28,6 +28,8 @@ class MessageRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(false);
@@ -42,6 +44,8 @@ class MessageRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenMessageIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
 
@@ -55,6 +59,8 @@ class MessageRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenAllSidesAreDeletedAndMessageDeleteErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(true);
@@ -71,6 +77,8 @@ class MessageRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(true);
@@ -85,6 +93,8 @@ class MessageRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willThrowException(new Exception('exc'));

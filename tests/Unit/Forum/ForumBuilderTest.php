@@ -40,6 +40,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willReturn(false);
         $forum->method('getErrors')->willReturn([1]);
@@ -55,6 +57,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willReturn(true);
         $result = $this->service->create(
@@ -68,6 +72,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create(
@@ -94,6 +100,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('edit')->willReturn(false);
         $forum->method('getErrors')->willReturn([1]);
@@ -105,6 +113,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('edit')->willReturn(true);
         $result = $this->service->edit($forum);
@@ -114,6 +124,8 @@ class ForumBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($forum);

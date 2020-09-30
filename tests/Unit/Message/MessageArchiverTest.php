@@ -28,6 +28,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willReturn(false);
@@ -43,6 +45,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenMessageIsAlreadyArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
 
@@ -56,6 +60,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnSuccessWhenArchivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willReturn(true);
@@ -69,6 +75,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willThrowException(new Exception('exc'));
@@ -88,6 +96,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willReturn(false);
@@ -103,6 +113,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenMessageIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
 
@@ -116,6 +128,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willReturn(true);
@@ -129,6 +143,8 @@ class MessageArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willThrowException(new Exception('exc'));

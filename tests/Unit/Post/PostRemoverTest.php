@@ -37,6 +37,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(false);
@@ -48,6 +50,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenPostIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(false);
         $post->method('delete')->willReturn(true);
@@ -59,6 +63,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(true);
@@ -75,6 +81,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willThrowException(new Exception('exc'));
@@ -86,6 +94,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($post);
@@ -96,6 +106,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenUpdatingThreadCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(true);
@@ -110,6 +122,8 @@ class PostRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(true);

@@ -27,6 +27,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldReturnErrorWhenBefriendingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('befriend')->willReturn(false);
@@ -44,6 +46,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldReturnErrorWhenTargetIsMember(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -55,6 +59,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldReturnErrorWhenTargetIsAlreadyFriend(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(true);
@@ -70,6 +76,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldPrepareAcquaintanceWhenItDoesntExist(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $acquaintance->expects(self::once())->method('prepare');
@@ -86,6 +94,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldReturnSuccessWhenBefriendingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(false);
@@ -101,6 +111,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testBefriendShouldReturnErrorWhenBefriendingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(false);
@@ -122,6 +134,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnErrorWhenUnfriendingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(true);
@@ -139,6 +153,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnErrorWhenTargetIsMember(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -150,6 +166,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnSuccessWhenUnfriendingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(true);
@@ -165,6 +183,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnErrorWhenUnfriendingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(true);
@@ -181,6 +201,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnErrorWhenAcquaintanceNotExists(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
@@ -195,6 +217,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnfriendShouldReturnErrorWhenTargetIsNotFriend(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isFriend')->willReturn(false);
@@ -215,6 +239,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldReturnErrorWhenIgnoringErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(false);
@@ -232,6 +258,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldReturnErrorWhenTargetIsAlreadyIgnored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(true);
@@ -247,6 +275,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldReturnErrorWhenTargetIsMember(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -258,6 +288,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldPrepareAcquaintanceWhenItDoesntExist(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $acquaintance->expects(self::once())->method('prepare');
@@ -274,6 +306,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldReturnSuccessWhenIgnoringIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(true);
@@ -289,6 +323,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testIgnoreShouldReturnErrorWhenIgnoringThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(false);
@@ -310,6 +346,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnErrorWhenUnignoringErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(true);
@@ -327,6 +365,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnErrorWhenTargetIsMember(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -338,6 +378,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnSuccessWhenUnignoringIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(true);
@@ -353,6 +395,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnErrorWhenUnignoringThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(true);
@@ -369,6 +413,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnErrorWhenAcquaintanceNotExists(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
@@ -383,6 +429,8 @@ class MemberAcquaintanceTest extends AppTestCase
 
     public function testUnignoreShouldReturnErrorWhenTargetIsNotIgnored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('isIgnoring')->willReturn(false);

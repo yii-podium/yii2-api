@@ -50,6 +50,8 @@ class ForumMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('move')->willReturn(false);
         $result = $this->service->move($forum, $this->createMock(CategoryRepositoryInterface::class));
@@ -60,6 +62,8 @@ class ForumMoverTest extends AppTestCase
 
     public function testMoveShouldReturnSuccessWhenMovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('move')->willReturn(true);
         $result = $this->service->move($forum, $this->createMock(CategoryRepositoryInterface::class));
@@ -69,6 +73,8 @@ class ForumMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('move')->willThrowException(new Exception('exc'));
         $result = $this->service->move($forum, $this->createMock(CategoryRepositoryInterface::class));

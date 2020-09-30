@@ -61,10 +61,25 @@ class AccountComponentTest extends TestCase
         $this->component->userConfig = $user;
 
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->expects(self::once())->method('fetchOne')->willReturn(true);
+        $member->expects(self::once())->method('fetchOne')->with(['user_id' => '1'])->willReturn(true);
         $this->component->repositoryConfig = $member;
 
         $this->component->getMembership();
+        $this->component->getMembership(); // second one to test internal cache
+    }
+
+    public function testGetMembershipShouldReloadMemberIfRequested(): void
+    {
+        $user = $this->createMock(User::class);
+        $user->expects(self::exactly(2))->method('getId')->willReturn(1);
+        $this->component->userConfig = $user;
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->expects(self::exactly(2))->method('fetchOne')->willReturn(true);
+        $this->component->repositoryConfig = $member;
+
+        $this->component->getMembership();
+        $this->component->getMembership(true);
     }
 
     public function testGetMembershipShouldThrowExceptionWhenUserComponentIsMisconfigured(): void

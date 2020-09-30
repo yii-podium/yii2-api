@@ -50,6 +50,8 @@ class ThreadMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(false);
         $result = $this->service->move($thread, $this->createMock(ForumRepositoryInterface::class));
@@ -60,6 +62,8 @@ class ThreadMoverTest extends AppTestCase
 
     public function testMoveShouldReturnSuccessWhenMovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
@@ -73,6 +77,8 @@ class ThreadMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willThrowException(new Exception('exc'));
         $result = $this->service->move($thread, $this->createMock(ForumRepositoryInterface::class));
@@ -83,6 +89,8 @@ class ThreadMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingOldForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
@@ -99,6 +107,8 @@ class ThreadMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingNewForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
         $oldForum = $this->createMock(ForumRepositoryInterface::class);

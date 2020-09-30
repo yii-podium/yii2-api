@@ -51,6 +51,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(false);
         $result = $this->service->move($post, $this->createMock(ThreadRepositoryInterface::class));
@@ -61,6 +63,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnSuccessWhenMovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -76,6 +80,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willThrowException(new Exception('exc'));
         $result = $this->service->move($post, $this->createMock(ThreadRepositoryInterface::class));
@@ -86,6 +92,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingOldThreadCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -102,6 +110,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingOldForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -121,6 +131,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingNewThreadCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
         $oldThread = $this->createMock(ThreadRepositoryInterface::class);
@@ -144,6 +156,8 @@ class PostMoverTest extends AppTestCase
 
     public function testMoveShouldReturnErrorWhenUpdatingNewForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
         $oldThread = $this->createMock(ThreadRepositoryInterface::class);

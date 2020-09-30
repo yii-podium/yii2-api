@@ -28,6 +28,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnErrorWhenUpErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
@@ -45,6 +47,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnErrorWhenIsUpIsTrue(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(true);
@@ -60,6 +64,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnSuccessWhenUpIsDoneWithAlreadyRated(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
@@ -74,6 +80,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnSuccessWhenUpIsDoneWithNotPreviouslyRated(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isUp')->willReturn(false);
@@ -88,6 +96,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnErrorWhenUpThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
@@ -104,6 +114,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsOld(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
@@ -118,6 +130,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbUpShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsNew(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isUp')->willReturn(false);
@@ -137,6 +151,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnErrorWhenDownErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
@@ -154,6 +170,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnErrorWhenIsDownIsTrue(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(true);
@@ -169,6 +187,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnSuccessWhenDownIsDoneWithAlreadyRated(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
@@ -183,6 +203,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnSuccessWhenDownIsDoneWithNotPreviouslyRated(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isDown')->willReturn(false);
@@ -197,6 +219,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnErrorWhenDownThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
@@ -213,6 +237,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsOld(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
@@ -227,6 +253,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbDownShouldReturnErrorWhenUpdateCountersErroredWhileThumbIsNew(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isDown')->willReturn(false);
@@ -246,6 +274,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnErrorWhenResetErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(false);
@@ -260,6 +290,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnErrorWhenPostIsNotRated(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $result = $this->service->thumbReset(
@@ -274,6 +306,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnSuccessWhenResetIsDoneWithPostPreviouslyUp(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
@@ -287,6 +321,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnSuccessWhenResetIsDoneWithPostPreviouslyDown(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
@@ -300,6 +336,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnErrorWhenResetThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willThrowException(new Exception('exc'));
@@ -315,6 +353,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnErrorWhenUpdateCountersErroredWhileThumbWasUp(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
@@ -329,6 +369,8 @@ class PostLikerTest extends AppTestCase
 
     public function testThumbResetShouldReturnErrorWhenUpdateCountersErroredWhileThumbWasDown(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);

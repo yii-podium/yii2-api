@@ -49,6 +49,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenSettingFirstOrderErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('getOrder')->willReturn(1);
         $category->method('setOrder')->willReturn(false);
@@ -59,6 +61,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenSettingSecondOrderErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category1 = $this->createMock(CategoryRepositoryInterface::class);
         $category1->method('getOrder')->willReturn(1);
         $category1->method('setOrder')->willReturn(true);
@@ -72,6 +76,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testReplaceShouldReturnSuccessWhenReplacingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('getOrder')->willReturn(1);
         $category->method('setOrder')->willReturn(true);
@@ -82,6 +88,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testReplaceShouldReturnErrorWhenReplacingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('getOrder')->willReturn(1);
         $category->method('setOrder')->willThrowException(new Exception('exc'));
@@ -98,6 +106,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('sort')->willReturn(false);
         $result = $this->service->sort($category);
@@ -107,6 +117,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testSortShouldReturnSuccessWhenSortingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('sort')->willReturn(true);
         $result = $this->service->sort($category);
@@ -116,6 +128,8 @@ class CategorySorterTest extends AppTestCase
 
     public function testSortShouldReturnErrorWhenSortingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('sort')->willThrowException(new Exception('exc'));
         $result = $this->service->sort($category);

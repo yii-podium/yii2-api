@@ -26,6 +26,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testRegisterShouldReturnErrorWhenRegisteringErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('register')->willReturn(false);
         $member->method('getErrors')->willReturn([1]);
@@ -37,6 +39,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testRegisterShouldReturnSuccessWhenRegisteringIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('register')->willReturn(true);
         $result = $this->service->register($member, 1);
@@ -46,6 +50,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testRegisterShouldReturnErrorWhenRegisteringThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('register')->willThrowException(new Exception('exc'));
         $result = $this->service->register($member, 1);
@@ -61,6 +67,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willReturn(false);
         $member->method('getErrors')->willReturn([1]);
@@ -72,6 +80,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willReturn(true);
         $result = $this->service->edit($member);
@@ -81,6 +91,8 @@ class MemberBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($member);

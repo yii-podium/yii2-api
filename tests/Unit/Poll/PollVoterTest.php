@@ -28,6 +28,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenVotingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('vote')->willReturn(false);
@@ -53,6 +55,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenMemberAlreadyVoted(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('hasMemberVoted')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
@@ -65,6 +69,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenPollIsSingleChoiceAndThereAreMoreThanOneAnswers(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('isSingleChoice')->willReturn(true);
@@ -78,6 +84,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenAnswersAreNotAcceptable(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('getErrors')->willReturn([1]);
@@ -92,6 +100,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnSuccessWhenVotingIsDoneOnSingleChoicePoll(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
@@ -106,6 +116,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnSuccessWhenVotingIsDoneOnMultipleChoicePollWithOneAnswer(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
@@ -120,6 +132,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnSuccessWhenVotingIsDoneOnMultipleChoicePollWithTwoAnswers(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
@@ -134,6 +148,8 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenVotingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willThrowException(new Exception('exc'));
         $poll->method('hasMemberVoted')->willReturn(false);

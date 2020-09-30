@@ -26,6 +26,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testLockShouldReturnErrorWhenLockingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('lock')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -37,6 +39,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testLockShouldReturnSuccessWhenLockingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('lock')->willReturn(true);
         $result = $this->service->lock($thread);
@@ -46,6 +50,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testLockShouldReturnErrorWhenLockingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('lock')->willThrowException(new Exception('exc'));
         $result = $this->service->lock($thread);
@@ -61,6 +67,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testUnlockShouldReturnErrorWhenUnlockingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unlock')->willReturn(false);
         $thread->method('getErrors')->willReturn([1]);
@@ -72,6 +80,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testUnlockShouldReturnSuccessWhenUnlockingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unlock')->willReturn(true);
         $result = $this->service->unlock($thread);
@@ -81,6 +91,8 @@ class ThreadLockerTest extends AppTestCase
 
     public function testUnlockShouldReturnErrorWhenUnlockingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unlock')->willThrowException(new Exception('exc'));
         $result = $this->service->unlock($thread);

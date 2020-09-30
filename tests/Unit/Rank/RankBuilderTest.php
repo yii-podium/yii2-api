@@ -27,6 +27,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('create')->willReturn(false);
         $rank->method('getErrors')->willReturn([1]);
@@ -46,6 +48,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('create')->willReturn(true);
         $result = $this->service->create($rank);
@@ -55,6 +59,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create($rank);
@@ -70,6 +76,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('edit')->willReturn(false);
         $rank->method('getErrors')->willReturn([1]);
@@ -89,6 +97,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('edit')->willReturn(true);
         $result = $this->service->edit($rank);
@@ -98,6 +108,8 @@ class RankBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($rank);

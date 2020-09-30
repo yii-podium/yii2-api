@@ -35,6 +35,8 @@ class CategoryRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('delete')->willReturn(false);
@@ -46,6 +48,8 @@ class CategoryRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenCategoryIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
         $category->method('delete')->willReturn(true);
@@ -57,6 +61,8 @@ class CategoryRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('delete')->willReturn(true);
@@ -67,6 +73,8 @@ class CategoryRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('delete')->willThrowException(new Exception('exc'));
@@ -78,6 +86,8 @@ class CategoryRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($category);

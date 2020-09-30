@@ -41,6 +41,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(false);
         $post->method('getErrors')->willReturn([1]);
@@ -56,6 +58,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -70,6 +74,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create(
@@ -84,6 +90,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenUpdatingThreadCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -96,6 +104,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -123,6 +133,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('edit')->willReturn(false);
         $post->method('getErrors')->willReturn([1]);
@@ -134,6 +146,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('edit')->willReturn(true);
         $result = $this->service->edit($post);
@@ -143,6 +157,8 @@ class PostBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($post);

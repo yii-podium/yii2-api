@@ -27,6 +27,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willReturn(false);
         $category->method('getErrors')->willReturn([1]);
@@ -38,6 +40,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willReturn(true);
         $result = $this->service->create($category, $this->createMock(MemberRepositoryInterface::class));
@@ -47,6 +51,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willThrowException(new Exception('exc'));
         $result = $this->service->create($category, $this->createMock(MemberRepositoryInterface::class));
@@ -62,6 +68,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('edit')->willReturn(false);
         $category->method('getErrors')->willReturn([1]);
@@ -73,6 +81,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('edit')->willReturn(true);
         $result = $this->service->edit($category);
@@ -82,6 +92,8 @@ class CategoryBuilderTest extends AppTestCase
 
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('edit')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($category);

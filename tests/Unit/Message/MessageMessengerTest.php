@@ -27,6 +27,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnErrorWhenSendingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willReturn(false);
         $sender = $this->createMock(MemberRepositoryInterface::class);
@@ -42,6 +44,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnErrorWhenSenderAndReceiverAreTheSame(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
@@ -58,6 +62,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnErrorWhenReplyParticipantsAreUnverified(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $replyTo = $this->createMock(MessageRepositoryInterface::class);
         $replyTo->method('verifyParticipants')->willReturn(false);
         $sender = $this->createMock(MemberRepositoryInterface::class);
@@ -77,6 +83,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnErrorWhenReceiverIgnoresSender(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
@@ -94,6 +102,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnSuccessWhenSendingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willReturn(true);
         $sender = $this->createMock(MemberRepositoryInterface::class);
@@ -108,6 +118,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnSuccessWhenSendingIsDoneWithReply(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $replyTo = $this->createMock(MessageRepositoryInterface::class);
         $replyTo->method('verifyParticipants')->willReturn(true);
         $message = $this->createMock(MessageRepositoryInterface::class);
@@ -124,6 +136,8 @@ class MessageMessengerTest extends AppTestCase
 
     public function testSendShouldReturnErrorWhenSendingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willThrowException(new Exception('exc'));
         $sender = $this->createMock(MemberRepositoryInterface::class);

@@ -35,6 +35,8 @@ class LoggerRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('delete')->willReturn(false);
         $result = $this->service->remove($log);
@@ -45,6 +47,8 @@ class LoggerRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('delete')->willReturn(true);
         $result = $this->service->remove($log);
@@ -54,6 +58,8 @@ class LoggerRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('delete')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($log);

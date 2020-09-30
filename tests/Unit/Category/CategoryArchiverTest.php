@@ -35,6 +35,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
         $category->method('archive')->willReturn(false);
@@ -47,6 +49,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenCategoryIsAlreadyArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $result = $this->service->archive($category);
@@ -57,6 +61,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnSuccessWhenArchivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
         $category->method('archive')->willReturn(true);
@@ -67,6 +73,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
         $category->method('archive')->willThrowException(new Exception('exc'));
@@ -91,6 +99,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('revive')->willReturn(false);
@@ -103,6 +113,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenCategoryIsNotArchived(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
         $result = $this->service->revive($category);
@@ -113,6 +125,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('revive')->willReturn(true);
@@ -123,6 +137,8 @@ class CategoryArchiverTest extends AppTestCase
 
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
         $category->method('revive')->willThrowException(new Exception('exc'));

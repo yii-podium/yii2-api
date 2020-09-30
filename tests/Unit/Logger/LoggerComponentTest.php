@@ -58,4 +58,13 @@ class LoggerComponentTest extends TestCase
 
         $this->component->remove($this->createMock(LogRepositoryInterface::class));
     }
+
+    public function testGetRepositoryShouldThrowExceptionWhenRepositoryIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->repositoryConfig = '';
+
+        $this->component->getRepository();
+    }
 }

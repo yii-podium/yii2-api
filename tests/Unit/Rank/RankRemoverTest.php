@@ -35,6 +35,8 @@ class RankRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('delete')->willReturn(false);
         $result = $this->service->remove($rank);
@@ -45,6 +47,8 @@ class RankRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnSuccessWhenRemovingIsDone(): void
     {
+        $this->transaction->expects(self::once())->method('commit');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('delete')->willReturn(true);
         $result = $this->service->remove($rank);
@@ -54,6 +58,8 @@ class RankRemoverTest extends AppTestCase
 
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
+        $this->transaction->expects(self::once())->method('rollBack');
+
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('delete')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($rank);
