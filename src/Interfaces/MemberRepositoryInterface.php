@@ -16,4 +16,6 @@ interface MemberRepositoryInterface extends RepositoryInterface
     public function register($id, array $data = []): bool;
 
     public function isBanned(): bool;
+
+    public function isIgnoring(MemberRepositoryInterface $member): bool;
 }

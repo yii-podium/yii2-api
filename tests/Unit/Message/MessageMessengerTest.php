@@ -29,19 +29,95 @@ class MessageMessengerTest extends AppTestCase
     {
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->send($message, $member, $member);
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $receiver->method('isIgnoring')->willReturn(false);
+        $result = $this->service->send($message, $sender, $receiver);
 
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
+    }
+
+    public function testSendShouldReturnErrorWhenSenderAndReceiverAreTheSame(): void
+    {
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $result = $this->service->send(
+            $this->createMock(MessageRepositoryInterface::class),
+            $sender,
+            $sender
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame('message.no.self.sending', $result->getErrors()['api']);
+    }
+
+    public function testSendShouldReturnErrorWhenReplyParticipantsAreUnverified(): void
+    {
+        $replyTo = $this->createMock(MessageRepositoryInterface::class);
+        $replyTo->method('verifyParticipants')->willReturn(false);
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $result = $this->service->send(
+            $this->createMock(MessageRepositoryInterface::class),
+            $sender,
+            $receiver,
+            $replyTo
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame('message.wrong.reply', $result->getErrors()['api']);
+    }
+
+    public function testSendShouldReturnErrorWhenReceiverIgnoresSender(): void
+    {
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $receiver->method('isIgnoring')->willReturn(true);
+        $result = $this->service->send(
+            $this->createMock(MessageRepositoryInterface::class),
+            $sender,
+            $receiver
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame('message.receiver.rejected', $result->getErrors()['api']);
     }
 
     public function testSendShouldReturnSuccessWhenSendingIsDone(): void
     {
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willReturn(true);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->send($message, $member, $member);
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $receiver->method('isIgnoring')->willReturn(false);
+        $result = $this->service->send($message, $sender, $receiver);
+
+        self::assertTrue($result->getResult());
+    }
+
+    public function testSendShouldReturnSuccessWhenSendingIsDoneWithReply(): void
+    {
+        $replyTo = $this->createMock(MessageRepositoryInterface::class);
+        $replyTo->method('verifyParticipants')->willReturn(true);
+        $message = $this->createMock(MessageRepositoryInterface::class);
+        $message->method('send')->willReturn(true);
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $receiver->method('isIgnoring')->willReturn(false);
+        $result = $this->service->send($message, $sender, $receiver, $replyTo);
 
         self::assertTrue($result->getResult());
     }
@@ -50,8 +126,12 @@ class MessageMessengerTest extends AppTestCase
     {
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willThrowException(new Exception('exc'));
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->send($message, $member, $member);
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('getId')->willReturn(1);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('getId')->willReturn(2);
+        $receiver->method('isIgnoring')->willReturn(false);
+        $result = $this->service->send($message, $sender, $receiver);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());

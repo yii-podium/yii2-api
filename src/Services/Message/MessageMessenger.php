@@ -48,6 +48,18 @@ final class MessageMessenger extends Component implements MessengerInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($sender->getId() === $receiver->getId()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.no.self.sending')]);
+            }
+
+            if (null !== $replyTo && !$replyTo->verifyParticipants($sender, $receiver)) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.wrong.reply')]);
+            }
+
+            if ($receiver->isIgnoring($sender)) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'message.receiver.rejected')]);
+            }
+
             if (!$message->send($sender, $receiver, $replyTo, $data)) {
                 throw new ServiceException($message->getErrors());
             }

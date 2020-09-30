@@ -17,5 +17,5 @@ interface MessageRepositoryInterface extends RepositoryInterface
         array $data = []
     ): bool;
 
-    public function isProperReply(MemberRepositoryInterface $sender, MemberRepositoryInterface $receiver): bool;
+    public function verifyParticipants(MemberRepositoryInterface $sender, MemberRepositoryInterface $receiver): bool;
 }
