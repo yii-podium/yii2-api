@@ -21,11 +21,6 @@ class ThreadMoverTest extends AppTestCase
         $this->service = new ThreadMover();
     }
 
-    public function testBeforeMoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeMove());
-    }
-
     public function testMoveShouldReturnErrorWhenThreadRepositoryIsWrong(): void
     {
         $result = $this->service->move(

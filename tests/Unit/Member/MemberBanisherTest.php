@@ -19,11 +19,6 @@ class MemberBanisherTest extends AppTestCase
         $this->service = new MemberBanisher();
     }
 
-    public function testBeforeBanShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeBan());
-    }
-
     public function testBanShouldReturnErrorWhenBanningErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -73,11 +68,6 @@ class MemberBanisherTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeUnbanShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnban());
     }
 
     public function testUnbanShouldReturnErrorWhenUnbanningErrored(): void

@@ -22,11 +22,6 @@ class ForumBuilderTest extends AppTestCase
         $this->service = new ForumBuilder();
     }
 
-    public function testBeforeCreateShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeCreate());
-    }
-
     public function testCreateShouldReturnErrorWhenRepositoryIsWrong(): void
     {
         $result = $this->service->create(
@@ -84,11 +79,6 @@ class ForumBuilderTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeEditShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeEdit());
     }
 
     public function testEditShouldReturnErrorWhenRepositoryIsWrong(): void

@@ -25,7 +25,7 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
     /**
      * Calls before creating a category.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -72,7 +72,7 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
     /**
      * Calls after creating the category successfully.
      */
-    public function afterCreate(CategoryRepositoryInterface $category): void
+    private function afterCreate(CategoryRepositoryInterface $category): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $category]));
     }
@@ -80,7 +80,7 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
     /**
      * Calls before editing the category.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -124,7 +124,7 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
     /**
      * Calls after editing the category successfully.
      */
-    public function afterEdit(CategoryRepositoryInterface $category): void
+    private function afterEdit(CategoryRepositoryInterface $category): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $category]));
     }

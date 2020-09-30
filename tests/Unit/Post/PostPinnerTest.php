@@ -20,11 +20,6 @@ class PostPinnerTest extends AppTestCase
         $this->service = new PostPinner();
     }
 
-    public function testBeforePinShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforePin());
-    }
-
     public function testPinShouldReturnErrorWhenPostRepositoryIsWrong(): void
     {
         $result = $this->service->pin($this->createMock(RepositoryInterface::class));
@@ -67,11 +62,6 @@ class PostPinnerTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeUnpinShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnpin());
     }
 
     public function testUnpinShouldReturnErrorWhenPostRepositoryIsWrong(): void

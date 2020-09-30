@@ -29,7 +29,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls before giving thumb up.
      */
-    public function beforeThumbUp(): bool
+    private function beforeThumbUp(): bool
     {
         $event = new ThumbEvent();
         $this->trigger(self::EVENT_BEFORE_THUMB_UP, $event);
@@ -91,7 +91,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls after giving thumb up successfully.
      */
-    public function afterThumbUp(ThumbRepositoryInterface $thumb): void
+    private function afterThumbUp(ThumbRepositoryInterface $thumb): void
     {
         $this->trigger(self::EVENT_AFTER_THUMB_UP, new ThumbEvent(['repository' => $thumb]));
     }
@@ -99,7 +99,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls before giving thumb down.
      */
-    public function beforeThumbDown(): bool
+    private function beforeThumbDown(): bool
     {
         $event = new ThumbEvent();
         $this->trigger(self::EVENT_BEFORE_THUMB_DOWN, $event);
@@ -161,7 +161,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls after giving thumb down to the post.
      */
-    public function afterThumbDown(ThumbRepositoryInterface $thumb): void
+    private function afterThumbDown(ThumbRepositoryInterface $thumb): void
     {
         $this->trigger(self::EVENT_AFTER_THUMB_DOWN, new ThumbEvent(['repository' => $thumb]));
     }
@@ -169,7 +169,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls before resetting thumb.
      */
-    public function beforeThumbReset(): bool
+    private function beforeThumbReset(): bool
     {
         $event = new ThumbEvent();
         $this->trigger(self::EVENT_BEFORE_THUMB_RESET, $event);
@@ -228,7 +228,7 @@ final class PostLiker extends Component implements LikerInterface
     /**
      * Calls after resetting thumb for the post successfully.
      */
-    public function afterThumbReset(): void
+    private function afterThumbReset(): void
     {
         $this->trigger(self::EVENT_AFTER_THUMB_RESET);
     }

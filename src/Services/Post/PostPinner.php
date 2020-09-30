@@ -25,7 +25,7 @@ final class PostPinner extends Component implements PinnerInterface
     /**
      * Calls before pinning the post.
      */
-    public function beforePin(): bool
+    private function beforePin(): bool
     {
         $event = new PinEvent();
         $this->trigger(self::EVENT_BEFORE_PINNING, $event);
@@ -69,7 +69,7 @@ final class PostPinner extends Component implements PinnerInterface
     /**
      * Calls after pinning the post successfully.
      */
-    public function afterPin(PostRepositoryInterface $post): void
+    private function afterPin(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_PINNING, new PinEvent(['repository' => $post]));
     }
@@ -77,7 +77,7 @@ final class PostPinner extends Component implements PinnerInterface
     /**
      * Calls before unpinning the post.
      */
-    public function beforeUnpin(): bool
+    private function beforeUnpin(): bool
     {
         $event = new PinEvent();
         $this->trigger(self::EVENT_BEFORE_UNPINNING, $event);
@@ -121,7 +121,7 @@ final class PostPinner extends Component implements PinnerInterface
     /**
      * Calls after unpinning the post successfully.
      */
-    public function afterUnpin(PostRepositoryInterface $post): void
+    private function afterUnpin(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_UNPINNING, new PinEvent(['repository' => $post]));
     }

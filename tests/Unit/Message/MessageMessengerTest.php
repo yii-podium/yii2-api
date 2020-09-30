@@ -20,11 +20,6 @@ class MessageMessengerTest extends AppTestCase
         $this->service = new MessageMessenger();
     }
 
-    public function testBeforeSendShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeSend());
-    }
-
     public function testSendShouldReturnErrorWhenSendingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');

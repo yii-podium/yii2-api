@@ -25,7 +25,7 @@ final class ThreadMover extends Component implements MoverInterface
     /**
      * Calls before moving the thread.
      */
-    public function beforeMove(): bool
+    private function beforeMove(): bool
     {
         $event = new MoveEvent();
         $this->trigger(self::EVENT_BEFORE_MOVING, $event);
@@ -84,7 +84,7 @@ final class ThreadMover extends Component implements MoverInterface
     /**
      * Calls after moving the thread successfully.
      */
-    public function afterMove(ThreadRepositoryInterface $thread): void
+    private function afterMove(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_MOVING, new MoveEvent(['repository' => $thread]));
     }

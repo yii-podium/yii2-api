@@ -26,7 +26,7 @@ final class CategorySorter extends Component implements SorterInterface
     /**
      * Calls before replacing the order of categories.
      */
-    public function beforeReplace(): bool
+    private function beforeReplace(): bool
     {
         $event = new SortEvent();
         $this->trigger(self::EVENT_BEFORE_REPLACING, $event);
@@ -77,7 +77,7 @@ final class CategorySorter extends Component implements SorterInterface
     /**
      * Calls after successful replacing the order of categories.
      */
-    public function afterReplace(): void
+    private function afterReplace(): void
     {
         $this->trigger(self::EVENT_AFTER_REPLACING);
     }
@@ -85,7 +85,7 @@ final class CategorySorter extends Component implements SorterInterface
     /**
      * Calls before sorting categories.
      */
-    public function beforeSort(): bool
+    private function beforeSort(): bool
     {
         $event = new SortEvent();
         $this->trigger(self::EVENT_BEFORE_SORTING, $event);
@@ -132,7 +132,7 @@ final class CategorySorter extends Component implements SorterInterface
     /**
      * Calls after successful sorting of categories.
      */
-    public function afterSort(): void
+    private function afterSort(): void
     {
         $this->trigger(self::EVENT_AFTER_SORTING);
     }

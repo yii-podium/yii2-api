@@ -20,11 +20,6 @@ class ThreadPinnerTest extends AppTestCase
         $this->service = new ThreadPinner();
     }
 
-    public function testBeforePinShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforePin());
-    }
-
     public function testPinShouldReturnErrorWhenThreadRepositoryIsWrong(): void
     {
         $result = $this->service->pin($this->createMock(RepositoryInterface::class));
@@ -67,11 +62,6 @@ class ThreadPinnerTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeUnpinShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnpin());
     }
 
     public function testUnpinShouldReturnErrorWhenThreadRepositoryIsWrong(): void

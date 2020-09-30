@@ -20,11 +20,6 @@ class CategoryArchiverTest extends AppTestCase
         $this->service = new CategoryArchiver();
     }
 
-    public function testBeforeArchiveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeArchive());
-    }
-
     public function testArchiveShouldReturnErrorWhenRepositoryIsWrong(): void
     {
         $result = $this->service->archive($this->createMock(RepositoryInterface::class));
@@ -82,11 +77,6 @@ class CategoryArchiverTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeReviveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRevive());
     }
 
     public function testReviveShouldReturnErrorWhenRepositoryIsWrong(): void

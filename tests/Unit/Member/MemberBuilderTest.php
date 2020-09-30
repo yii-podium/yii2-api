@@ -19,11 +19,6 @@ class MemberBuilderTest extends AppTestCase
         $this->service = new MemberBuilder();
     }
 
-    public function testBeforeRegisterShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRegister());
-    }
-
     public function testRegisterShouldReturnErrorWhenRegisteringErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -58,11 +53,6 @@ class MemberBuilderTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeEditShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeEdit());
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

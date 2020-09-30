@@ -23,7 +23,7 @@ final class LoggerBuilder extends Component implements LogBuilderInterface
     /**
      * Calls before creating the thread.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -71,7 +71,7 @@ final class LoggerBuilder extends Component implements LogBuilderInterface
     /**
      * Calls after creating the log successfully.
      */
-    public function afterCreate(LogRepositoryInterface $thread): void
+    private function afterCreate(LogRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $thread]));
     }

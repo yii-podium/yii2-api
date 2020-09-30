@@ -25,7 +25,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     /**
      * Calls before archiving the message side.
      */
-    public function beforeArchive(): bool
+    private function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_ARCHIVING, $event);
@@ -75,7 +75,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     /**
      * Calls after archiving the message successfully.
      */
-    public function afterArchive(MessageRepositoryInterface $message): void
+    private function afterArchive(MessageRepositoryInterface $message): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $message]));
     }
@@ -83,7 +83,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     /**
      * Calls before reviving the message side.
      */
-    public function beforeRevive(): bool
+    private function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_REVIVING, $event);
@@ -133,7 +133,7 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
     /**
      * Calls after reviving the message successfully.
      */
-    public function afterRevive(MessageRepositoryInterface $message): void
+    private function afterRevive(MessageRepositoryInterface $message): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $message]));
     }

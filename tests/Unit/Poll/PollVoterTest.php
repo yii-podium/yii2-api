@@ -21,11 +21,6 @@ class PollVoterTest extends AppTestCase
         $this->service = new PollVoter();
     }
 
-    public function testBeforeRemoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeVote());
-    }
-
     public function testVoteShouldReturnErrorWhenVotingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');

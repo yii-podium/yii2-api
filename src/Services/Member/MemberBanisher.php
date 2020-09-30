@@ -24,7 +24,7 @@ final class MemberBanisher extends Component implements BanisherInterface
     /**
      * Calls before banning the member.
      */
-    public function beforeBan(): bool
+    private function beforeBan(): bool
     {
         $event = new BanEvent();
         $this->trigger(self::EVENT_BEFORE_BANNING, $event);
@@ -72,7 +72,7 @@ final class MemberBanisher extends Component implements BanisherInterface
     /**
      * Calls after banning the member successfully.
      */
-    public function afterBan(MemberRepositoryInterface $member): void
+    private function afterBan(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_BANNING, new BanEvent(['repository' => $member]));
     }
@@ -80,7 +80,7 @@ final class MemberBanisher extends Component implements BanisherInterface
     /**
      * Calls before unbanning the member.
      */
-    public function beforeUnban(): bool
+    private function beforeUnban(): bool
     {
         $event = new BanEvent();
         $this->trigger(self::EVENT_BEFORE_UNBANNING, $event);
@@ -128,7 +128,7 @@ final class MemberBanisher extends Component implements BanisherInterface
     /**
      * Calls after unbanning the member successfully.
      */
-    public function afterUnban(MemberRepositoryInterface $member): void
+    private function afterUnban(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_UNBANNING, new BanEvent(['repository' => $member]));
     }

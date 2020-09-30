@@ -19,11 +19,6 @@ class ThreadLockerTest extends AppTestCase
         $this->service = new ThreadLocker();
     }
 
-    public function testBeforeLockShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeLock());
-    }
-
     public function testLockShouldReturnErrorWhenLockingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -58,11 +53,6 @@ class ThreadLockerTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeUnlockShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnlock());
     }
 
     public function testUnlockShouldReturnErrorWhenUnlockingErrored(): void

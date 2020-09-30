@@ -26,7 +26,7 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls before joining the group.
      */
-    public function beforeJoin(): bool
+    private function beforeJoin(): bool
     {
         $event = new GroupEvent();
         $this->trigger(self::EVENT_BEFORE_JOINING, $event);
@@ -76,7 +76,7 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls after joining the group successfully.
      */
-    public function afterJoin(GroupMemberRepositoryInterface $groupMember): void
+    private function afterJoin(GroupMemberRepositoryInterface $groupMember): void
     {
         $this->trigger(self::EVENT_AFTER_JOINING, new GroupEvent(['repository' => $groupMember]));
     }
@@ -84,7 +84,7 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls before leaving the group.
      */
-    public function beforeLeave(): bool
+    private function beforeLeave(): bool
     {
         $event = new GroupEvent();
         $this->trigger(self::EVENT_BEFORE_LEAVING, $event);
@@ -134,7 +134,7 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls after leaving the group successfully.
      */
-    public function afterLeave(): void
+    private function afterLeave(): void
     {
         $this->trigger(self::EVENT_AFTER_LEAVING);
     }

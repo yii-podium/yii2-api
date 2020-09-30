@@ -26,7 +26,7 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
     /**
      * Calls before subscribing to the thread.
      */
-    public function beforeSubscribe(): bool
+    private function beforeSubscribe(): bool
     {
         $event = new SubscriptionEvent();
         $this->trigger(self::EVENT_BEFORE_SUBSCRIBING, $event);
@@ -77,7 +77,7 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
     /**
      * Calls after subscribing to the thread.
      */
-    public function afterSubscribe(SubscriptionRepositoryInterface $subscription): void
+    private function afterSubscribe(SubscriptionRepositoryInterface $subscription): void
     {
         $this->trigger(self::EVENT_AFTER_SUBSCRIBING, new SubscriptionEvent(['repository' => $subscription]));
     }
@@ -85,7 +85,7 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
     /**
      * Calls before unsubscribing from the thread.
      */
-    public function beforeUnsubscribe(): bool
+    private function beforeUnsubscribe(): bool
     {
         $event = new SubscriptionEvent();
         $this->trigger(self::EVENT_BEFORE_UNSUBSCRIBING, $event);
@@ -139,7 +139,7 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
     /**
      * Calls after unsubscribing from the thread successfully.
      */
-    public function afterUnsubscribe(): void
+    private function afterUnsubscribe(): void
     {
         $this->trigger(self::EVENT_AFTER_UNSUBSCRIBING);
     }

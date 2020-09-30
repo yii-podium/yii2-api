@@ -25,7 +25,7 @@ final class RankBuilder extends Component implements BuilderInterface
     /**
      * Calls before creating a rank.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -69,7 +69,7 @@ final class RankBuilder extends Component implements BuilderInterface
     /**
      * Calls after creating the rank successfully.
      */
-    public function afterCreate(RankRepositoryInterface $rank): void
+    private function afterCreate(RankRepositoryInterface $rank): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $rank]));
     }
@@ -77,7 +77,7 @@ final class RankBuilder extends Component implements BuilderInterface
     /**
      * Calls before editing the rank.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -121,7 +121,7 @@ final class RankBuilder extends Component implements BuilderInterface
     /**
      * Calls after editing the rank successfully.
      */
-    public function afterEdit(RankRepositoryInterface $rank): void
+    private function afterEdit(RankRepositoryInterface $rank): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $rank]));
     }

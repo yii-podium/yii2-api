@@ -21,11 +21,6 @@ class MessageArchiverTest extends AppTestCase
         $this->service = new MessageArchiver();
     }
 
-    public function testBeforeArchiveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeArchive());
-    }
-
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -87,11 +82,6 @@ class MessageArchiverTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeReviveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRevive());
     }
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void

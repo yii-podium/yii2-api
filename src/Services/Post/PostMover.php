@@ -26,7 +26,7 @@ final class PostMover extends Component implements MoverInterface
     /**
      * Calls before moving the post.
      */
-    public function beforeMove(): bool
+    private function beforeMove(): bool
     {
         $event = new MoveEvent();
         $this->trigger(self::EVENT_BEFORE_MOVING, $event);
@@ -93,7 +93,7 @@ final class PostMover extends Component implements MoverInterface
     /**
      * Calls after moving the post successfully.
      */
-    public function afterMove(PostRepositoryInterface $post): void
+    private function afterMove(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_MOVING, new MoveEvent(['repository' => $post]));
     }

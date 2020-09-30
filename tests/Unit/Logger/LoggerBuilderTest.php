@@ -20,11 +20,6 @@ class LoggerBuilderTest extends AppTestCase
         $this->service = new LoggerBuilder();
     }
 
-    public function testBeforeCreateShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeCreate());
-    }
-
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');

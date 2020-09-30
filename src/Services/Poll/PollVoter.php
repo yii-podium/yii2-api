@@ -23,7 +23,7 @@ final class PollVoter extends Component implements VoterInterface
     public const EVENT_BEFORE_VOTING = 'podium.poll.voting.before';
     public const EVENT_AFTER_VOTING = 'podium.poll.voting.after';
 
-    public function beforeVote(): bool
+    private function beforeVote(): bool
     {
         $event = new VoteEvent();
         $this->trigger(self::EVENT_BEFORE_VOTING, $event);
@@ -82,7 +82,7 @@ final class PollVoter extends Component implements VoterInterface
         return PodiumResponse::success();
     }
 
-    public function afterVote(PollRepositoryInterface $poll): void
+    private function afterVote(PollRepositoryInterface $poll): void
     {
         $this->trigger(self::EVENT_AFTER_VOTING, new VoteEvent(['repository' => $poll]));
     }

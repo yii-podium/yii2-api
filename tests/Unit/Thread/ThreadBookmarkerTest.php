@@ -22,11 +22,6 @@ class ThreadBookmarkerTest extends AppTestCase
         $this->service = new ThreadBookmarker();
     }
 
-    public function testBeforeMarkShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeMark());
-    }
-
     public function testMarkShouldReturnTrueIfMarkingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');

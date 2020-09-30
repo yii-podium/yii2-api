@@ -24,7 +24,7 @@ final class ForumMover extends Component implements MoverInterface
     /**
      * Calls before moving the forum.
      */
-    public function beforeMove(): bool
+    private function beforeMove(): bool
     {
         $event = new MoveEvent();
         $this->trigger(self::EVENT_BEFORE_MOVING, $event);
@@ -72,7 +72,7 @@ final class ForumMover extends Component implements MoverInterface
     /**
      * Calls after moving the forum successfully.
      */
-    public function afterMove(ForumRepositoryInterface $forum): void
+    private function afterMove(ForumRepositoryInterface $forum): void
     {
         $this->trigger(self::EVENT_AFTER_MOVING, new MoveEvent(['repository' => $forum]));
     }

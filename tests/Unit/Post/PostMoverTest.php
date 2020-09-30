@@ -22,11 +22,6 @@ class PostMoverTest extends AppTestCase
         $this->service = new PostMover();
     }
 
-    public function testBeforeMoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeMove());
-    }
-
     public function testMoveShouldReturnErrorWhenPostRepositoryIsWrong(): void
     {
         $result = $this->service->move(

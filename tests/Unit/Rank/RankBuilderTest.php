@@ -20,11 +20,6 @@ class RankBuilderTest extends AppTestCase
         $this->service = new RankBuilder();
     }
 
-    public function testBeforeCreateShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeCreate());
-    }
-
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -67,11 +62,6 @@ class RankBuilderTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeEditShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeEdit());
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

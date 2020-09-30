@@ -22,7 +22,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
     public const EVENT_BEFORE_EDITING = 'podium.poll.editing.before';
     public const EVENT_AFTER_EDITING = 'podium.poll.editing.after';
 
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -64,12 +64,12 @@ final class PollBuilder extends Component implements PollBuilderInterface
         return PodiumResponse::success();
     }
 
-    public function afterCreate(PollRepositoryInterface $poll): void
+    private function afterCreate(PollRepositoryInterface $poll): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $poll]));
     }
 
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -111,7 +111,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
         return PodiumResponse::success();
     }
 
-    public function afterEdit(PollRepositoryInterface $poll): void
+    private function afterEdit(PollRepositoryInterface $poll): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $poll]));
     }

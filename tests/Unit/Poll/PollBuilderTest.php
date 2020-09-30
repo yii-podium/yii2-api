@@ -20,11 +20,6 @@ class PollBuilderTest extends AppTestCase
         $this->service = new PollBuilder();
     }
 
-    public function testBeforeCreateShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeCreate());
-    }
-
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -65,11 +60,6 @@ class PollBuilderTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeEditShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeEdit());
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

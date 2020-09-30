@@ -25,7 +25,7 @@ final class GroupBuilder extends Component implements BuilderInterface
     /**
      * Calls before creating a group.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -69,7 +69,7 @@ final class GroupBuilder extends Component implements BuilderInterface
     /**
      * Calls after creating the group successfully.
      */
-    public function afterCreate(GroupRepositoryInterface $group): void
+    private function afterCreate(GroupRepositoryInterface $group): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $group]));
     }
@@ -77,7 +77,7 @@ final class GroupBuilder extends Component implements BuilderInterface
     /**
      * Calls before editing the group.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -121,7 +121,7 @@ final class GroupBuilder extends Component implements BuilderInterface
     /**
      * Calls after editing the group successfully.
      */
-    public function afterEdit(GroupRepositoryInterface $group): void
+    private function afterEdit(GroupRepositoryInterface $group): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $group]));
     }

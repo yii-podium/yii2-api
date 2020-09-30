@@ -21,11 +21,6 @@ class ThreadSubscriberTest extends AppTestCase
         $this->service = new ThreadSubscriber();
     }
 
-    public function testBeforeSubscribeShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeSubscribe());
-    }
-
     public function testSubscribeShouldReturnErrorWhenSubscribingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -91,11 +86,6 @@ class ThreadSubscriberTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('thread.already.subscribed', $result->getErrors()['api']);
-    }
-
-    public function testBeforeUnsubscribeShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnsubscribe());
     }
 
     public function testUnsubscribeShouldReturnErrorWhenUnsubscribingErrored(): void

@@ -21,11 +21,6 @@ class ForumMoverTest extends AppTestCase
         $this->service = new ForumMover();
     }
 
-    public function testBeforeMoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeMove());
-    }
-
     public function testMoveShouldReturnErrorWhenForumRepositoryIsWrong(): void
     {
         $result = $this->service->move(

@@ -27,7 +27,7 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
     /**
      * Calls before creating the forum.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -79,7 +79,7 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
     /**
      * Calls after creating the forum successfully.
      */
-    public function afterCreate(ForumRepositoryInterface $forum): void
+    private function afterCreate(ForumRepositoryInterface $forum): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $forum]));
     }
@@ -87,7 +87,7 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
     /**
      * Calls before editing the forum.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -131,7 +131,7 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
     /**
      * Calls after editing the forum successfully.
      */
-    public function afterEdit(ForumRepositoryInterface $forum): void
+    private function afterEdit(ForumRepositoryInterface $forum): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $forum]));
     }

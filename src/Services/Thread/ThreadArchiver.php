@@ -25,7 +25,7 @@ final class ThreadArchiver extends Component implements ArchiverInterface
     /**
      * Calls before archiving the thread.
      */
-    public function beforeArchive(): bool
+    private function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_ARCHIVING, $event);
@@ -73,7 +73,7 @@ final class ThreadArchiver extends Component implements ArchiverInterface
     /**
      * Calls after archiving the thread successfully.
      */
-    public function afterArchive(ThreadRepositoryInterface $thread): void
+    private function afterArchive(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $thread]));
     }
@@ -81,7 +81,7 @@ final class ThreadArchiver extends Component implements ArchiverInterface
     /**
      * Calls before reviving the thread.
      */
-    public function beforeRevive(): bool
+    private function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_REVIVING, $event);
@@ -129,7 +129,7 @@ final class ThreadArchiver extends Component implements ArchiverInterface
     /**
      * Calls after reviving the thread successfully.
      */
-    public function afterRevive(ThreadRepositoryInterface $thread): void
+    private function afterRevive(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $thread]));
     }

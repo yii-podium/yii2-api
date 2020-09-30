@@ -25,7 +25,7 @@ final class PostArchiver extends Component implements ArchiverInterface
     /**
      * Calls before archiving the post.
      */
-    public function beforeArchive(): bool
+    private function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_ARCHIVING, $event);
@@ -73,7 +73,7 @@ final class PostArchiver extends Component implements ArchiverInterface
     /**
      * Calls after archiving post successfully.
      */
-    public function afterArchive(PostRepositoryInterface $post): void
+    private function afterArchive(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $post]));
     }
@@ -81,7 +81,7 @@ final class PostArchiver extends Component implements ArchiverInterface
     /**
      * Calls before reviving the post.
      */
-    public function beforeRevive(): bool
+    private function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_REVIVING, $event);
@@ -129,7 +129,7 @@ final class PostArchiver extends Component implements ArchiverInterface
     /**
      * Calls after reviving the post successfully.
      */
-    public function afterRevive(PostRepositoryInterface $post): void
+    private function afterRevive(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $post]));
     }

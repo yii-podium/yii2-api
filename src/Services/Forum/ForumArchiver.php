@@ -25,7 +25,7 @@ final class ForumArchiver extends Component implements ArchiverInterface
     /**
      * Calls before archiving the forum.
      */
-    public function beforeArchive(): bool
+    private function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_ARCHIVING, $event);
@@ -73,7 +73,7 @@ final class ForumArchiver extends Component implements ArchiverInterface
     /**
      * Calls after archiving the forum successfully.
      */
-    public function afterArchive(ForumRepositoryInterface $forum): void
+    private function afterArchive(ForumRepositoryInterface $forum): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $forum]));
     }
@@ -81,7 +81,7 @@ final class ForumArchiver extends Component implements ArchiverInterface
     /**
      * Calls before reviving the forum.
      */
-    public function beforeRevive(): bool
+    private function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_REVIVING, $event);
@@ -129,7 +129,7 @@ final class ForumArchiver extends Component implements ArchiverInterface
     /**
      * Calls after reviving the forum successfully.
      */
-    public function afterRevive(ForumRepositoryInterface $forum): void
+    private function afterRevive(ForumRepositoryInterface $forum): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $forum]));
     }

@@ -23,7 +23,7 @@ final class GroupRemover extends Component implements RemoverInterface
     /**
      * Calls before removing the group.
      */
-    public function beforeRemove(): bool
+    private function beforeRemove(): bool
     {
         $event = new RemoveEvent();
         $this->trigger(self::EVENT_BEFORE_REMOVING, $event);
@@ -67,7 +67,7 @@ final class GroupRemover extends Component implements RemoverInterface
     /**
      * Calls after removing the group successfully.
      */
-    public function afterRemove(): void
+    private function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);
     }

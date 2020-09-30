@@ -24,7 +24,7 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
     /**
      * Calls before registering a member.
      */
-    public function beforeRegister(): bool
+    private function beforeRegister(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_REGISTERING, $event);
@@ -70,7 +70,7 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
     /**
      * Calls after registering the member successfully.
      */
-    public function afterRegister(MemberRepositoryInterface $member): void
+    private function afterRegister(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_REGISTERING, new BuildEvent(['repository' => $member]));
     }
@@ -78,7 +78,7 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
     /**
      * Calls before editing the member.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -122,7 +122,7 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
     /**
      * Calls after editing the member successfully.
      */
-    public function afterEdit(MemberRepositoryInterface $member): void
+    private function afterEdit(MemberRepositoryInterface $member): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $member]));
     }

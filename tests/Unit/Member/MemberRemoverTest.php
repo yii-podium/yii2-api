@@ -20,11 +20,6 @@ class MemberRemoverTest extends AppTestCase
         $this->service = new MemberRemover();
     }
 
-    public function testBeforeRemoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRemove());
-    }
-
     public function testRemoveShouldReturnErrorWhenRepositoryIsWrong(): void
     {
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));

@@ -25,7 +25,7 @@ final class ThreadRemover extends Component implements RemoverInterface
     /**
      * Calls before removing the thread.
      */
-    public function beforeRemove(): bool
+    private function beforeRemove(): bool
     {
         $event = new RemoveEvent();
         $this->trigger(self::EVENT_BEFORE_REMOVING, $event);
@@ -79,7 +79,7 @@ final class ThreadRemover extends Component implements RemoverInterface
     /**
      * Calls after removing the thread successfully.
      */
-    public function afterRemove(): void
+    private function afterRemove(): void
     {
         $this->trigger(self::EVENT_AFTER_REMOVING);
     }

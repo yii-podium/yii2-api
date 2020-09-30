@@ -25,7 +25,7 @@ final class ThreadPinner extends Component implements PinnerInterface
     /**
      * Calls before pinning the thread.
      */
-    public function beforePin(): bool
+    private function beforePin(): bool
     {
         $event = new PinEvent();
         $this->trigger(self::EVENT_BEFORE_PINNING, $event);
@@ -69,7 +69,7 @@ final class ThreadPinner extends Component implements PinnerInterface
     /**
      * Calls after pinning the thread successfully.
      */
-    public function afterPin(ThreadRepositoryInterface $thread): void
+    private function afterPin(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_PINNING, new PinEvent(['repository' => $thread]));
     }
@@ -77,7 +77,7 @@ final class ThreadPinner extends Component implements PinnerInterface
     /**
      * Calls before unpinning the thread.
      */
-    public function beforeUnpin(): bool
+    private function beforeUnpin(): bool
     {
         $event = new PinEvent();
         $this->trigger(self::EVENT_BEFORE_UNPINNING, $event);
@@ -121,7 +121,7 @@ final class ThreadPinner extends Component implements PinnerInterface
     /**
      * Calls after unpinning the thread successfully.
      */
-    public function afterUnpin(ThreadRepositoryInterface $thread): void
+    private function afterUnpin(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_UNPINNING, new PinEvent(['repository' => $thread]));
     }

@@ -21,11 +21,6 @@ class GroupKeeperTest extends AppTestCase
         $this->service = new GroupKeeper();
     }
 
-    public function testBeforeJoinShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeJoin());
-    }
-
     public function testJoinShouldReturnErrorWhenMemberAlreadyJoined(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -84,11 +79,6 @@ class GroupKeeperTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeLeaveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeLeave());
     }
 
     public function testEditShouldReturnErrorWhenMemberNotJoinedBefore(): void

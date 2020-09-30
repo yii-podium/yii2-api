@@ -23,7 +23,7 @@ final class MessageMessenger extends Component implements MessengerInterface
     /**
      * Calls before sending the message.
      */
-    public function beforeSend(): bool
+    private function beforeSend(): bool
     {
         $event = new SendEvent();
         $this->trigger(self::EVENT_BEFORE_SENDING, $event);
@@ -84,7 +84,7 @@ final class MessageMessenger extends Component implements MessengerInterface
     /**
      * Calls after sending the message successfully.
      */
-    public function afterSend(MessageRepositoryInterface $message): void
+    private function afterSend(MessageRepositoryInterface $message): void
     {
         $this->trigger(self::EVENT_AFTER_SENDING, new SendEvent(['repository' => $message]));
     }

@@ -20,11 +20,6 @@ class MemberAcquaintanceTest extends AppTestCase
         $this->service = new MemberAcquaintance();
     }
 
-    public function testBeforeBefriendShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeBefriend());
-    }
-
     public function testBefriendShouldReturnErrorWhenBefriendingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -127,11 +122,6 @@ class MemberAcquaintanceTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testBeforeUnfriendShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnfriend());
-    }
-
     public function testUnfriendShouldReturnErrorWhenUnfriendingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -230,11 +220,6 @@ class MemberAcquaintanceTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('target.is.not.friend', $result->getErrors()['api']);
-    }
-
-    public function testBeforeIgnoreShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeIgnore());
     }
 
     public function testIgnoreShouldReturnErrorWhenIgnoringErrored(): void
@@ -337,11 +322,6 @@ class MemberAcquaintanceTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeUnignoreShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeUnignore());
     }
 
     public function testUnignoreShouldReturnErrorWhenUnignoringErrored(): void

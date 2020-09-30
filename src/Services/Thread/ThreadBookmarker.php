@@ -25,7 +25,7 @@ final class ThreadBookmarker extends Component implements BookmarkerInterface
     /**
      * Calls before marking the thread.
      */
-    public function beforeMark(): bool
+    private function beforeMark(): bool
     {
         $event = new BookmarkEvent();
         $this->trigger(self::EVENT_BEFORE_MARKING, $event);
@@ -79,7 +79,7 @@ final class ThreadBookmarker extends Component implements BookmarkerInterface
     /**
      * Calls after marking the thread successfully.
      */
-    public function afterMark(BookmarkRepositoryInterface $bookmark): void
+    private function afterMark(BookmarkRepositoryInterface $bookmark): void
     {
         $this->trigger(self::EVENT_AFTER_MARKING, new BookmarkEvent(['repository' => $bookmark]));
     }

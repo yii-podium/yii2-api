@@ -21,11 +21,6 @@ class PollRemoverTest extends AppTestCase
         $this->service = new PollRemover();
     }
 
-    public function testBeforeRemoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRemove());
-    }
-
     public function testRemoveShouldReturnErrorWhenRepositoryIsWrong(): void
     {
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));

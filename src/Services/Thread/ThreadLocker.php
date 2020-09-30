@@ -24,7 +24,7 @@ final class ThreadLocker extends Component implements LockerInterface
     /**
      * Calls before locking the thread.
      */
-    public function beforeLock(): bool
+    private function beforeLock(): bool
     {
         $event = new LockEvent();
         $this->trigger(self::EVENT_BEFORE_LOCKING, $event);
@@ -68,7 +68,7 @@ final class ThreadLocker extends Component implements LockerInterface
     /**
      * Calls after locking the thread successfully.
      */
-    public function afterLock(ThreadRepositoryInterface $thread): void
+    private function afterLock(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_LOCKING, new LockEvent(['repository' => $thread]));
     }
@@ -76,7 +76,7 @@ final class ThreadLocker extends Component implements LockerInterface
     /**
      * Calls before unlocking the thread.
      */
-    public function beforeUnlock(): bool
+    private function beforeUnlock(): bool
     {
         $event = new LockEvent();
         $this->trigger(self::EVENT_BEFORE_UNLOCKING, $event);
@@ -120,7 +120,7 @@ final class ThreadLocker extends Component implements LockerInterface
     /**
      * Calls after unlocking the thread successfully.
      */
-    public function afterUnlock(ThreadRepositoryInterface $thread): void
+    private function afterUnlock(ThreadRepositoryInterface $thread): void
     {
         $this->trigger(self::EVENT_AFTER_UNLOCKING, new LockEvent(['repository' => $thread]));
     }

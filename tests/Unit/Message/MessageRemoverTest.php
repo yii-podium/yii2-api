@@ -21,11 +21,6 @@ class MessageRemoverTest extends AppTestCase
         $this->service = new MessageRemover();
     }
 
-    public function testBeforeRemoveShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeRemove());
-    }
-
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');

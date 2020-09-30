@@ -25,7 +25,7 @@ final class CategoryArchiver extends Component implements ArchiverInterface
     /**
      * Calls before archiving the category.
      */
-    public function beforeArchive(): bool
+    private function beforeArchive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_ARCHIVING, $event);
@@ -73,7 +73,7 @@ final class CategoryArchiver extends Component implements ArchiverInterface
     /**
      * Calls after successful archiving the category.
      */
-    public function afterArchive(CategoryRepositoryInterface $category): void
+    private function afterArchive(CategoryRepositoryInterface $category): void
     {
         $this->trigger(self::EVENT_AFTER_ARCHIVING, new ArchiveEvent(['repository' => $category]));
     }
@@ -81,7 +81,7 @@ final class CategoryArchiver extends Component implements ArchiverInterface
     /**
      * Calls before reviving the category.
      */
-    public function beforeRevive(): bool
+    private function beforeRevive(): bool
     {
         $event = new ArchiveEvent();
         $this->trigger(self::EVENT_BEFORE_REVIVING, $event);
@@ -129,7 +129,7 @@ final class CategoryArchiver extends Component implements ArchiverInterface
     /**
      * Calls after successful reviving the category.
      */
-    public function afterRevive(CategoryRepositoryInterface $category): void
+    private function afterRevive(CategoryRepositoryInterface $category): void
     {
         $this->trigger(self::EVENT_AFTER_REVIVING, new ArchiveEvent(['repository' => $category]));
     }

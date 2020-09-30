@@ -29,7 +29,7 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
     /**
      * Calls before creating the post.
      */
-    public function beforeCreate(): bool
+    private function beforeCreate(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_CREATING, $event);
@@ -90,7 +90,7 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
     /**
      * Calls after creating the post successfully.
      */
-    public function afterCreate(PostRepositoryInterface $post): void
+    private function afterCreate(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $post]));
     }
@@ -98,7 +98,7 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
     /**
      * Calls before editing the post.
      */
-    public function beforeEdit(): bool
+    private function beforeEdit(): bool
     {
         $event = new BuildEvent();
         $this->trigger(self::EVENT_BEFORE_EDITING, $event);
@@ -142,7 +142,7 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
     /**
      * Calls after editing the post successfully.
      */
-    public function afterEdit(PostRepositoryInterface $post): void
+    private function afterEdit(PostRepositoryInterface $post): void
     {
         $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $post]));
     }

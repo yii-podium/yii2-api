@@ -29,7 +29,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls before befriending the member.
      */
-    public function beforeBefriend(): bool
+    private function beforeBefriend(): bool
     {
         $event = new AcquaintanceEvent();
         $this->trigger(self::EVENT_BEFORE_BEFRIENDING, $event);
@@ -88,7 +88,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls after befriending the member successfully.
      */
-    public function afterBefriend(AcquaintanceRepositoryInterface $acquaintance): void
+    private function afterBefriend(AcquaintanceRepositoryInterface $acquaintance): void
     {
         $this->trigger(self::EVENT_AFTER_BEFRIENDING, new AcquaintanceEvent(['repository' => $acquaintance]));
     }
@@ -96,7 +96,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls before unfriending the member.
      */
-    public function beforeUnfriend(): bool
+    private function beforeUnfriend(): bool
     {
         $event = new AcquaintanceEvent();
         $this->trigger(self::EVENT_BEFORE_UNFRIENDING, $event);
@@ -155,7 +155,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls after unfriending the member successfully.
      */
-    public function afterUnfriend(): void
+    private function afterUnfriend(): void
     {
         $this->trigger(self::EVENT_AFTER_UNFRIENDING);
     }
@@ -163,7 +163,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls before ignoring the member.
      */
-    public function beforeIgnore(): bool
+    private function beforeIgnore(): bool
     {
         $event = new AcquaintanceEvent();
         $this->trigger(self::EVENT_BEFORE_IGNORING, $event);
@@ -222,7 +222,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls after ignoring the member successfully.
      */
-    public function afterIgnore(AcquaintanceRepositoryInterface $acquaintance): void
+    private function afterIgnore(AcquaintanceRepositoryInterface $acquaintance): void
     {
         $this->trigger(self::EVENT_AFTER_IGNORING, new AcquaintanceEvent(['repository' => $acquaintance]));
     }
@@ -230,7 +230,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls before unignoring the member.
      */
-    public function beforeUnignore(): bool
+    private function beforeUnignore(): bool
     {
         $event = new AcquaintanceEvent();
         $this->trigger(self::EVENT_BEFORE_UNIGNORING, $event);
@@ -289,7 +289,7 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     /**
      * Calls after unignoring the member successfully.
      */
-    public function afterUnignore(): void
+    private function afterUnignore(): void
     {
         $this->trigger(self::EVENT_AFTER_UNIGNORING);
     }

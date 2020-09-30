@@ -20,11 +20,6 @@ class CategorySorterTest extends AppTestCase
         $this->service = new CategorySorter();
     }
 
-    public function testBeforeReplaceShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeReplace());
-    }
-
     public function testReplaceShouldReturnErrorWhenFirstRepositoryIsWrong(): void
     {
         $result = $this->service->replace(
@@ -97,11 +92,6 @@ class CategorySorterTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeSortShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeSort());
     }
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void

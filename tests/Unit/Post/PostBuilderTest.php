@@ -23,11 +23,6 @@ class PostBuilderTest extends AppTestCase
         $this->service = new PostBuilder();
     }
 
-    public function testBeforeCreateShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeCreate());
-    }
-
     public function testCreateShouldReturnErrorWhenRepositoryIsWrong(): void
     {
         $result = $this->service->create(
@@ -117,11 +112,6 @@ class PostBuilderTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating forum counters!', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeEditShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeEdit());
     }
 
     public function testEditShouldReturnErrorWhenRepositoryIsWrong(): void

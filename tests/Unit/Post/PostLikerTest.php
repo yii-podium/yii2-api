@@ -21,11 +21,6 @@ class PostLikerTest extends AppTestCase
         $this->service = new PostLiker();
     }
 
-    public function testBeforeThumbUpShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeThumbUp());
-    }
-
     public function testThumbUpShouldReturnErrorWhenUpErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -144,11 +139,6 @@ class PostLikerTest extends AppTestCase
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testBeforeThumbDownShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeThumbDown());
-    }
-
     public function testThumbDownShouldReturnErrorWhenDownErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -265,11 +255,6 @@ class PostLikerTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testBeforeThumbResetShouldReturnTrue(): void
-    {
-        self::assertTrue($this->service->beforeThumbReset());
     }
 
     public function testThumbResetShouldReturnErrorWhenResetErrored(): void
