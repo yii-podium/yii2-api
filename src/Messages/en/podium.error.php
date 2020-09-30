@@ -29,9 +29,11 @@ return [
     'post.must.be.archived' => 'Post must be archived first.',
     'post.not.archived' => 'Post is not archived.',
     'post.not.rated' => 'Post is not rated.',
-    'target.already.acquainted' => 'Target is already acquainted.', // TODO
-    'target.not.befriended' => 'Target is not befriended.', // TODO
-    'target.not.ignored' => 'Target is not ignored.', // TODO
+    'target.already.friend' => 'Target is already friend.',
+    'target.already.ignored' => 'Target is already ignored.',
+    'target.is.member' => 'Target is the member.',
+    'target.is.not.friend' => 'Target is not a friend.',
+    'target.is.not.ignored' => 'Target is not ignored.',
     'thread.already.archived' => 'Thread is already archived.',
     'thread.already.subscribed' => 'Thread is already subscribed.',
     'thread.must.be.archived' => 'Thread must be archived first.',

@@ -38,8 +38,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('befriend')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->befriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_BEFRIENDING]);
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_BEFRIENDING]);
@@ -62,8 +66,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('befriend')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->befriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_BEFRIENDING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_BEFRIENDING, $this->eventsRaised);
@@ -104,10 +112,13 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING]);
@@ -129,10 +140,13 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
@@ -155,7 +169,10 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
@@ -164,7 +181,7 @@ class MemberAcquaintanceTest extends AppTestCase
         Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
     }
 
-    public function testUnfriendShouldOnlyTriggerBeforeEventWhenMemberIgnoresAnother(): void
+    public function testUnfriendShouldOnlyTriggerBeforeEventWhenTargetIsNotFriend(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING] = true;
@@ -177,9 +194,12 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
@@ -221,8 +241,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->ignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_IGNORING]);
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_IGNORING]);
@@ -245,8 +269,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->ignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_IGNORING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_IGNORING, $this->eventsRaised);
@@ -287,10 +315,13 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING]);
@@ -312,10 +343,13 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);
@@ -338,7 +372,10 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);
@@ -347,7 +384,7 @@ class MemberAcquaintanceTest extends AppTestCase
         Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
     }
 
-    public function testUnignoreShouldOnlyTriggerBeforeEventWhenMemberIsFriendsWithAnother(): void
+    public function testUnignoreShouldOnlyTriggerBeforeEventWhenTargetIsNotIgnored(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING] = true;
@@ -360,9 +397,12 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $this->service->unignore($acquaintance, $member, $target);
 
         self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
         self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);

@@ -30,12 +30,42 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('befriend')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(false);
         $acquaintance->method('getErrors')->willReturn([1]);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->befriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testBefriendShouldReturnErrorWhenTargetIsMember(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $result = $this->service->befriend($acquaintance, $member, $member);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.is.member', $result->getErrors()['api']);
+    }
+
+    public function testBefriendShouldReturnErrorWhenTargetIsAlreadyFriend(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $acquaintance->method('fetchOne')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(true);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->befriend($acquaintance, $member, $target);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.already.friend', $result->getErrors()['api']);
     }
 
     public function testBefriendShouldPrepareAcquaintanceWhenItDoesntExist(): void
@@ -44,8 +74,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance->method('fetchOne')->willReturn(false);
         $acquaintance->expects(self::once())->method('prepare');
         $acquaintance->method('befriend')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->befriend($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -54,9 +88,13 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $acquaintance->method('befriend')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->befriend($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -65,9 +103,13 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $acquaintance->method('befriend')->willThrowException(new Exception('exc'));
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->befriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->befriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -82,24 +124,41 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $acquaintance->method('getErrors')->willReturn([1]);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testUnfriendShouldReturnErrorWhenTargetIsMember(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $result = $this->service->unfriend($acquaintance, $member, $member);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.is.member', $result->getErrors()['api']);
     }
 
     public function testUnfriendShouldReturnSuccessWhenUnfriendingIsDone(): void
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -108,10 +167,13 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
+        $acquaintance->method('isFriend')->willReturn(true);
         $acquaintance->method('delete')->willThrowException(new Exception('exc'));
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -122,22 +184,28 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('acquaintance.not.exists', $result->getErrors()['api']);
     }
 
-    public function testUnfriendShouldReturnErrorWhenMemberIsIgnoringAnother(): void
+    public function testUnfriendShouldReturnErrorWhenTargetIsNotFriend(): void
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
+        $acquaintance->method('isFriend')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unfriend($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
-        self::assertSame('member.ignores.target', $result->getErrors()['api']);
+        self::assertSame('target.is.not.friend', $result->getErrors()['api']);
     }
 
     public function testBeforeIgnoreShouldReturnTrue(): void
@@ -150,12 +218,42 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $acquaintance->method('getErrors')->willReturn([1]);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->ignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testIgnoreShouldReturnErrorWhenTargetIsAlreadyIgnored(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $acquaintance->method('fetchOne')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(true);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->ignore($acquaintance, $member, $target);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.already.ignored', $result->getErrors()['api']);
+    }
+
+    public function testIgnoreShouldReturnErrorWhenTargetIsMember(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $result = $this->service->ignore($acquaintance, $member, $member);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.is.member', $result->getErrors()['api']);
     }
 
     public function testIgnoreShouldPrepareAcquaintanceWhenItDoesntExist(): void
@@ -164,8 +262,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance->method('fetchOne')->willReturn(false);
         $acquaintance->expects(self::once())->method('prepare');
         $acquaintance->method('ignore')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->ignore($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -175,8 +277,12 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
         $acquaintance->method('ignore')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->ignore($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -185,9 +291,13 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $acquaintance->method('ignore')->willThrowException(new Exception('exc'));
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->ignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->ignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -202,24 +312,41 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $acquaintance->method('getErrors')->willReturn([1]);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testUnignoreShouldReturnErrorWhenTargetIsMember(): void
+    {
+        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('getId')->willReturn(1);
+        $result = $this->service->unignore($acquaintance, $member, $member);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('target.is.member', $result->getErrors()['api']);
     }
 
     public function testUnignoreShouldReturnSuccessWhenUnignoringIsDone(): void
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unignore($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
@@ -228,10 +355,13 @@ class MemberAcquaintanceTest extends AppTestCase
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
+        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willThrowException(new Exception('exc'));
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -242,21 +372,27 @@ class MemberAcquaintanceTest extends AppTestCase
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('acquaintance.not.exists', $result->getErrors()['api']);
     }
 
-    public function testUnignoreShouldReturnErrorWhenMemberIsIgnoringAnother(): void
+    public function testUnignoreShouldReturnErrorWhenTargetIsNotIgnored(): void
     {
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
+        $acquaintance->method('isIgnoring')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $member->method('getId')->willReturn(1);
+        $target = $this->createMock(MemberRepositoryInterface::class);
+        $target->method('getId')->willReturn(2);
+        $result = $this->service->unignore($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
-        self::assertSame('member.befriends.target', $result->getErrors()['api']);
+        self::assertSame('target.is.not.ignored', $result->getErrors()['api']);
     }
 }

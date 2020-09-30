@@ -52,9 +52,18 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->getId() === $target->getId()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
+            }
+
             if (!$acquaintance->fetchOne($member, $target)) {
                 $acquaintance->prepare($member, $target);
             }
+
+            if ($acquaintance->isFriend()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.already.friend')]);
+            }
+
             if (!$acquaintance->befriend()) {
                 throw new ServiceException($acquaintance->getErrors());
             }
@@ -110,11 +119,16 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->getId() === $target->getId()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
+            }
+
             if (!$acquaintance->fetchOne($member, $target)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
             }
-            if ($acquaintance->isIgnoring()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'member.ignores.target')]);
+
+            if (!$acquaintance->isFriend()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.not.friend')]);
             }
 
             if (!$acquaintance->delete()) {
@@ -172,9 +186,18 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->getId() === $target->getId()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
+            }
+
             if (!$acquaintance->fetchOne($member, $target)) {
                 $acquaintance->prepare($member, $target);
             }
+
+            if ($acquaintance->isIgnoring()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.already.ignored')]);
+            }
+
             if (!$acquaintance->ignore()) {
                 throw new ServiceException($acquaintance->getErrors());
             }
@@ -230,11 +253,16 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->getId() === $target->getId()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
+            }
+
             if (!$acquaintance->fetchOne($member, $target)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
             }
-            if ($acquaintance->isFriend()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'member.befriends.target')]);
+
+            if (!$acquaintance->isIgnoring()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.not.ignored')]);
             }
 
             if (!$acquaintance->delete()) {
