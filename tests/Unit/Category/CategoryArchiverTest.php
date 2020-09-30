@@ -10,6 +10,8 @@ use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Category\CategoryArchiver;
 use Podium\Tests\AppTestCase;
 
+use function count;
+
 class CategoryArchiverTest extends AppTestCase
 {
     private CategoryArchiver $service;
@@ -69,6 +71,15 @@ class CategoryArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while archiving category' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            )
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(false);
@@ -128,6 +139,13 @@ class CategoryArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while reviving category' === $data[0] && 'exc' === $data[1];
+                }
+            )
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willReturn(true);
