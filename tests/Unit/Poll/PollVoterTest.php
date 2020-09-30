@@ -32,6 +32,7 @@ class PollVoterTest extends AppTestCase
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('vote')->willReturn(false);
         $poll->method('getErrors')->willReturn([1]);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
@@ -75,12 +76,27 @@ class PollVoterTest extends AppTestCase
         self::assertSame('poll.one.vote.allowed', $result->getErrors()['api']);
     }
 
+    public function testVoteShouldReturnErrorWhenAnswersAreNotAcceptable(): void
+    {
+        $poll = $this->createMock(PollRepositoryInterface::class);
+        $poll->method('hasMemberVoted')->willReturn(false);
+        $poll->method('getErrors')->willReturn([1]);
+        $poll->method('areAnswersAcceptable')->willReturn(false);
+        $post = $this->createMock(PollPostRepositoryInterface::class);
+        $post->method('getPoll')->willReturn($poll);
+        $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('poll.wrong.answer', $result->getErrors()['api']);
+    }
+
     public function testVoteShouldReturnSuccessWhenVotingIsDoneOnSingleChoicePoll(): void
     {
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('isSingleChoice')->willReturn(true);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
@@ -94,6 +110,7 @@ class PollVoterTest extends AppTestCase
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('isSingleChoice')->willReturn(false);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
@@ -107,6 +124,7 @@ class PollVoterTest extends AppTestCase
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('isSingleChoice')->willReturn(false);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1, 2]);
@@ -119,6 +137,7 @@ class PollVoterTest extends AppTestCase
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willThrowException(new Exception('exc'));
         $poll->method('hasMemberVoted')->willReturn(false);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);

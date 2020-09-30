@@ -22,7 +22,7 @@ return [
     'message.wrong.reply' => 'Replying to wrong message.',
     'poll.already.voted' => 'Poll vote is already done.',
     'poll.one.vote.allowed' => 'Poll allows only one vote.',
-    'poll.wrong.answer' => 'Selected answer comes from different poll.', // TODO
+    'poll.wrong.answer' => 'Selected answer is not acceptable.',
     'post.already.archived' => 'Post is already archived.',
     'post.already.disliked' => 'Post is already disliked.',
     'post.already.liked' => 'Post is already liked.',

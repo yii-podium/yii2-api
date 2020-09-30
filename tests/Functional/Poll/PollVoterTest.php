@@ -41,6 +41,7 @@ class PollVoterTest extends AppTestCase
         $poll->method('vote')->willReturn(true);
         $poll->method('hasMemberVoted')->willReturn(false);
         $poll->method('getId')->willReturn(9);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
@@ -66,9 +67,59 @@ class PollVoterTest extends AppTestCase
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willReturn(false);
         $poll->method('hasMemberVoted')->willReturn(false);
+        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
         $post->method('getPoll')->willReturn($poll);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
+
+        self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
+        self::assertArrayNotHasKey(PollVoter::EVENT_AFTER_VOTING, $this->eventsRaised);
+
+        Event::off(PollVoter::class, PollVoter::EVENT_BEFORE_VOTING, $beforeHandler);
+        Event::off(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
+    }
+
+    public function testVoteShouldOnlyTriggerBeforeEventWhenMemberAlreadyVoted(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING] = true;
+        };
+        Event::on(PollVoter::class, PollVoter::EVENT_BEFORE_VOTING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[PollVoter::EVENT_AFTER_VOTING] = true;
+        };
+        Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
+
+        $poll = $this->createMock(PollRepositoryInterface::class);
+        $poll->method('hasMemberVoted')->willReturn(true);
+        $post = $this->createMock(PollPostRepositoryInterface::class);
+        $post->method('getPoll')->willReturn($poll);
+        $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
+
+        self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
+        self::assertArrayNotHasKey(PollVoter::EVENT_AFTER_VOTING, $this->eventsRaised);
+
+        Event::off(PollVoter::class, PollVoter::EVENT_BEFORE_VOTING, $beforeHandler);
+        Event::off(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
+    }
+
+    public function testVoteShouldOnlyTriggerBeforeEventWhenPollIsSingleChoiceAndTwoAnswersAreGiven(): void
+    {
+        $beforeHandler = function () {
+            $this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING] = true;
+        };
+        Event::on(PollVoter::class, PollVoter::EVENT_BEFORE_VOTING, $beforeHandler);
+        $afterHandler = function () {
+            $this->eventsRaised[PollVoter::EVENT_AFTER_VOTING] = true;
+        };
+        Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
+
+        $poll = $this->createMock(PollRepositoryInterface::class);
+        $poll->method('hasMemberVoted')->willReturn(false);
+        $poll->method('isSingleChoice')->willReturn(true);
+        $post = $this->createMock(PollPostRepositoryInterface::class);
+        $post->method('getPoll')->willReturn($poll);
+        $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1, 2]);
 
         self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
         self::assertArrayNotHasKey(PollVoter::EVENT_AFTER_VOTING, $this->eventsRaised);

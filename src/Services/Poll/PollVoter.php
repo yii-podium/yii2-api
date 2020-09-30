@@ -52,9 +52,15 @@ final class PollVoter extends Component implements VoterInterface
             if ($poll->hasMemberVoted($member)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'poll.already.voted')]);
             }
+
             if ($answersCount > 1 && $poll->isSingleChoice()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'poll.one.vote.allowed')]);
             }
+
+            if (!$poll->areAnswersAcceptable($answers)) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'poll.wrong.answer')]);
+            }
+
             if (!$poll->vote($member, $answers)) {
                 throw new ServiceException($poll->getErrors());
             }

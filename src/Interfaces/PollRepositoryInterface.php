@@ -22,4 +22,6 @@ interface PollRepositoryInterface extends RepositoryInterface
     public function isSingleChoice(): bool;
 
     public function vote(MemberRepositoryInterface $member, array $answers): bool;
+
+    public function areAnswersAcceptable(array $answers): bool;
 }
