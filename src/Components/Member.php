@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\MemberBuilderInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Member\MemberAcquaintance;
 use Podium\Api\Services\Member\MemberBanisher;
 use Podium\Api\Services\Member\MemberBuilder;

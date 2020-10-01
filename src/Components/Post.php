@@ -19,6 +19,7 @@ use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Interfaces\ThumbRepositoryInterface;
 use Podium\Api\Interfaces\VoterInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Poll\PollBuilder;
 use Podium\Api\Services\Poll\PollRemover;
 use Podium\Api\Services\Poll\PollVoter;

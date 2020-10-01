@@ -6,12 +6,12 @@ namespace Podium\Tests\Unit\Message;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Message;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageArchiverInterface;
 use Podium\Api\Interfaces\MessageRemoverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
 use Podium\Api\Interfaces\MessengerInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class MessageComponentTest extends TestCase

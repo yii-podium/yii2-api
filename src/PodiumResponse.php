@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Api\Components;
+namespace Podium\Api;
 
 final class PodiumResponse
 {

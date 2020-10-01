@@ -24,6 +24,7 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Module;
+use Podium\Api\PodiumResponse;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;

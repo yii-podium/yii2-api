@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Thread;
 
 use InvalidArgumentException;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\MoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

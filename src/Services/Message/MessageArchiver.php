@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Message;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageArchiverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Thread;
 
 use PHPUnit\Framework\TestCase;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Components\Thread;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\BookmarkerInterface;
@@ -21,6 +20,7 @@ use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SubscriberInterface;
 use Podium\Api\Interfaces\SubscriptionRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class ThreadComponentTest extends TestCase

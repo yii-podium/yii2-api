@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Post;
 
 use PHPUnit\Framework\TestCase;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Components\Post;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
@@ -20,6 +19,7 @@ use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Interfaces\ThumbRepositoryInterface;
 use Podium\Api\Interfaces\VoterInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class PostComponentTest extends TestCase

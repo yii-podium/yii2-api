@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Group\GroupBuilder;
 use Podium\Api\Services\Group\GroupKeeper;
 use Podium\Api\Services\Group\GroupRemover;

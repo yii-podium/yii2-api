@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SorterInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Category\CategoryArchiver;
 use Podium\Api\Services\Category\CategoryBuilder;
 use Podium\Api\Services\Category\CategoryRemover;

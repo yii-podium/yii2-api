@@ -19,6 +19,7 @@ use Podium\Api\Interfaces\SubscriberInterface;
 use Podium\Api\Interfaces\SubscriptionRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Thread\ThreadArchiver;
 use Podium\Api\Services\Thread\ThreadBookmarker;
 use Podium\Api\Services\Thread\ThreadBuilder;

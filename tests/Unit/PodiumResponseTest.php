@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Podium\Api\Components\PodiumResponse;
+use Podium\Api\PodiumResponse;
 
 class PodiumResponseTest extends TestCase
 {

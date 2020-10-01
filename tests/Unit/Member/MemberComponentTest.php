@@ -6,13 +6,13 @@ namespace Podium\Tests\Unit\Member;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Member;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\AcquaintanceInterface;
 use Podium\Api\Interfaces\AcquaintanceRepositoryInterface;
 use Podium\Api\Interfaces\BanisherInterface;
 use Podium\Api\Interfaces\MemberBuilderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class MemberComponentTest extends TestCase

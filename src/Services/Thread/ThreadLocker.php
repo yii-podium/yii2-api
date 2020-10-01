@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Thread;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\LockEvent;
 use Podium\Api\Interfaces\LockerInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

@@ -9,6 +9,7 @@ use Podium\Api\Interfaces\LoggerInterface;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Logger\LoggerBuilder;
 use Podium\Api\Services\Logger\LoggerRemover;
 use yii\base\Component;

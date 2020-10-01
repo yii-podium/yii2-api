@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Poll;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\VoteEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Interfaces\VoterInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

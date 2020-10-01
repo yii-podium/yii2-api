@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\MessageInterface;
 use Podium\Api\Interfaces\MessageRemoverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
 use Podium\Api\Interfaces\MessengerInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Message\MessageArchiver;
 use Podium\Api\Services\Message\MessageMessenger;
 use Podium\Api\Services\Message\MessageRemover;

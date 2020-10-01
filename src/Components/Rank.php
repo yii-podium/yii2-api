@@ -8,6 +8,7 @@ use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\RankInterface;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Rank\RankBuilder;
 use Podium\Api\Services\Rank\RankRemover;
 use yii\base\Component;

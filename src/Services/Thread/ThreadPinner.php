@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Thread;
 
 use InvalidArgumentException;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\PinnerInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

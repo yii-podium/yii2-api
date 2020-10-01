@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Thread;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BookmarkEvent;
 use Podium\Api\Interfaces\BookmarkerInterface;
 use Podium\Api\Interfaces\BookmarkRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
