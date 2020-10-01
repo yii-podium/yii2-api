@@ -23,15 +23,34 @@ class PostBuilderTest extends AppTestCase
         $this->service = new PostBuilder();
     }
 
-    public function testCreateShouldReturnErrorWhenRepositoryIsWrong(): void
+    public function testCreateShouldReturnErrorWhenPostRepositoryIsWrong(): void
     {
         $result = $this->service->create(
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(ThreadRepositoryInterface::class)
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(
+            'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
+    }
+
+    public function testCreateShouldReturnErrorWhenThreadRepositoryIsWrong(): void
+    {
+        $result = $this->service->create(
+            $this->createMock(PostRepositoryInterface::class),
             $this->createMock(MemberRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class)
         );
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
@@ -128,6 +147,10 @@ class PostBuilderTest extends AppTestCase
         $result = $this->service->edit($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

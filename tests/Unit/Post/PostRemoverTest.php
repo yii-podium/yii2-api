@@ -27,7 +27,10 @@ class PostRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void

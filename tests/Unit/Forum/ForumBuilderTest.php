@@ -31,6 +31,10 @@ class ForumBuilderTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testCreateShouldReturnErrorWhenCategoryRepositoryIsWrong(): void
@@ -42,17 +46,10 @@ class ForumBuilderTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-    }
-
-    public function testCreateShouldReturnErrorWhenBothRepositoriesAreWrong(): void
-    {
-        $result = $this->service->create(
-            $this->createMock(RepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class),
-            $this->createMock(RepositoryInterface::class)
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
         );
-
-        self::assertFalse($result->getResult());
     }
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
@@ -117,6 +114,10 @@ class ForumBuilderTest extends AppTestCase
         $result = $this->service->edit($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

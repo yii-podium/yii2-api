@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Forum;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\SortEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
@@ -39,11 +40,27 @@ final class ForumSorter extends Component implements SorterInterface
      */
     public function replace(RepositoryInterface $firstForum, RepositoryInterface $secondForum): PodiumResponse
     {
-        if (
-            !$firstForum instanceof ForumRepositoryInterface
-            || !$secondForum instanceof ForumRepositoryInterface
-            || !$this->beforeReplace()
-        ) {
+        if (!$firstForum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'First forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$secondForum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Second forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeReplace()) {
             return PodiumResponse::error();
         }
 
@@ -98,7 +115,17 @@ final class ForumSorter extends Component implements SorterInterface
      */
     public function sort(RepositoryInterface $forum): PodiumResponse
     {
-        if (!$forum instanceof ForumRepositoryInterface || !$this->beforeSort()) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeSort()) {
             return PodiumResponse::error();
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Post;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\PinnerInterface;
@@ -38,7 +39,17 @@ final class PostPinner extends Component implements PinnerInterface
      */
     public function pin(RepositoryInterface $post): PodiumResponse
     {
-        if (!$post instanceof PostRepositoryInterface || !$this->beforePin()) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforePin()) {
             return PodiumResponse::error();
         }
 
@@ -90,7 +101,17 @@ final class PostPinner extends Component implements PinnerInterface
      */
     public function unpin(RepositoryInterface $post): PodiumResponse
     {
-        if (!$post instanceof PostRepositoryInterface || !$this->beforeUnpin()) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeUnpin()) {
             return PodiumResponse::error();
         }
 

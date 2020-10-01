@@ -28,7 +28,10 @@ class ForumSorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'First forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnErrorWhenSecondRepositoryIsWrong(): void
@@ -39,7 +42,10 @@ class ForumSorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Second forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnErrorWhenSettingFirstOrderErrored(): void
@@ -130,6 +136,17 @@ class ForumSorterTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testSortShouldReturnErrorWhenRepositoryIsWrong(): void
+    {
+        $result = $this->service->sort($this->createMock(RepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void

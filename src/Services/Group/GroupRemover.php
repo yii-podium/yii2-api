@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Group;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
@@ -36,7 +37,17 @@ final class GroupRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $group): PodiumResponse
     {
-        if (!$group instanceof GroupRepositoryInterface || !$this->beforeRemove()) {
+        if (!$group instanceof GroupRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Group must be instance of Podium\Api\Interfaces\GroupRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

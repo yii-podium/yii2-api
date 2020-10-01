@@ -28,7 +28,10 @@ class CategorySorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'First category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnErrorWhenSecondRepositoryIsWrong(): void
@@ -39,7 +42,10 @@ class CategorySorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Second category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnSuccessWhenReplacingIsDone(): void
@@ -137,7 +143,10 @@ class CategorySorterTest extends AppTestCase
         $result = $this->service->sort($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void

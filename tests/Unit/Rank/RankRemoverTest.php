@@ -25,7 +25,10 @@ class RankRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void

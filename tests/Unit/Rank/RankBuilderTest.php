@@ -38,7 +38,10 @@ class RankBuilderTest extends AppTestCase
         $result = $this->service->create($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
@@ -91,7 +94,10 @@ class RankBuilderTest extends AppTestCase
         $result = $this->service->edit($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void

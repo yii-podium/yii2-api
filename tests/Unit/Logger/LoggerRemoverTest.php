@@ -25,7 +25,10 @@ class LoggerRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Log must be instance of Podium\Api\Interfaces\LogRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void

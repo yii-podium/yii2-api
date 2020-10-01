@@ -60,6 +60,25 @@ class ThreadBookmarkerTest extends AppTestCase
         self::assertTrue($result->getResult());
     }
 
+    public function testMarkShouldReturnTrueIfBookmarkIsSeenAtTheTimeOfPostCreation(): void
+    {
+        $this->transaction->expects(self::once())->method('commit');
+
+        $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
+        $bookmark->method('fetchOne')->willReturn(true);
+        $bookmark->expects(self::never())->method('prepare');
+        $bookmark->method('getLastSeen')->willReturn(2);
+        $bookmark->expects(self::never())->method('mark');
+
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
+        $post->method('getCreatedAt')->willReturn(2);
+
+        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+
+        self::assertTrue($result->getResult());
+    }
+
     public function testMarkShouldPrepareBookmarkWhenItDoesntExist(): void
     {
         $this->transaction->expects(self::once())->method('commit');
@@ -77,6 +96,26 @@ class ThreadBookmarkerTest extends AppTestCase
         $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
 
         self::assertTrue($result->getResult());
+    }
+
+    public function testMarkShouldReturnErrorWhenMarkingErrored(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $bookmark = $this->createMock(BookmarkRepositoryInterface::class);
+        $bookmark->method('fetchOne')->willReturn(true);
+        $bookmark->method('getLastSeen')->willReturn(1);
+        $bookmark->method('mark')->willReturn(false);
+        $bookmark->method('getErrors')->willReturn([3]);
+
+        $post = $this->createMock(PostRepositoryInterface::class);
+        $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
+        $post->method('getCreatedAt')->willReturn(2);
+
+        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame([3], $result->getErrors());
     }
 
     public function testMarkShouldReturnErrorWhenMarkingThrowsException(): void

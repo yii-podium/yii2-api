@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Thread;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
@@ -38,7 +39,17 @@ final class ThreadArchiver extends Component implements ArchiverInterface
      */
     public function archive(RepositoryInterface $thread): PodiumResponse
     {
-        if (!$thread instanceof ThreadRepositoryInterface || !$this->beforeArchive()) {
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeArchive()) {
             return PodiumResponse::error();
         }
 
@@ -94,7 +105,17 @@ final class ThreadArchiver extends Component implements ArchiverInterface
      */
     public function revive(RepositoryInterface $thread): PodiumResponse
     {
-        if (!$thread instanceof ThreadRepositoryInterface || !$this->beforeRevive()) {
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRevive()) {
             return PodiumResponse::error();
         }
 

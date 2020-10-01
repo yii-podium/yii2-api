@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Forum;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
@@ -36,7 +37,17 @@ final class ForumRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $forum): PodiumResponse
     {
-        if (!$forum instanceof ForumRepositoryInterface || !$this->beforeRemove()) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

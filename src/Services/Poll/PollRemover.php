@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Poll;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
@@ -33,7 +34,17 @@ final class PollRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $post): PodiumResponse
     {
-        if (!$post instanceof PollPostRepositoryInterface || !$this->beforeRemove()) {
+        if (!$post instanceof PollPostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PollPostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

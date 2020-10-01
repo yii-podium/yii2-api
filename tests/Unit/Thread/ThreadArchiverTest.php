@@ -25,7 +25,10 @@ class ThreadArchiverTest extends AppTestCase
         $result = $this->service->archive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
@@ -93,7 +96,10 @@ class ThreadArchiverTest extends AppTestCase
         $result = $this->service->revive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void

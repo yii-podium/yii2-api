@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Thread;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\PinEvent;
 use Podium\Api\Interfaces\PinnerInterface;
@@ -38,7 +39,17 @@ final class ThreadPinner extends Component implements PinnerInterface
      */
     public function pin(RepositoryInterface $thread): PodiumResponse
     {
-        if (!$thread instanceof ThreadRepositoryInterface || !$this->beforePin()) {
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforePin()) {
             return PodiumResponse::error();
         }
 
@@ -90,7 +101,17 @@ final class ThreadPinner extends Component implements PinnerInterface
      */
     public function unpin(RepositoryInterface $thread): PodiumResponse
     {
-        if (!$thread instanceof ThreadRepositoryInterface || !$this->beforeUnpin()) {
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeUnpin()) {
             return PodiumResponse::error();
         }
 

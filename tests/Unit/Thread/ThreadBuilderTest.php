@@ -22,15 +22,34 @@ class ThreadBuilderTest extends AppTestCase
         $this->service = new ThreadBuilder();
     }
 
-    public function testCreateShouldReturnErrorWhenRepositoryIsWrong(): void
+    public function testCreateShouldReturnErrorWhenThreadRepositoryIsWrong(): void
     {
         $result = $this->service->create(
             $this->createMock(RepositoryInterface::class),
+            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(ForumRepositoryInterface::class)
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
+    }
+
+    public function testCreateShouldReturnErrorWhenForumRepositoryIsWrong(): void
+    {
+        $result = $this->service->create(
+            $this->createMock(ThreadRepositoryInterface::class),
             $this->createMock(MemberRepositoryInterface::class),
             $this->createMock(RepositoryInterface::class)
         );
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void
@@ -118,6 +137,10 @@ class ThreadBuilderTest extends AppTestCase
         $result = $this->service->edit($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testEditShouldReturnErrorWhenEditingErrored(): void

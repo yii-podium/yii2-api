@@ -30,7 +30,10 @@ class PostMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenThreadRepositoryIsWrong(): void
@@ -41,7 +44,10 @@ class PostMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void

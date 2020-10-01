@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Post;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
@@ -46,11 +47,27 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
         RepositoryInterface $thread,
         array $data = []
     ): PodiumResponse {
-        if (
-            !$post instanceof PostRepositoryInterface
-            || !$thread instanceof ThreadRepositoryInterface
-            || !$this->beforeCreate()
-        ) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeCreate()) {
             return PodiumResponse::error();
         }
 
@@ -111,7 +128,17 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
      */
     public function edit(RepositoryInterface $post, array $data = []): PodiumResponse
     {
-        if (!$post instanceof PostRepositoryInterface || !$this->beforeEdit()) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeEdit()) {
             return PodiumResponse::error();
         }
 

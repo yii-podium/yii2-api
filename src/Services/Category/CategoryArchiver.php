@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Category;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
@@ -38,7 +39,17 @@ final class CategoryArchiver extends Component implements ArchiverInterface
      */
     public function archive(RepositoryInterface $category): PodiumResponse
     {
-        if (!$category instanceof CategoryRepositoryInterface || !$this->beforeArchive()) {
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeArchive()) {
             return PodiumResponse::error();
         }
 
@@ -94,7 +105,17 @@ final class CategoryArchiver extends Component implements ArchiverInterface
      */
     public function revive(RepositoryInterface $category): PodiumResponse
     {
-        if (!$category instanceof CategoryRepositoryInterface || !$this->beforeRevive()) {
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRevive()) {
             return PodiumResponse::error();
         }
 

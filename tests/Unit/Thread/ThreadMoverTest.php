@@ -29,7 +29,10 @@ class ThreadMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenForumRepositoryIsWrong(): void
@@ -40,7 +43,10 @@ class ThreadMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void

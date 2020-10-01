@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Group;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\BuilderInterface;
@@ -38,7 +39,17 @@ final class GroupBuilder extends Component implements BuilderInterface
      */
     public function create(RepositoryInterface $group, array $data = []): PodiumResponse
     {
-        if (!$group instanceof GroupRepositoryInterface || !$this->beforeCreate()) {
+        if (!$group instanceof GroupRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Group must be instance of Podium\Api\Interfaces\GroupRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeCreate()) {
             return PodiumResponse::error();
         }
 
@@ -90,7 +101,17 @@ final class GroupBuilder extends Component implements BuilderInterface
      */
     public function edit(RepositoryInterface $group, array $data = []): PodiumResponse
     {
-        if (!$group instanceof GroupRepositoryInterface || !$this->beforeEdit()) {
+        if (!$group instanceof GroupRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Group must be instance of Podium\Api\Interfaces\GroupRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeEdit()) {
             return PodiumResponse::error();
         }
 
