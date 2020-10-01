@@ -14,7 +14,4 @@ There are some rules:
  - each repository knows how to handle one single storage unit and not more,
  - components operate on repositories, not on identifiers.
 
-TODOs:
- - [ ] Infection
-
 When API is ready, I'll start preparing the client.
