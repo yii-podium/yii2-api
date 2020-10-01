@@ -47,6 +47,15 @@ class LoggerBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while creating log' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $log = $this->createMock(LogRepositoryInterface::class);
         $log->method('create')->willThrowException(new Exception('exc'));

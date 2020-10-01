@@ -144,6 +144,15 @@ class PollVoterTest extends AppTestCase
     public function testVoteShouldReturnErrorWhenVotingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while voting in poll' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $poll = $this->createMock(PollRepositoryInterface::class);
         $poll->method('vote')->willThrowException(new Exception('exc'));

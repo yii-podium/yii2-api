@@ -84,6 +84,17 @@ class ForumSorterTest extends AppTestCase
     public function testReplaceShouldReturnErrorWhenReplacingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing forums order' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('getOrder')->willReturn(1);
@@ -119,6 +130,15 @@ class ForumSorterTest extends AppTestCase
     public function testSortShouldReturnErrorWhenSortingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while sorting forums' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('sort')->willThrowException(new Exception('exc'));

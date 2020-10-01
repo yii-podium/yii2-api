@@ -69,6 +69,15 @@ class PostArchiverTest extends AppTestCase
     public function testArchiveShouldReturnErrorWhenArchivingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while archiving post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(false);
@@ -128,6 +137,15 @@ class PostArchiverTest extends AppTestCase
     public function testReviveShouldReturnErrorWhenRevivingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while reviving post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('isArchived')->willReturn(true);

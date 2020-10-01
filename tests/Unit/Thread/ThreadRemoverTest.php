@@ -73,6 +73,15 @@ class ThreadRemoverTest extends AppTestCase
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while deleting thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
@@ -86,6 +95,15 @@ class ThreadRemoverTest extends AppTestCase
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while deleting thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willThrowException(new Exception('exc'));
@@ -98,6 +116,17 @@ class ThreadRemoverTest extends AppTestCase
     public function testRemoveShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while deleting thread' === $data[0]
+                        && 'Error while updating forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);

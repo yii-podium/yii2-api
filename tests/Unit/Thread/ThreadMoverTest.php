@@ -73,6 +73,15 @@ class ThreadMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while moving thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willThrowException(new Exception('exc'));
@@ -85,6 +94,17 @@ class ThreadMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingOldForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving thread' === $data[0]
+                        && 'Error while updating old forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
@@ -103,6 +123,17 @@ class ThreadMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingNewForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving thread' === $data[0]
+                        && 'Error while updating new forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);

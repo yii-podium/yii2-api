@@ -54,6 +54,15 @@ class GroupRemoverTest extends AppTestCase
     public function testRemoveShouldReturnErrorWhenRemovingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while deleting group' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $group = $this->createMock(GroupRepositoryInterface::class);
         $group->method('delete')->willThrowException(new Exception('exc'));

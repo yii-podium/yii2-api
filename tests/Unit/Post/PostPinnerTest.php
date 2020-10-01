@@ -55,6 +55,15 @@ class PostPinnerTest extends AppTestCase
     public function testPinShouldReturnErrorWhenPinningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while pinning post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('pin')->willThrowException(new Exception('exc'));
@@ -99,6 +108,15 @@ class PostPinnerTest extends AppTestCase
     public function testUnpinShouldReturnErrorWhenUnpinningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while unpinning post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('unpin')->willThrowException(new Exception('exc'));

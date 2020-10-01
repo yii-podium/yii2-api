@@ -55,6 +55,15 @@ class RankBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while creating rank' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('create')->willThrowException(new Exception('exc'));
@@ -99,6 +108,15 @@ class RankBuilderTest extends AppTestCase
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while editing rank' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $rank = $this->createMock(RankRepositoryInterface::class);
         $rank->method('edit')->willThrowException(new Exception('exc'));

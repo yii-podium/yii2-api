@@ -69,6 +69,15 @@ class GroupKeeperTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingGroupMemberThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while joining group' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(false);
@@ -127,6 +136,15 @@ class GroupKeeperTest extends AppTestCase
     public function testEditShouldReturnErrorWhenDeletingGroupMemberThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while leaving group' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
         $groupMember->method('fetchOne')->willReturn(true);

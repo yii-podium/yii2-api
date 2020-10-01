@@ -60,6 +60,15 @@ class MemberBanisherTest extends AppTestCase
     public function testBanShouldReturnErrorWhenBanningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while banning member' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
@@ -111,6 +120,15 @@ class MemberBanisherTest extends AppTestCase
     public function testUnbanShouldReturnErrorWhenUnbanningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while unbanning member' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(true);

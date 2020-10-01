@@ -107,6 +107,17 @@ class MemberAcquaintanceTest extends AppTestCase
     public function testBefriendShouldReturnErrorWhenBefriendingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while befriending member' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
@@ -174,6 +185,17 @@ class MemberAcquaintanceTest extends AppTestCase
     public function testUnfriendShouldReturnErrorWhenUnfriendingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while unfriending member' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
@@ -309,6 +331,15 @@ class MemberAcquaintanceTest extends AppTestCase
     public function testIgnoreShouldReturnErrorWhenIgnoringThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while ignoring member' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
@@ -376,6 +407,15 @@ class MemberAcquaintanceTest extends AppTestCase
     public function testUnignoreShouldReturnErrorWhenUnignoringThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while unignoring member' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);

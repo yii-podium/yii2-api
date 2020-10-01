@@ -69,6 +69,15 @@ class ForumMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while moving forum' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('move')->willThrowException(new Exception('exc'));

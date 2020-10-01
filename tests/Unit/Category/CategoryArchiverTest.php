@@ -78,7 +78,9 @@ class CategoryArchiverTest extends AppTestCase
                         && 'Exception while archiving category' === $data[0]
                         && 'exc' === $data[1];
                 }
-            )
+            ),
+            1,
+            'podium'
         );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
@@ -144,7 +146,9 @@ class CategoryArchiverTest extends AppTestCase
                 static function (array $data) {
                     return 3 === count($data) && 'Exception while reviving category' === $data[0] && 'exc' === $data[1];
                 }
-            )
+            ),
+            1,
+            'podium'
         );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);

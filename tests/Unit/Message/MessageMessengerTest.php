@@ -132,6 +132,15 @@ class MessageMessengerTest extends AppTestCase
     public function testSendShouldReturnErrorWhenSendingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while sending message' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('send')->willThrowException(new Exception('exc'));

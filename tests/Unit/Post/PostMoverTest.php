@@ -76,6 +76,15 @@ class PostMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenMovingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while moving post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willThrowException(new Exception('exc'));
@@ -88,6 +97,17 @@ class PostMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingOldThreadCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving post' === $data[0]
+                        && 'Error while updating old thread counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
@@ -106,6 +126,17 @@ class PostMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingOldForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving post' === $data[0]
+                        && 'Error while updating old forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
@@ -127,6 +158,17 @@ class PostMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingNewThreadCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving post' === $data[0]
+                        && 'Error while updating new thread counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
@@ -152,6 +194,17 @@ class PostMoverTest extends AppTestCase
     public function testMoveShouldReturnErrorWhenUpdatingNewForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while moving post' === $data[0]
+                        && 'Error while updating new forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);

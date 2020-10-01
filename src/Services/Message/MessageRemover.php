@@ -64,7 +64,7 @@ final class MessageRemover extends Component implements MessageRemoverInterface
             return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
-            Yii::error(['Exception while removing message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
+            Yii::error(['Exception while deleting message', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
             return PodiumResponse::error(['exception' => $exc]);
         }

@@ -55,6 +55,15 @@ class ThreadPinnerTest extends AppTestCase
     public function testPinShouldReturnErrorWhenPinningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while pinning thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('pin')->willThrowException(new Exception('exc'));
@@ -99,6 +108,15 @@ class ThreadPinnerTest extends AppTestCase
     public function testUnpinShouldReturnErrorWhenUnpinningThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while unpinning thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unpin')->willThrowException(new Exception('exc'));

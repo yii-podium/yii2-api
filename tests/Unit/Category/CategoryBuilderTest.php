@@ -47,6 +47,15 @@ class CategoryBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while creating category' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willThrowException(new Exception('exc'));
@@ -83,6 +92,15 @@ class CategoryBuilderTest extends AppTestCase
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while editing category' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('edit')->willThrowException(new Exception('exc'));

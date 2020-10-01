@@ -70,6 +70,15 @@ class PostBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while creating post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willThrowException(new Exception('exc'));
@@ -148,6 +157,15 @@ class PostBuilderTest extends AppTestCase
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while editing post' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('edit')->willThrowException(new Exception('exc'));

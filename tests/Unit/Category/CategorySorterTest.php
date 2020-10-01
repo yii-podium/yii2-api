@@ -84,6 +84,17 @@ class CategorySorterTest extends AppTestCase
     public function testReplaceShouldReturnErrorWhenReplacingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing categories order' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('getOrder')->willReturn(1);
@@ -119,6 +130,17 @@ class CategorySorterTest extends AppTestCase
     public function testSortShouldReturnErrorWhenSortingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while sorting categories' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('sort')->willThrowException(new Exception('exc'));

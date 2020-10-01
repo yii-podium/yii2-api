@@ -66,6 +66,15 @@ class ThreadBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenCreatingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while creating thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willThrowException(new Exception('exc'));
@@ -82,6 +91,17 @@ class ThreadBuilderTest extends AppTestCase
     public function testCreateShouldReturnErrorWhenUpdatingForumCountersErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while creating thread' === $data[0]
+                        && 'Error while updating forum counters!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willReturn(true);
@@ -127,6 +147,15 @@ class ThreadBuilderTest extends AppTestCase
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while editing thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('edit')->willThrowException(new Exception('exc'));

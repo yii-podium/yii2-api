@@ -46,6 +46,17 @@ class MemberBuilderTest extends AppTestCase
     public function testRegisterShouldReturnErrorWhenRegisteringThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while registering member' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('register')->willThrowException(new Exception('exc'));
@@ -82,6 +93,15 @@ class MemberBuilderTest extends AppTestCase
     public function testEditShouldReturnErrorWhenEditingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while editing member' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willThrowException(new Exception('exc'));

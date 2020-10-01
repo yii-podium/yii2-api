@@ -82,6 +82,15 @@ class CategoryRemoverTest extends AppTestCase
     public function testRemoveShouldReturnErrorWhenIsArchivedThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while deleting category' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('isArchived')->willThrowException(new Exception('exc'));

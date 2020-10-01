@@ -92,6 +92,15 @@ class PostLikerTest extends AppTestCase
     public function testThumbUpShouldReturnErrorWhenUpThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while giving thumb up' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
@@ -210,6 +219,15 @@ class PostLikerTest extends AppTestCase
     public function testThumbDownShouldReturnErrorWhenDownThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while giving thumb down' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
@@ -322,6 +340,15 @@ class PostLikerTest extends AppTestCase
     public function testThumbResetShouldReturnErrorWhenResetThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while resetting thumb' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);

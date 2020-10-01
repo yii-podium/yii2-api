@@ -58,6 +58,17 @@ class ThreadSubscriberTest extends AppTestCase
     public function testSubscribeShouldReturnErrorWhenSubscribingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while subscribing thread' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $subscription = $this->createMock(SubscriptionRepositoryInterface::class);
         $subscription->method('isMemberSubscribed')->willReturn(false);
@@ -125,6 +136,17 @@ class ThreadSubscriberTest extends AppTestCase
     public function testUnsubscribeShouldReturnErrorWhenUnsubscribingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while unsubscribing thread' === $data[0]
+                        && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $subscription = $this->createMock(SubscriptionRepositoryInterface::class);
         $subscription->method('fetchOne')->willReturn(true);

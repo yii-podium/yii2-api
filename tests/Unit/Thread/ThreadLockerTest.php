@@ -46,6 +46,15 @@ class ThreadLockerTest extends AppTestCase
     public function testLockShouldReturnErrorWhenLockingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while locking thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('lock')->willThrowException(new Exception('exc'));
@@ -82,6 +91,15 @@ class ThreadLockerTest extends AppTestCase
     public function testUnlockShouldReturnErrorWhenUnlockingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data) && 'Exception while unlocking thread' === $data[0] && 'exc' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('unlock')->willThrowException(new Exception('exc'));
