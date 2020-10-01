@@ -57,7 +57,7 @@ class ThreadBuilderTest extends AppTestCase
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('create')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
+        $forum->method('updateCounters')->with(1, 0)->willReturn(true);
         $result = $this->service->create($thread, $this->createMock(MemberRepositoryInterface::class), $forum);
 
         self::assertTrue($result->getResult());

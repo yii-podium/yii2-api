@@ -32,7 +32,8 @@ class ThreadSubscriberTest extends AppTestCase
         };
         Event::on(ThreadSubscriber::class, ThreadSubscriber::EVENT_BEFORE_SUBSCRIBING, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[ThreadSubscriber::EVENT_AFTER_SUBSCRIBING] = $event instanceof SubscriptionEvent;
+            $this->eventsRaised[ThreadSubscriber::EVENT_AFTER_SUBSCRIBING] = $event instanceof SubscriptionEvent
+                && $event->repository instanceof SubscriptionRepositoryInterface;
         };
         Event::on(ThreadSubscriber::class, ThreadSubscriber::EVENT_AFTER_SUBSCRIBING, $afterHandler);
 

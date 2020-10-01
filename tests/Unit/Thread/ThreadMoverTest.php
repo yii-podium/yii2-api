@@ -61,11 +61,15 @@ class ThreadMoverTest extends AppTestCase
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
-        $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
-        $thread->method('getParent')->willReturn($forum);
+        $thread->method('getPostsCount')->willReturn(9);
+        $newForum = $this->createMock(ForumRepositoryInterface::class);
+        $newForum->method('updateCounters')->with(1, 9)->willReturn(true);
+
+        $oldForum = $this->createMock(ForumRepositoryInterface::class);
+        $oldForum->method('updateCounters')->with(-1, -9)->willReturn(true);
+        $thread->method('getParent')->willReturn($oldForum);
         $thread->method('updateCounters')->willReturn(true);
-        $result = $this->service->move($thread, $forum);
+        $result = $this->service->move($thread, $newForum);
 
         self::assertTrue($result->getResult());
     }
