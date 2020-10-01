@@ -1,7 +1,7 @@
 # Yii 2 Podium API Docs
 
  - [Installation](en/installation.md)
- - Account
+ - [Account](en/account.md)
  - Category
  - Forum
  - Group
