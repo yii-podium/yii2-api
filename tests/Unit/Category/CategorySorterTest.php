@@ -28,7 +28,10 @@ class CategorySorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'First category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnErrorWhenSecondRepositoryIsWrong(): void
@@ -39,34 +42,10 @@ class CategorySorterTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
-    }
-
-    public function testReplaceShouldReturnErrorWhenSettingFirstOrderErrored(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $category = $this->createMock(CategoryRepositoryInterface::class);
-        $category->method('getOrder')->willReturn(1);
-        $category->method('setOrder')->willReturn(false);
-        $result = $this->service->replace($category, $category);
-
-        self::assertFalse($result->getResult());
-    }
-
-    public function testReplaceShouldReturnErrorWhenSettingSecondOrderErrored(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $category1 = $this->createMock(CategoryRepositoryInterface::class);
-        $category1->method('getOrder')->willReturn(1);
-        $category1->method('setOrder')->willReturn(true);
-        $category2 = $this->createMock(CategoryRepositoryInterface::class);
-        $category2->method('getOrder')->willReturn(2);
-        $category2->method('setOrder')->willReturn(false);
-        $result = $this->service->replace($category1, $category2);
-
-        self::assertFalse($result->getResult());
+        self::assertSame(
+            'Second category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReplaceShouldReturnSuccessWhenReplacingIsDone(): void
@@ -103,6 +82,71 @@ class CategorySorterTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testReplaceShouldReturnErrorWhenSettingFirstCategoryOrderErrored(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing categories order' === $data[0]
+                        && 'Error while setting new category order!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
+
+        $category1 = $this->createMock(CategoryRepositoryInterface::class);
+        $category1->method('getOrder')->willReturn(1);
+        $category1->method('setOrder')->willReturn(false);
+        $category2 = $this->createMock(CategoryRepositoryInterface::class);
+        $category2->method('getOrder')->willReturn(2);
+        $category2->method('setOrder')->willReturn(true);
+        $result = $this->service->replace($category1, $category2);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('Error while setting new category order!', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testReplaceShouldReturnErrorWhenSettingSecondCategoryOrderErrored(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing categories order' === $data[0]
+                        && 'Error while setting new category order!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
+
+        $category1 = $this->createMock(CategoryRepositoryInterface::class);
+        $category1->method('getOrder')->willReturn(1);
+        $category1->method('setOrder')->willReturn(true);
+        $category2 = $this->createMock(CategoryRepositoryInterface::class);
+        $category2->method('getOrder')->willReturn(2);
+        $category2->method('setOrder')->willReturn(false);
+        $result = $this->service->replace($category1, $category2);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('Error while setting new category order!', $result->getErrors()['exception']->getMessage());
+    }
+
+    public function testSortShouldReturnErrorWhenRepositoryIsWrong(): void
+    {
+        $result = $this->service->sort($this->createMock(RepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testSortShouldReturnErrorWhenSortingErrored(): void

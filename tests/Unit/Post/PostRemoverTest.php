@@ -27,7 +27,10 @@ class PostRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
@@ -64,9 +67,9 @@ class PostRemoverTest extends AppTestCase
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
-        $thread->method('updateCounters')->willReturn(true);
+        $thread->method('updateCounters')->with(-1)->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
+        $forum->method('updateCounters')->with(0, -1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
         $post->method('getParent')->willReturn($thread);
         $result = $this->service->remove($post);

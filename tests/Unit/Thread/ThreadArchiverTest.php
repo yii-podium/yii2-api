@@ -25,7 +25,10 @@ class ThreadArchiverTest extends AppTestCase
         $result = $this->service->archive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
@@ -93,7 +96,10 @@ class ThreadArchiverTest extends AppTestCase
         $result = $this->service->revive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
@@ -108,6 +114,18 @@ class ThreadArchiverTest extends AppTestCase
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testReviveShouldReturnErrorWhenThreadIsNotArchived(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
+        $result = $this->service->revive($thread);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('thread.not.archived', $result->getErrors()['api']);
     }
 
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void

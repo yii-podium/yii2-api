@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Forum;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
@@ -38,7 +39,17 @@ final class ForumArchiver extends Component implements ArchiverInterface
      */
     public function archive(RepositoryInterface $forum): PodiumResponse
     {
-        if (!$forum instanceof ForumRepositoryInterface || !$this->beforeArchive()) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeArchive()) {
             return PodiumResponse::error();
         }
 
@@ -94,7 +105,17 @@ final class ForumArchiver extends Component implements ArchiverInterface
      */
     public function revive(RepositoryInterface $forum): PodiumResponse
     {
-        if (!$forum instanceof ForumRepositoryInterface || !$this->beforeRevive()) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRevive()) {
             return PodiumResponse::error();
         }
 

@@ -31,13 +31,15 @@ class PostMoverTest extends AppTestCase
             $this->eventsRaised[PostMover::EVENT_BEFORE_MOVING] = $event instanceof MoveEvent;
         };
         Event::on(PostMover::class, PostMover::EVENT_BEFORE_MOVING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[PostMover::EVENT_AFTER_MOVING] = true;
+        $afterHandler = function ($event) {
+            $this->eventsRaised[PostMover::EVENT_AFTER_MOVING] = $event instanceof MoveEvent
+                && 77 === $event->repository->getId();
         };
         Event::on(PostMover::class, PostMover::EVENT_AFTER_MOVING, $afterHandler);
 
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
+        $post->method('getId')->willReturn(77);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('updateCounters')->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);

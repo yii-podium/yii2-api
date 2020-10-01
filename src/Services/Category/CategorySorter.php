@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Category;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\SortEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
@@ -39,11 +40,27 @@ final class CategorySorter extends Component implements SorterInterface
      */
     public function replace(RepositoryInterface $firstCategory, RepositoryInterface $secondCategory): PodiumResponse
     {
-        if (
-            !$firstCategory instanceof CategoryRepositoryInterface
-            || !$secondCategory instanceof CategoryRepositoryInterface
-            || !$this->beforeReplace()
-        ) {
+        if (!$firstCategory instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'First category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$secondCategory instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Second category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeReplace()) {
             return PodiumResponse::error();
         }
 
@@ -98,7 +115,17 @@ final class CategorySorter extends Component implements SorterInterface
      */
     public function sort(RepositoryInterface $category): PodiumResponse
     {
-        if (!$category instanceof CategoryRepositoryInterface || !$this->beforeSort()) {
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeSort()) {
             return PodiumResponse::error();
         }
 

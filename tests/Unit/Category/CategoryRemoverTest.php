@@ -25,7 +25,10 @@ class CategoryRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void

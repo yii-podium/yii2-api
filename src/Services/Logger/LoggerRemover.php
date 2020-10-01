@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Logger;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\LogRepositoryInterface;
@@ -36,7 +37,17 @@ final class LoggerRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $log): PodiumResponse
     {
-        if (!$log instanceof LogRepositoryInterface || !$this->beforeRemove()) {
+        if (!$log instanceof LogRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Log must be instance of Podium\Api\Interfaces\LogRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

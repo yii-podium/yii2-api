@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Post;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ArchiveEvent;
 use Podium\Api\Interfaces\ArchiverInterface;
@@ -38,7 +39,17 @@ final class PostArchiver extends Component implements ArchiverInterface
      */
     public function archive(RepositoryInterface $post): PodiumResponse
     {
-        if (!$post instanceof PostRepositoryInterface || !$this->beforeArchive()) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeArchive()) {
             return PodiumResponse::error();
         }
 
@@ -94,7 +105,17 @@ final class PostArchiver extends Component implements ArchiverInterface
      */
     public function revive(RepositoryInterface $post): PodiumResponse
     {
-        if (!$post instanceof PostRepositoryInterface || !$this->beforeRevive()) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRevive()) {
             return PodiumResponse::error();
         }
 

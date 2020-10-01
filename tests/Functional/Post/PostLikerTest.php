@@ -32,7 +32,8 @@ class PostLikerTest extends AppTestCase
         };
         Event::on(PostLiker::class, PostLiker::EVENT_BEFORE_THUMB_UP, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[PostLiker::EVENT_AFTER_THUMB_UP] = $event instanceof ThumbEvent;
+            $this->eventsRaised[PostLiker::EVENT_AFTER_THUMB_UP] = $event instanceof ThumbEvent
+                && $event->repository instanceof ThumbRepositoryInterface;
         };
         Event::on(PostLiker::class, PostLiker::EVENT_AFTER_THUMB_UP, $afterHandler);
 
@@ -131,7 +132,8 @@ class PostLikerTest extends AppTestCase
         };
         Event::on(PostLiker::class, PostLiker::EVENT_BEFORE_THUMB_DOWN, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[PostLiker::EVENT_AFTER_THUMB_DOWN] = $event instanceof ThumbEvent;
+            $this->eventsRaised[PostLiker::EVENT_AFTER_THUMB_DOWN] = $event instanceof ThumbEvent
+                && $event->repository instanceof ThumbRepositoryInterface;
         };
         Event::on(PostLiker::class, PostLiker::EVENT_AFTER_THUMB_DOWN, $afterHandler);
 

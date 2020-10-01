@@ -29,7 +29,10 @@ class ForumMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenCategoryRepositoryIsWrong(): void
@@ -40,7 +43,10 @@ class ForumMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void

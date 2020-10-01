@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Thread;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
@@ -38,7 +39,17 @@ final class ThreadRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $thread): PodiumResponse
     {
-        if (!$thread instanceof ThreadRepositoryInterface || !$this->beforeRemove()) {
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

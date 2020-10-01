@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Rank;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\RankRepositoryInterface;
@@ -36,7 +37,17 @@ final class RankRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $rank): PodiumResponse
     {
-        if (!$rank instanceof RankRepositoryInterface || !$this->beforeRemove()) {
+        if (!$rank instanceof RankRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

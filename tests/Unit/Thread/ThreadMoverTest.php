@@ -29,7 +29,10 @@ class ThreadMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenForumRepositoryIsWrong(): void
@@ -40,7 +43,10 @@ class ThreadMoverTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testMoveShouldReturnErrorWhenMovingErrored(): void
@@ -61,11 +67,15 @@ class ThreadMoverTest extends AppTestCase
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
-        $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
-        $thread->method('getParent')->willReturn($forum);
+        $thread->method('getPostsCount')->willReturn(9);
+        $newForum = $this->createMock(ForumRepositoryInterface::class);
+        $newForum->method('updateCounters')->with(1, 9)->willReturn(true);
+
+        $oldForum = $this->createMock(ForumRepositoryInterface::class);
+        $oldForum->method('updateCounters')->with(-1, -9)->willReturn(true);
+        $thread->method('getParent')->willReturn($oldForum);
         $thread->method('updateCounters')->willReturn(true);
-        $result = $this->service->move($thread, $forum);
+        $result = $this->service->move($thread, $newForum);
 
         self::assertTrue($result->getResult());
     }

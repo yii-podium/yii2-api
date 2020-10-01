@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Member;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
@@ -36,7 +37,17 @@ final class MemberRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $member): PodiumResponse
     {
-        if (!$member instanceof MemberRepositoryInterface || !$this->beforeRemove()) {
+        if (!$member instanceof MemberRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Member must be instance of Podium\Api\Interfaces\MemberRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

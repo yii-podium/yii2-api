@@ -26,7 +26,10 @@ class ThreadRemoverTest extends AppTestCase
         $result = $this->service->remove($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testRemoveShouldReturnErrorWhenRemovingErrored(): void
@@ -62,8 +65,9 @@ class ThreadRemoverTest extends AppTestCase
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('isArchived')->willReturn(true);
         $thread->method('delete')->willReturn(true);
+        $thread->method('getPostsCount')->willReturn(1);
         $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
+        $forum->method('updateCounters')->with(-1, -1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
         $result = $this->service->remove($thread);
 

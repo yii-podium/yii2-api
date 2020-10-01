@@ -33,7 +33,8 @@ class ThreadBookmarkerTest extends AppTestCase
         };
         Event::on(ThreadBookmarker::class, ThreadBookmarker::EVENT_BEFORE_MARKING, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[ThreadBookmarker::EVENT_AFTER_MARKING] = $event instanceof BookmarkEvent;
+            $this->eventsRaised[ThreadBookmarker::EVENT_AFTER_MARKING] = $event instanceof BookmarkEvent
+                && $event->repository instanceof BookmarkRepositoryInterface;
         };
         Event::on(ThreadBookmarker::class, ThreadBookmarker::EVENT_AFTER_MARKING, $afterHandler);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Rank;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\BuilderInterface;
@@ -38,7 +39,17 @@ final class RankBuilder extends Component implements BuilderInterface
      */
     public function create(RepositoryInterface $rank, array $data = []): PodiumResponse
     {
-        if (!$rank instanceof RankRepositoryInterface || !$this->beforeCreate()) {
+        if (!$rank instanceof RankRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeCreate()) {
             return PodiumResponse::error();
         }
 
@@ -90,7 +101,17 @@ final class RankBuilder extends Component implements BuilderInterface
      */
     public function edit(RepositoryInterface $rank, array $data = []): PodiumResponse
     {
-        if (!$rank instanceof RankRepositoryInterface || !$this->beforeEdit()) {
+        if (!$rank instanceof RankRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Rank must be instance of Podium\Api\Interfaces\RankRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeEdit()) {
             return PodiumResponse::error();
         }
 

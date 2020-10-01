@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Post;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\MoveEvent;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
@@ -39,11 +40,27 @@ final class PostMover extends Component implements MoverInterface
      */
     public function move(RepositoryInterface $post, RepositoryInterface $thread): PodiumResponse
     {
-        if (
-            !$post instanceof PostRepositoryInterface
-            || !$thread instanceof ThreadRepositoryInterface
-            || !$this->beforeMove()
-        ) {
+        if (!$post instanceof PostRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Post must be instance of Podium\Api\Interfaces\PostRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$thread instanceof ThreadRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeMove()) {
             return PodiumResponse::error();
         }
 

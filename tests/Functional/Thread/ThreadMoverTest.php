@@ -30,13 +30,15 @@ class ThreadMoverTest extends AppTestCase
             $this->eventsRaised[ThreadMover::EVENT_BEFORE_MOVING] = $event instanceof MoveEvent;
         };
         Event::on(ThreadMover::class, ThreadMover::EVENT_BEFORE_MOVING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[ThreadMover::EVENT_AFTER_MOVING] = true;
+        $afterHandler = function ($event) {
+            $this->eventsRaised[ThreadMover::EVENT_AFTER_MOVING] = $event instanceof MoveEvent
+                && 54 === $event->repository->getId();
         };
         Event::on(ThreadMover::class, ThreadMover::EVENT_AFTER_MOVING, $afterHandler);
 
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('move')->willReturn(true);
+        $thread->method('getId')->willReturn(54);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('updateCounters')->willReturn(true);
         $thread->method('getParent')->willReturn($forum);

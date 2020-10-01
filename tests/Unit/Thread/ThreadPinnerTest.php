@@ -25,7 +25,10 @@ class ThreadPinnerTest extends AppTestCase
         $result = $this->service->pin($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testPinShouldReturnErrorWhenPinningErrored(): void
@@ -78,7 +81,10 @@ class ThreadPinnerTest extends AppTestCase
         $result = $this->service->unpin($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Thread must be instance of Podium\Api\Interfaces\ThreadRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testUnpinShouldReturnErrorWhenUnpinningErrored(): void

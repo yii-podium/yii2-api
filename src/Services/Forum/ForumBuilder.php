@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Forum;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
@@ -44,11 +45,27 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
         RepositoryInterface $category,
         array $data = []
     ): PodiumResponse {
-        if (
-            !$forum instanceof ForumRepositoryInterface
-            || !$category instanceof CategoryRepositoryInterface
-            || !$this->beforeCreate()
-        ) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeCreate()) {
             return PodiumResponse::error();
         }
 
@@ -100,7 +117,17 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
      */
     public function edit(RepositoryInterface $forum, array $data = []): PodiumResponse
     {
-        if (!$forum instanceof ForumRepositoryInterface || !$this->beforeEdit()) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeEdit()) {
             return PodiumResponse::error();
         }
 

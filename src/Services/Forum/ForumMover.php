@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Forum;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\MoveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
@@ -37,11 +38,27 @@ final class ForumMover extends Component implements MoverInterface
      */
     public function move(RepositoryInterface $forum, RepositoryInterface $category): PodiumResponse
     {
-        if (
-            !$forum instanceof ForumRepositoryInterface
-            || !$category instanceof CategoryRepositoryInterface
-            || !$this->beforeMove()
-        ) {
+        if (!$forum instanceof ForumRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Forum must be instance of Podium\Api\Interfaces\ForumRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeMove()) {
             return PodiumResponse::error();
         }
 

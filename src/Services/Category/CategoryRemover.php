@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Category;
 
+use InvalidArgumentException;
 use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
@@ -36,7 +37,17 @@ final class CategoryRemover extends Component implements RemoverInterface
      */
     public function remove(RepositoryInterface $category): PodiumResponse
     {
-        if (!$category instanceof CategoryRepositoryInterface || !$this->beforeRemove()) {
+        if (!$category instanceof CategoryRepositoryInterface) {
+            return PodiumResponse::error(
+                [
+                    'exception' => new InvalidArgumentException(
+                        'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!'
+                    ),
+                ]
+            );
+        }
+
+        if (!$this->beforeRemove()) {
             return PodiumResponse::error();
         }
 

@@ -38,7 +38,10 @@ class GroupBuilderTest extends AppTestCase
         $result = $this->service->create($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Group must be instance of Podium\Api\Interfaces\GroupRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
@@ -91,7 +94,10 @@ class GroupBuilderTest extends AppTestCase
         $result = $this->service->edit($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Group must be instance of Podium\Api\Interfaces\GroupRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void

@@ -27,7 +27,10 @@ class CategoryArchiverTest extends AppTestCase
         $result = $this->service->archive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testArchiveShouldReturnErrorWhenArchivingErrored(): void
@@ -97,7 +100,10 @@ class CategoryArchiverTest extends AppTestCase
         $result = $this->service->revive($this->createMock(RepositoryInterface::class));
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame(
+            'Category must be instance of Podium\Api\Interfaces\CategoryRepositoryInterface!',
+            $result->getErrors()['exception']->getMessage()
+        );
     }
 
     public function testReviveShouldReturnErrorWhenRevivingErrored(): void
