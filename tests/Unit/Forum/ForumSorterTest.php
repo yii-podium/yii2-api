@@ -45,18 +45,44 @@ class ForumSorterTest extends AppTestCase
     public function testReplaceShouldReturnErrorWhenSettingFirstOrderErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing forums order' === $data[0]
+                        && 'Error while setting new forum order!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
-        $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('getOrder')->willReturn(1);
-        $forum->method('setOrder')->willReturn(false);
-        $result = $this->service->replace($forum, $forum);
+        $forum1 = $this->createMock(ForumRepositoryInterface::class);
+        $forum1->method('getOrder')->willReturn(1);
+        $forum1->method('setOrder')->willReturn(false);
+        $forum2 = $this->createMock(ForumRepositoryInterface::class);
+        $forum2->method('getOrder')->willReturn(2);
+        $forum2->method('setOrder')->willReturn(true);
+        $result = $this->service->replace($forum1, $forum2);
 
         self::assertFalse($result->getResult());
+        self::assertSame('Error while setting new forum order!', $result->getErrors()['exception']->getMessage());
     }
 
     public function testReplaceShouldReturnErrorWhenSettingSecondOrderErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
+        $this->logger->expects(self::once())->method('log')->with(
+            self::callback(
+                static function (array $data) {
+                    return 3 === count($data)
+                        && 'Exception while replacing forums order' === $data[0]
+                        && 'Error while setting new forum order!' === $data[1];
+                }
+            ),
+            1,
+            'podium'
+        );
 
         $forum1 = $this->createMock(ForumRepositoryInterface::class);
         $forum1->method('getOrder')->willReturn(1);
@@ -67,6 +93,7 @@ class ForumSorterTest extends AppTestCase
         $result = $this->service->replace($forum1, $forum2);
 
         self::assertFalse($result->getResult());
+        self::assertSame('Error while setting new forum order!', $result->getErrors()['exception']->getMessage());
     }
 
     public function testReplaceShouldReturnSuccessWhenReplacingIsDone(): void

@@ -60,15 +60,21 @@ class PostMoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $oldForum = $this->createMock(ForumRepositoryInterface::class);
+        $oldForum->method('updateCounters')->with(0, -1)->willReturn(true);
+        $oldThread = $this->createMock(ThreadRepositoryInterface::class);
+        $oldThread->method('updateCounters')->with(-1)->willReturn(true);
+        $oldThread->method('getParent')->willReturn($oldForum);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('move')->willReturn(true);
-        $thread = $this->createMock(ThreadRepositoryInterface::class);
-        $thread->method('updateCounters')->willReturn(true);
-        $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
-        $thread->method('getParent')->willReturn($forum);
-        $post->method('getParent')->willReturn($thread);
-        $result = $this->service->move($post, $thread);
+        $post->method('getParent')->willReturn($oldThread);
+
+        $newForum = $this->createMock(ForumRepositoryInterface::class);
+        $newForum->method('updateCounters')->with(0, 1)->willReturn(true);
+        $newThread = $this->createMock(ThreadRepositoryInterface::class);
+        $newThread->method('updateCounters')->with(1)->willReturn(true);
+        $newThread->method('getParent')->willReturn($newForum);
+        $result = $this->service->move($post, $newThread);
 
         self::assertTrue($result->getResult());
     }

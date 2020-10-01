@@ -64,9 +64,9 @@ class PostRemoverTest extends AppTestCase
         $post->method('isArchived')->willReturn(true);
         $post->method('delete')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
-        $thread->method('updateCounters')->willReturn(true);
+        $thread->method('updateCounters')->with(-1)->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
+        $forum->method('updateCounters')->with(0, -1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
         $post->method('getParent')->willReturn($thread);
         $result = $this->service->remove($post);

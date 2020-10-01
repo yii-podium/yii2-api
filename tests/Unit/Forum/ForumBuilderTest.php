@@ -22,7 +22,29 @@ class ForumBuilderTest extends AppTestCase
         $this->service = new ForumBuilder();
     }
 
-    public function testCreateShouldReturnErrorWhenRepositoryIsWrong(): void
+    public function testCreateShouldReturnErrorWhenForumRepositoryIsWrong(): void
+    {
+        $result = $this->service->create(
+            $this->createMock(RepositoryInterface::class),
+            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(CategoryRepositoryInterface::class)
+        );
+
+        self::assertFalse($result->getResult());
+    }
+
+    public function testCreateShouldReturnErrorWhenCategoryRepositoryIsWrong(): void
+    {
+        $result = $this->service->create(
+            $this->createMock(ForumRepositoryInterface::class),
+            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(RepositoryInterface::class)
+        );
+
+        self::assertFalse($result->getResult());
+    }
+
+    public function testCreateShouldReturnErrorWhenBothRepositoriesAreWrong(): void
     {
         $result = $this->service->create(
             $this->createMock(RepositoryInterface::class),

@@ -110,6 +110,18 @@ class ThreadArchiverTest extends AppTestCase
         self::assertSame([1], $result->getErrors());
     }
 
+    public function testReviveShouldReturnErrorWhenThreadIsNotArchived(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isArchived')->willReturn(false);
+        $result = $this->service->revive($thread);
+
+        self::assertFalse($result->getResult());
+        self::assertSame('thread.not.archived', $result->getErrors()['api']);
+    }
+
     public function testReviveShouldReturnSuccessWhenRevivingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');

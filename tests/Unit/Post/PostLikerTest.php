@@ -282,6 +282,7 @@ class PostLikerTest extends AppTestCase
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(false);
+        $thumb->method('getErrors')->willReturn([2]);
         $result = $this->service->thumbReset(
             $thumb,
             $this->createMock(PostRepositoryInterface::class),
@@ -289,6 +290,7 @@ class PostLikerTest extends AppTestCase
         );
 
         self::assertFalse($result->getResult());
+        self::assertSame([2], $result->getErrors());
     }
 
     public function testThumbResetShouldReturnErrorWhenPostIsNotRated(): void

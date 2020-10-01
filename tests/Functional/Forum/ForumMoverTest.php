@@ -30,12 +30,14 @@ class ForumMoverTest extends AppTestCase
             $this->eventsRaised[ForumMover::EVENT_BEFORE_MOVING] = $event instanceof MoveEvent;
         };
         Event::on(ForumMover::class, ForumMover::EVENT_BEFORE_MOVING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[ForumMover::EVENT_AFTER_MOVING] = true;
+        $afterHandler = function ($event) {
+            $this->eventsRaised[ForumMover::EVENT_AFTER_MOVING] = $event instanceof MoveEvent
+                && 11 === $event->repository->getId();
         };
         Event::on(ForumMover::class, ForumMover::EVENT_AFTER_MOVING, $afterHandler);
 
         $forum = $this->createMock(ForumRepositoryInterface::class);
+        $forum->method('getId')->willReturn(11);
         $forum->method('move')->willReturn(true);
         $this->service->move($forum, $this->createMock(CategoryRepositoryInterface::class));
 

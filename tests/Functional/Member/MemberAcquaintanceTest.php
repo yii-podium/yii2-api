@@ -31,7 +31,8 @@ class MemberAcquaintanceTest extends AppTestCase
         };
         Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_BEFRIENDING, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_BEFRIENDING] = $event instanceof AcquaintanceEvent;
+            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_BEFRIENDING] = $event instanceof AcquaintanceEvent
+                && $event->repository instanceof AcquaintanceRepositoryInterface;
         };
         Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_BEFRIENDING, $afterHandler);
 
@@ -234,7 +235,8 @@ class MemberAcquaintanceTest extends AppTestCase
         };
         Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_IGNORING, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_IGNORING] = $event instanceof AcquaintanceEvent;
+            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_IGNORING] = $event instanceof AcquaintanceEvent
+                && $event->repository instanceof AcquaintanceRepositoryInterface;
         };
         Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_IGNORING, $afterHandler);
 

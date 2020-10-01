@@ -58,9 +58,9 @@ class PostBuilderTest extends AppTestCase
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
-        $thread->method('updateCounters')->willReturn(true);
+        $thread->method('updateCounters')->with(1)->willReturn(true);
         $forum = $this->createMock(ForumRepositoryInterface::class);
-        $forum->method('updateCounters')->willReturn(true);
+        $forum->method('updateCounters')->with(0, 1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
         $result = $this->service->create($post, $this->createMock(MemberRepositoryInterface::class), $thread);
 

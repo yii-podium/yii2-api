@@ -20,4 +20,14 @@ class ServiceExceptionTest extends TestCase
 
         self::assertSame([1], $exc->getErrorList());
     }
+
+    public function testDefaults(): void
+    {
+        $exc = new ServiceException();
+
+        self::assertSame([], $exc->getErrorList());
+        self::assertSame('', $exc->getMessage());
+        self::assertSame(0, $exc->getCode());
+        self::assertNull($exc->getPrevious());
+    }
 }
