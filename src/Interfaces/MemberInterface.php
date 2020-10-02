@@ -9,42 +9,59 @@ use Podium\Api\PodiumResponse;
 interface MemberInterface
 {
     /**
-     * Returns the repository.
+     * Returns the member repository.
      */
-    public function getRepository(): MemberRepositoryInterface;
+    public function getMemberRepository(): MemberRepositoryInterface;
 
     /**
-     * Registers account.
+     * Returns the acquaintance repository.
+     */
+    public function getAcquaintanceRepository(): AcquaintanceRepositoryInterface;
+
+    /**
+     * Registers the member.
      *
      * @param int|string|array $id
      */
     public function register($id, array $data = []): PodiumResponse;
 
+    /**
+     * Removes the member.
+     */
     public function remove(MemberRepositoryInterface $member): PodiumResponse;
 
+    /**
+     * Edits the member.
+     */
     public function edit(MemberRepositoryInterface $member, array $data = []): PodiumResponse;
 
     /**
-     * Befriends the member.
+     * Befriends the target as the member.
      */
     public function befriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unfriends the member.
+     * Unfriends the target as the member.
      */
     public function unfriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Ignores the member.
+     * Ignores the target as the member.
      */
     public function ignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unignores the member.
+     * Unignores the target as the member.
      */
     public function unignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
+    /**
+     * Bans the member.
+     */
     public function ban(MemberRepositoryInterface $member): PodiumResponse;
 
+    /**
+     * Unbans the member.
+     */
     public function unban(MemberRepositoryInterface $member): PodiumResponse;
 }

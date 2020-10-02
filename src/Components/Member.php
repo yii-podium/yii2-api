@@ -57,7 +57,7 @@ final class Member extends Component implements MemberInterface
     /**
      * @throws InvalidConfigException
      */
-    public function getRepository(): MemberRepositoryInterface
+    public function getMemberRepository(): MemberRepositoryInterface
     {
         if (null === $this->repository) {
             /** @var MemberRepositoryInterface $repository */
@@ -89,7 +89,7 @@ final class Member extends Component implements MemberInterface
      */
     public function register($id, array $data = []): PodiumResponse
     {
-        return $this->getBuilder()->register($this->getRepository(), $id, $data);
+        return $this->getBuilder()->register($this->getMemberRepository(), $id, $data);
     }
 
     /**
