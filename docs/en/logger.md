@@ -38,10 +38,14 @@ or component's ID or configuration array that can be resolved as the above. Defa
 ### create <span id="create"></span>
 
 ```
-create(array $data = []): Podium\Api\PodiumResponse
+create(
+    Podium\Api\Interfaces\MemberRepositoryInterface $author,
+    string $action,
+    array $data = []
+): Podium\Api\PodiumResponse
 ```
 
-Creates a log. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L71)
+Creates a log for action as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L71)
 
 #### Events
 
