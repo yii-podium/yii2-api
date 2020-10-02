@@ -188,6 +188,6 @@ Sorts the categories order. [[link]](https://github.com/yii-podium/yii2-api/blob
 - `Podium\Api\Services\Category\CategorySorter::EVENT_BEFORE_SORTING`
 - `Podium\Api\Services\Category\CategorySorter::EVENT_AFTER_SORTING`
 
---
+---
 
 [Next >>> Forum](forum.md)
