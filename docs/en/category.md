@@ -211,4 +211,4 @@ Sorts the categories order. [[link]](https://github.com/yii-podium/yii2-api/blob
 
 ---
 
-[Next >>> Forum](forum.md)
+[<<< Index](../README.md) | [Next >>> Forum](forum.md)

@@ -158,4 +158,4 @@ Send a new message (or a reply to the message) from the sender to the receiver.
 
 ---
 
-[Next >>> Post](post.md)
+[<<< Index](../README.md) | [Next >>> Post](post.md)

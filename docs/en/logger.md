@@ -99,4 +99,4 @@ Removes the log. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-[Next >>> Member](member.md)
+[<<< Index](../README.md) | [Next >>> Member](member.md)

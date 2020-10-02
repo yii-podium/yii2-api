@@ -347,4 +347,4 @@ Votes in the post's poll as the current user.
 
 ---
 
-[Next >>> Category](category.md)
+[<<< Index](../README.md) | [Next >>> Category](category.md)

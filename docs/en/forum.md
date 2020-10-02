@@ -245,4 +245,4 @@ Sorts the forums order. [[link]](https://github.com/yii-podium/yii2-api/blob/mas
 
 ---
 
-[Next >>> Group](group.md)
+[<<< Index](../README.md) | [Next >>> Group](group.md)
