@@ -67,6 +67,8 @@ Archives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/mast
 - `Podium\Api\Services\Category\CategoryArchiver::EVENT_BEFORE_ARCHIVING`
 - `Podium\Api\Services\Category\CategoryArchiver::EVENT_AFTER_ARCHIVING`
 
+---
+
 ### create <span id="create"></span>
 
 ```
@@ -79,6 +81,8 @@ Creates a category as the author. [[link]](https://github.com/yii-podium/yii2-ap
 
 - `Podium\Api\Services\Category\CategoryBuilder::EVENT_BEFORE_CREATING`
 - `Podium\Api\Services\Category\CategoryBuilder::EVENT_AFTER_CREATING`
+
+---
 
 ### edit <span id="edit"></span>
 
@@ -93,6 +97,8 @@ Edits the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 - `Podium\Api\Services\Category\CategoryBuilder::EVENT_BEFORE_EDITING`
 - `Podium\Api\Services\Category\CategoryBuilder::EVENT_AFTER_EDITING`
 
+---
+
 ### getArchiver <span id="getArchiver"></span>
 
 ```
@@ -100,6 +106,8 @@ getArchiver(): Podium\Api\Interfaces\ArchiverInterface
 ```
 
 Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L171)
+
+---
 
 ### getBuilder <span id="getBuilder"></span>
 
@@ -109,6 +117,8 @@ getBuilder(): Podium\Api\Interfaces\CategoryBuilderInterface
 
 Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L71)
 
+---
+
 ### getRemover <span id="getRemover"></span>
 
 ```
@@ -116,6 +126,8 @@ getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
 Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L107)
+
+---
 
 ### getRepository <span id="getRepository"></span>
 
@@ -125,6 +137,8 @@ getRepository(): Podium\Api\Interfaces\CategoryRepositoryInterface
 
 Returns the category repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L55)
 
+---
+
 ### getSorter <span id="getSorter"></span>
 
 ```
@@ -132,6 +146,8 @@ getSorter(): Podium\Api\Interfaces\SorterInterface
 ```
 
 Returns the sorter service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L133)
+
+---
 
 ### remove <span id="remove"></span>
 
@@ -145,6 +161,8 @@ Removes the category. [[link]](https://github.com/yii-podium/yii2-api/blob/maste
 
 - `Podium\Api\Services\Category\CategoryRemover::EVENT_BEFORE_REMOVING`
 - `Podium\Api\Services\Category\CategoryRemover::EVENT_AFTER_REMOVING`
+
+---
 
 ### replace <span id="replace"></span>
 
@@ -162,6 +180,8 @@ Replaces the categories order. [[link]](https://github.com/yii-podium/yii2-api/b
 - `Podium\Api\Services\Category\CategorySorter::EVENT_BEFORE_REPLACING`
 - `Podium\Api\Services\Category\CategorySorter::EVENT_AFTER_REPLACING`
 
+---
+
 ### revive <span id="revive"></span>
 
 ```
@@ -174,6 +194,8 @@ Revives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/maste
 
 - `Podium\Api\Services\Category\CategoryArchiver::EVENT_BEFORE_REVIVING`
 - `Podium\Api\Services\Category\CategoryArchiver::EVENT_AFTER_REVIVING`
+
+---
 
 ### sort <span id="sort"></span>
 

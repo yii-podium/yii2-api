@@ -29,6 +29,6 @@ To use any of Podium components simply call it with module's ID:
 Most of component's methods are returning [PodiumResponse](https://github.com/yii-podium/yii2-api/blob/master/src/PodiumResponse.php) 
 object.
 
---
+---
 
 [Next >>> Account](account.md)
