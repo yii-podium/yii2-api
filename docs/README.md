@@ -1,6 +1,9 @@
 # Yii 2 Podium API Docs
 
  - [Installation](en/installation.md)
+
+## Components
+
  - [Account](en/account.md)
  - Category
  - Forum
@@ -10,6 +13,10 @@
  - Message
  - Post
  - Rank
+
+## Repositories
+
+ - ...
 
 Podium is an [Yii 2](https://www.yiiframework.com/) forum [module](https://www.yiiframework.com/doc/guide/2.0/en/structure-modules). 
 This very package is only the Podium API, so if you are looking for a full working forum experience head over to 
