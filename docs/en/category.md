@@ -12,32 +12,31 @@ This component provides methods to manage the Podium categories.
 
 ## Configuration
 
+#### archiverConfig
+
+Archiver service. Expects an instance of [ArchiverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/ArchiverInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryArchiver`.
+
 #### builderConfig
 
 Builder service. Expects an instance of 
 [CategoryBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategoryBuilderInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryBuilder`.
 
-#### sorterConfig
-
-Sorter service. Expects an instance of [SorterInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/SorterInterface.php) 
-or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategorySorter`.
-
 #### removerConfig
 
 Remover service. Expects an instance of [RemoverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/RemoverInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryRemover`.
 
-#### archiverConfig
-
-Archiver service. Expects an instance of [ArchiverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/ArchiverInterface.php) 
-or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryArchiver`.
-
 #### repositoryConfig
 
-Category repository. Expects an instance of 
-[CategoryRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategoryRepositoryInterface.php) 
+Category repository. Expects an instance of [CategoryRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategoryRepositoryInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `null`.
+
+#### sorterConfig
+
+Sorter service. Expects an instance of [SorterInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/SorterInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategorySorter`.
 
 ## Methods
 

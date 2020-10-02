@@ -6,13 +6,13 @@
 
  - [Account](en/account.md)
  - [Category](en/category.md)
- - Forum
- - Group
- - Logger
- - Member
- - Message
- - Post
- - Rank
+ - [Forum](en/forum.md)
+ - [Group](en/group.md)
+ - [Logger](en/logger.md)
+ - [Member](en/member.md)
+ - [Message](en/message.md)
+ - [Post](en/post.md)
+ - [Rank](en/rank.md)
 
 ## Repositories
 
