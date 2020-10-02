@@ -16,13 +16,14 @@ and allows to call their methods from the perspective of a logged-in user.
 
 #### repositoryConfig
 
-Expects an instance of [MemberRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/MemberRepositoryInterface.php) 
+Member repository. Expects an instance of 
+[MemberRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/MemberRepositoryInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `null`.
 
 #### userConfig
 
-Expects an instance of [User](https://github.com/yiisoft/yii2/blob/master/framework/web/User.php) or component's ID or 
-configuration array that can be resolved as the above. Default: `user`.
+User component. Expects an instance of [User](https://github.com/yiisoft/yii2/blob/master/framework/web/User.php) or 
+component's ID or configuration array that can be resolved as the above. Default: `user`.
 
 ## Methods
 

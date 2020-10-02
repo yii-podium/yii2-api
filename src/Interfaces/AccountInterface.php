@@ -9,6 +9,11 @@ use Podium\Api\PodiumResponse;
 interface AccountInterface
 {
     /**
+     * Returns the member repository.
+     */
+    public function getMembership(bool $renew = false): MemberRepositoryInterface;
+
+    /**
      * Adds the current user to the group.
      */
     public function joinGroup(GroupRepositoryInterface $group): PodiumResponse;

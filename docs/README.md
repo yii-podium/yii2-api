@@ -5,7 +5,7 @@
 ## Components
 
  - [Account](en/account.md)
- - Category
+ - [Category](en/category.md)
  - Forum
  - Group
  - Logger
