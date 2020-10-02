@@ -90,7 +90,10 @@ Creates a category as the current user.
 ### createForum <span id="createForum"></span>
 
 ```
-createForum(Podium\Api\Interfaces\CategoryRepositoryInterface $parentCategory, array $data = []): Podium\Api\PodiumResponse
+createForum(
+    Podium\Api\Interfaces\CategoryRepositoryInterface $parentCategory,
+    array $data = []
+): Podium\Api\PodiumResponse
 ```
 
 Creates a forum under the parent category as the current user. 

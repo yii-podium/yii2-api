@@ -117,7 +117,10 @@ Returns the group repository. [[link]](https://github.com/yii-podium/yii2-api/bl
 ### join <span id="join"></span>
 
 ```
-join(Podium\Api\Interfaces\GroupRepositoryInterface $group, Podium\Api\Interfaces\MemberRepositoryInterface $member): Podium\Api\PodiumResponse
+join(
+    Podium\Api\Interfaces\GroupRepositoryInterface $group,
+    Podium\Api\Interfaces\MemberRepositoryInterface $member
+): Podium\Api\PodiumResponse
 ```
 
 Joins the group as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L142)
@@ -132,7 +135,10 @@ Joins the group as the member. [[link]](https://github.com/yii-podium/yii2-api/b
 ### leave <span id="leave"></span>
 
 ```
-leave(Podium\Api\Interfaces\GroupRepositoryInterface $group, Podium\Api\Interfaces\MemberRepositoryInterface $member): Podium\Api\PodiumResponse
+leave(
+    Podium\Api\Interfaces\GroupRepositoryInterface $group,
+    Podium\Api\Interfaces\MemberRepositoryInterface $member
+): Podium\Api\PodiumResponse
 ```
 
 Leaves the group as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L152)
