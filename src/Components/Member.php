@@ -85,8 +85,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Registers member.
-     *
      * @throws InvalidConfigException
      */
     public function register($id, array $data = []): PodiumResponse
@@ -95,8 +93,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Updates member.
-     *
      * @throws InvalidConfigException
      */
     public function edit(MemberRepositoryInterface $member, array $data = []): PodiumResponse
@@ -140,8 +136,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Befriends the member.
-     *
      * @throws InvalidConfigException
      */
     public function befriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
@@ -150,8 +144,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Unfriends the member.
-     *
      * @throws InvalidConfigException
      */
     public function unfriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
@@ -160,8 +152,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Ignores the member.
-     *
      * @throws InvalidConfigException
      */
     public function ignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
@@ -170,8 +160,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Unignores the member.
-     *
      * @throws InvalidConfigException
      */
     public function unignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
@@ -196,8 +184,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Bans the member.
-     *
      * @throws InvalidConfigException
      */
     public function ban(MemberRepositoryInterface $member): PodiumResponse
@@ -206,8 +192,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Unbans the member.
-     *
      * @throws InvalidConfigException
      */
     public function unban(MemberRepositoryInterface $member): PodiumResponse
@@ -232,8 +216,6 @@ final class Member extends Component implements MemberInterface
     }
 
     /**
-     * Deletes member.
-     *
      * @throws InvalidConfigException
      */
     public function remove(MemberRepositoryInterface $member): PodiumResponse

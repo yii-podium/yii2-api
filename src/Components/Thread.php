@@ -122,8 +122,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Creates thread.
-     *
      * @throws InvalidConfigException
      */
     public function create(
@@ -135,8 +133,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Updates thread.
-     *
      * @throws InvalidConfigException
      */
     public function edit(ThreadRepositoryInterface $thread, array $data = []): PodiumResponse
@@ -161,8 +157,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Deletes thread.
-     *
      * @throws InvalidConfigException
      */
     public function remove(ThreadRepositoryInterface $thread): PodiumResponse
@@ -187,8 +181,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Moves thread.
-     *
      * @throws InvalidConfigException
      */
     public function move(ThreadRepositoryInterface $thread, ForumRepositoryInterface $forum): PodiumResponse
@@ -213,8 +205,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Pins thread.
-     *
      * @throws InvalidConfigException
      */
     public function pin(ThreadRepositoryInterface $thread): PodiumResponse
@@ -223,8 +213,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Unpins thread.
-     *
      * @throws InvalidConfigException
      */
     public function unpin(ThreadRepositoryInterface $thread): PodiumResponse
@@ -249,8 +237,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Locks thread.
-     *
      * @throws InvalidConfigException
      */
     public function lock(ThreadRepositoryInterface $thread): PodiumResponse
@@ -259,8 +245,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Unlocks thread.
-     *
      * @throws InvalidConfigException
      */
     public function unlock(ThreadRepositoryInterface $thread): PodiumResponse
@@ -285,8 +269,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Archives thread.
-     *
      * @throws InvalidConfigException
      */
     public function archive(ThreadRepositoryInterface $thread): PodiumResponse
@@ -295,8 +277,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Revives thread.
-     *
      * @throws InvalidConfigException
      */
     public function revive(ThreadRepositoryInterface $thread): PodiumResponse
@@ -337,8 +317,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Subscribes to a thread.
-     *
      * @throws InvalidConfigException
      */
     public function subscribe(ThreadRepositoryInterface $thread, MemberRepositoryInterface $member): PodiumResponse
@@ -347,8 +325,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Unsubscribes from a thread.
-     *
      * @throws InvalidConfigException
      */
     public function unsubscribe(ThreadRepositoryInterface $thread, MemberRepositoryInterface $member): PodiumResponse
@@ -389,8 +365,6 @@ final class Thread extends Component implements ThreadInterface
     }
 
     /**
-     * Marks last seen post in a thread.
-     *
      * @throws InvalidConfigException
      */
     public function mark(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse

@@ -80,8 +80,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Creates category.
-     *
      * @throws InvalidConfigException
      */
     public function create(MemberRepositoryInterface $author, array $data = []): PodiumResponse
@@ -90,8 +88,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Updates the category.
-     *
      * @throws InvalidConfigException
      */
     public function edit(CategoryRepositoryInterface $category, array $data = []): PodiumResponse
@@ -116,8 +112,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Removes the category.
-     *
      * @throws InvalidConfigException
      */
     public function remove(CategoryRepositoryInterface $category): PodiumResponse
@@ -142,8 +136,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Replaces the order of the categories.
-     *
      * @throws InvalidConfigException
      */
     public function replace(
@@ -154,8 +146,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Normalizes the sort order of all categories.
-     *
      * @throws InvalidConfigException
      */
     public function sort(): PodiumResponse
@@ -180,8 +170,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Archives the category.
-     *
      * @throws InvalidConfigException
      */
     public function archive(CategoryRepositoryInterface $category): PodiumResponse
@@ -190,8 +178,6 @@ final class Category extends Component implements CategoryInterface
     }
 
     /**
-     * Revives the category.
-     *
      * @throws InvalidConfigException
      */
     public function revive(CategoryRepositoryInterface $category): PodiumResponse

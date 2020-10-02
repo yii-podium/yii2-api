@@ -65,8 +65,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Creates rank.
-     *
      * @throws InvalidConfigException
      */
     public function create(array $data = []): PodiumResponse
@@ -75,8 +73,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Updates rank.
-     *
      * @throws InvalidConfigException
      */
     public function edit(RankRepositoryInterface $rank, array $data = []): PodiumResponse
@@ -101,8 +97,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Deletes rank.
-     *
      * @throws InvalidConfigException
      */
     public function remove(RankRepositoryInterface $rank): PodiumResponse

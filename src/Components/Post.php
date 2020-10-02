@@ -123,8 +123,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Creates post.
-     *
      * @throws InvalidConfigException
      */
     public function create(
@@ -136,8 +134,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Updates post.
-     *
      * @throws InvalidConfigException
      */
     public function edit(PostRepositoryInterface $post, array $data = []): PodiumResponse
@@ -162,8 +158,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Deletes post.
-     *
      * @throws InvalidConfigException
      */
     public function remove(PostRepositoryInterface $post): PodiumResponse
@@ -188,8 +182,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Moves post.
-     *
      * @throws InvalidConfigException
      */
     public function move(PostRepositoryInterface $post, ThreadRepositoryInterface $thread): PodiumResponse
@@ -214,8 +206,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Archives post.
-     *
      * @throws InvalidConfigException
      */
     public function archive(PostRepositoryInterface $post): PodiumResponse
@@ -224,8 +214,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Revives post.
-     *
      * @throws InvalidConfigException
      */
     public function revive(PostRepositoryInterface $post): PodiumResponse
@@ -266,8 +254,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Gives post a thumb up.
-     *
      * @throws InvalidConfigException
      */
     public function thumbUp(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse
@@ -276,8 +262,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Gives post a thumb down.
-     *
      * @throws InvalidConfigException
      */
     public function thumbDown(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse
@@ -286,8 +270,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Resets post given thumb.
-     *
      * @throws InvalidConfigException
      */
     public function thumbReset(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse
@@ -312,8 +294,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Pins post.
-     *
      * @throws InvalidConfigException
      */
     public function pin(PostRepositoryInterface $post): PodiumResponse
@@ -322,8 +302,6 @@ final class Post extends Component implements PostInterface, PollPostInterface
     }
 
     /**
-     * Unpins post.
-     *
      * @throws InvalidConfigException
      */
     public function unpin(PostRepositoryInterface $post): PodiumResponse
