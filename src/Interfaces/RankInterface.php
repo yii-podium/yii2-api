@@ -8,17 +8,23 @@ use Podium\Api\PodiumResponse;
 
 interface RankInterface
 {
+    /**
+     * Returns the rank repository.
+     */
     public function getRepository(): RankRepositoryInterface;
 
     /**
-     * Creates rank.
+     * Creates a rank.
      */
     public function create(array $data = []): PodiumResponse;
 
     /**
-     * Updates rank.
+     * Edits the rank.
      */
     public function edit(RankRepositoryInterface $rank, array $data = []): PodiumResponse;
 
+    /**
+     * Removes the rank.
+     */
     public function remove(RankRepositoryInterface $rank): PodiumResponse;
 }
