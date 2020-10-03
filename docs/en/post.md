@@ -167,7 +167,11 @@ Edits the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/
 ### editPoll <span id="editPoll"></span>
 
 ```
-editPoll(Podium\Api\Interfaces\PollPostRepositoryInterface $post, array $answers = [], array $data = []): Podium\Api\PodiumResponse
+editPoll(
+    Podium\Api\Interfaces\PollPostRepositoryInterface $post,
+    array $answers = [],
+    array $data = []
+): Podium\Api\PodiumResponse
 ```
 
 Edits the post's poll with answers. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L339)
