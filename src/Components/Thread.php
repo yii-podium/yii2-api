@@ -94,7 +94,7 @@ final class Thread extends Component implements ThreadInterface
     /**
      * @throws InvalidConfigException
      */
-    public function getRepository(): ThreadRepositoryInterface
+    public function getThreadRepository(): ThreadRepositoryInterface
     {
         if (null === $this->repository) {
             /** @var ThreadRepositoryInterface $repository */
@@ -129,7 +129,7 @@ final class Thread extends Component implements ThreadInterface
         ForumRepositoryInterface $forum,
         array $data = []
     ): PodiumResponse {
-        return $this->getBuilder()->create($this->getRepository(), $author, $forum, $data);
+        return $this->getBuilder()->create($this->getThreadRepository(), $author, $forum, $data);
     }
 
     /**

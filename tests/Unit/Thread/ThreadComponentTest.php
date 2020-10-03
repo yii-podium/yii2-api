@@ -246,7 +246,7 @@ class ThreadComponentTest extends TestCase
 
         $this->component->threadRepositoryConfig = '';
 
-        $this->component->getRepository();
+        $this->component->getThreadRepository();
     }
 
     public function testGetSubscriptionRepositoryShouldThrowExceptionWhenSubscriptionRepositoryIsMisconfigured(): void

@@ -52,15 +52,15 @@ or component's ID or configuration array that can be resolved as the above. Defa
 Poll Voter service. Expects an instance of [VoterInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/VoterInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Poll\PollVoter`.
 
-#### removerConfig
-
-Remover service. Expects an instance of [RemoverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/RemoverInterface.php) 
-or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Post\PostRemover`.
-
 #### postRepositoryConfig
 
 Post repository. Expects an instance of [PostRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/PostRepositoryInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `null`.
+
+#### removerConfig
+
+Remover service. Expects an instance of [RemoverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/RemoverInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Post\PostRemover`.
 
 #### thumbRepositoryConfig
 
