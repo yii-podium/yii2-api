@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Category;
 
 use InvalidArgumentException;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

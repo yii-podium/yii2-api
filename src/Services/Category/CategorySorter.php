@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Category;
 
 use InvalidArgumentException;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\SortEvent;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\SorterInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

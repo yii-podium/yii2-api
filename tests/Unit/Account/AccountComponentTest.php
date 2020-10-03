@@ -8,7 +8,6 @@ use DomainException;
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Account;
 use Podium\Api\Components\NoMembershipException;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\CategoryInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumInterface;
@@ -27,6 +26,7 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Module;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 use yii\web\User;
 

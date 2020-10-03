@@ -6,11 +6,11 @@ namespace Podium\Tests\Unit\Logger;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Logger;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\LogBuilderInterface;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class LoggerComponentTest extends TestCase

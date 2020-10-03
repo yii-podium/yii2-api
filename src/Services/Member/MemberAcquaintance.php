@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Member;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\AcquaintanceEvent;
 use Podium\Api\Interfaces\AcquaintanceInterface;
 use Podium\Api\Interfaces\AcquaintanceRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

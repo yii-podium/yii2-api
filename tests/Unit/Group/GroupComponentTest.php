@@ -6,12 +6,12 @@ namespace Podium\Tests\Unit\Group;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Group;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class GroupComponentTest extends TestCase

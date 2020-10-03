@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Podium\Api\Interfaces;
 
-use Podium\Api\Components\PodiumResponse;
+use Podium\Api\PodiumResponse;
 
 interface ForumInterface
 {
     /**
-     * Returns the repository.
+     * Returns the forum repository.
      */
     public function getRepository(): ForumRepositoryInterface;
 
     /**
-     * Creates forum.
+     * Creates a forum as the author under the category.
      */
     public function create(
         MemberRepositoryInterface $author,
@@ -23,28 +23,40 @@ interface ForumInterface
     ): PodiumResponse;
 
     /**
-     * Updates forum.
+     * Edits the forum.
      */
     public function edit(ForumRepositoryInterface $forum, array $data = []): PodiumResponse;
 
+    /**
+     * Removes the forum.
+     */
     public function remove(ForumRepositoryInterface $forum): PodiumResponse;
 
     /**
-     * Replaces the order of the forums.
+     * Replaces the forums order.
      */
     public function replace(
         ForumRepositoryInterface $firstForum,
         ForumRepositoryInterface $secondForum
     ): PodiumResponse;
 
+    /**
+     * Sorts the forums order.
+     */
     public function sort(): PodiumResponse;
 
     /**
-     * Moves forum to different category.
+     * Moves the forum to the category.
      */
     public function move(ForumRepositoryInterface $forum, CategoryRepositoryInterface $category): PodiumResponse;
 
+    /**
+     * Archives the forum.
+     */
     public function archive(ForumRepositoryInterface $forum): PodiumResponse;
 
+    /**
+     * Revives the forum.
+     */
     public function revive(ForumRepositoryInterface $forum): PodiumResponse;
 }

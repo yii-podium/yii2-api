@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Logger;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\LogBuilderInterface;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

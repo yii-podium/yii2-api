@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\MessageInterface;
 use Podium\Api\Interfaces\MessageRemoverInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
 use Podium\Api\Interfaces\MessengerInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Message\MessageArchiver;
 use Podium\Api\Services\Message\MessageMessenger;
 use Podium\Api\Services\Message\MessageRemover;
@@ -72,8 +73,6 @@ final class Message extends Component implements MessageInterface
     }
 
     /**
-     * Sends message.
-     *
      * @throws InvalidConfigException
      */
     public function send(
@@ -102,8 +101,6 @@ final class Message extends Component implements MessageInterface
     }
 
     /**
-     * Deletes message copy.
-     *
      * @throws InvalidConfigException
      */
     public function remove(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse
@@ -128,8 +125,6 @@ final class Message extends Component implements MessageInterface
     }
 
     /**
-     * Archives message copy.
-     *
      * @throws InvalidConfigException
      */
     public function archive(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse
@@ -138,8 +133,6 @@ final class Message extends Component implements MessageInterface
     }
 
     /**
-     * Revives message copy.
-     *
      * @throws InvalidConfigException
      */
     public function revive(MessageRepositoryInterface $message, MemberRepositoryInterface $participant): PodiumResponse

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Podium\Api\Interfaces;
 
-use Podium\Api\Components\PodiumResponse;
+use Podium\Api\PodiumResponse;
 
 interface PollPostInterface
 {
     /**
-     * Adds a poll to the post.
+     * Adds a poll with the poll answers to the post.
      */
     public function addPoll(PollPostRepositoryInterface $post, array $answers, array $data = []): PodiumResponse;
 
     /**
-     * Updates the post's poll.
+     * Edits the post's poll with answers.
      */
     public function editPoll(PollPostRepositoryInterface $post, array $answers = [], array $data = []): PodiumResponse;
 
@@ -24,7 +24,7 @@ interface PollPostInterface
     public function removePoll(PollPostRepositoryInterface $post): PodiumResponse;
 
     /**
-     * Votes in the post's poll.
+     * Votes in the post's poll with answers as the member.
      */
     public function votePoll(
         PollPostRepositoryInterface $post,

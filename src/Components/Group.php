@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Group\GroupBuilder;
 use Podium\Api\Services\Group\GroupKeeper;
 use Podium\Api\Services\Group\GroupRemover;
@@ -72,8 +73,6 @@ final class Group extends Component implements GroupInterface
     }
 
     /**
-     * Creates group.
-     *
      * @throws InvalidConfigException
      */
     public function create(array $data = []): PodiumResponse
@@ -82,8 +81,6 @@ final class Group extends Component implements GroupInterface
     }
 
     /**
-     * Updates group.
-     *
      * @throws InvalidConfigException
      */
     public function edit(GroupRepositoryInterface $group, array $data = []): PodiumResponse
@@ -108,8 +105,6 @@ final class Group extends Component implements GroupInterface
     }
 
     /**
-     * Deletes group.
-     *
      * @throws InvalidConfigException
      */
     public function remove(GroupRepositoryInterface $group): PodiumResponse
@@ -134,8 +129,6 @@ final class Group extends Component implements GroupInterface
     }
 
     /**
-     * Adds member to the group.
-     *
      * @throws InvalidConfigException
      */
     public function join(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse
@@ -144,8 +137,6 @@ final class Group extends Component implements GroupInterface
     }
 
     /**
-     * Removes member from a group.
-     *
      * @throws InvalidConfigException
      */
     public function leave(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Rank;
 
 use PHPUnit\Framework\TestCase;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Components\Rank;
 use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class RankComponentTest extends TestCase

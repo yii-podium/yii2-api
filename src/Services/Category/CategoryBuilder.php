@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Category;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\CategoryBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

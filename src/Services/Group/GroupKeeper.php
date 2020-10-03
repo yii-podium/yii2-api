@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Group;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\GroupEvent;
 use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

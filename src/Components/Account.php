@@ -17,6 +17,7 @@ use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageInterface;
 use Podium\Api\Interfaces\MessageRepositoryInterface;
+use Podium\Api\Interfaces\PodiumBridgeInterface;
 use Podium\Api\Interfaces\PollPostInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PostInterface;
@@ -24,13 +25,14 @@ use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
 use Podium\Api\Module;
+use Podium\Api\PodiumResponse;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\helpers\Json;
 use yii\web\User;
 
-final class Account extends Component implements AccountInterface
+final class Account extends Component implements AccountInterface, PodiumBridgeInterface
 {
     /**
      * @var string|array|MemberRepositoryInterface
@@ -64,6 +66,8 @@ final class Account extends Component implements AccountInterface
     private ?MemberRepositoryInterface $member = null;
 
     /**
+     * Returns member's repository loaded with current user's data.
+     *
      * @throws InvalidConfigException|NoMembershipException
      */
     public function getMembership(bool $renew = false): MemberRepositoryInterface
@@ -124,34 +128,34 @@ final class Account extends Component implements AccountInterface
     /**
      * @throws InvalidConfigException|NoMembershipException
      */
-    public function createForum(CategoryRepositoryInterface $category, array $data = []): PodiumResponse
+    public function createForum(CategoryRepositoryInterface $parentCategory, array $data = []): PodiumResponse
     {
         /** @var ForumInterface $forumComponent */
         $forumComponent = $this->getPodium()->getForum();
 
-        return $forumComponent->create($this->getMembership(), $category, $data);
+        return $forumComponent->create($this->getMembership(), $parentCategory, $data);
     }
 
     /**
      * @throws InvalidConfigException|NoMembershipException
      */
-    public function createThread(ForumRepositoryInterface $forum, array $data = []): PodiumResponse
+    public function createThread(ForumRepositoryInterface $parentForum, array $data = []): PodiumResponse
     {
         /** @var ThreadInterface $threadComponent */
         $threadComponent = $this->getPodium()->getThread();
 
-        return $threadComponent->create($this->getMembership(), $forum, $data);
+        return $threadComponent->create($this->getMembership(), $parentForum, $data);
     }
 
     /**
      * @throws InvalidConfigException|NoMembershipException
      */
-    public function createPost(ThreadRepositoryInterface $thread, array $data = []): PodiumResponse
+    public function createPost(ThreadRepositoryInterface $parentThread, array $data = []): PodiumResponse
     {
         /** @var PostInterface $postComponent */
         $postComponent = $this->getPodium()->getPost();
 
-        return $postComponent->create($this->getMembership(), $thread, $data);
+        return $postComponent->create($this->getMembership(), $parentThread, $data);
     }
 
     /**

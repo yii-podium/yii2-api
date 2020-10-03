@@ -8,6 +8,7 @@ use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\RankInterface;
 use Podium\Api\Interfaces\RankRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Rank\RankBuilder;
 use Podium\Api\Services\Rank\RankRemover;
 use yii\base\Component;
@@ -64,8 +65,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Creates rank.
-     *
      * @throws InvalidConfigException
      */
     public function create(array $data = []): PodiumResponse
@@ -74,8 +73,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Updates rank.
-     *
      * @throws InvalidConfigException
      */
     public function edit(RankRepositoryInterface $rank, array $data = []): PodiumResponse
@@ -100,8 +97,6 @@ final class Rank extends Component implements RankInterface
     }
 
     /**
-     * Deletes rank.
-     *
      * @throws InvalidConfigException
      */
     public function remove(RankRepositoryInterface $rank): PodiumResponse

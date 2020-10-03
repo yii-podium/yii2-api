@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Poll;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\PollBuilderInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
 use Podium\Api\Interfaces\PollRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;

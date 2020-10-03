@@ -6,7 +6,6 @@ namespace Podium\Tests\Unit\Forum;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Forum;
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
@@ -15,6 +14,7 @@ use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SorterInterface;
+use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
 class ForumComponentTest extends TestCase

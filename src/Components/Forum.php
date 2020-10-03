@@ -13,6 +13,7 @@ use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SorterInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Forum\ForumArchiver;
 use Podium\Api\Services\Forum\ForumBuilder;
 use Podium\Api\Services\Forum\ForumMover;

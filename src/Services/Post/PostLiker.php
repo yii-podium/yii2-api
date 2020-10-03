@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Post;
 
-use Podium\Api\Components\PodiumResponse;
 use Podium\Api\Events\ThumbEvent;
 use Podium\Api\Interfaces\LikerInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThumbRepositoryInterface;
+use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
 use Yii;
