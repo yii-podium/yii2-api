@@ -11,10 +11,18 @@ use Podium\Api\PodiumResponse;
  */
 interface PostInterface
 {
-    public function getRepository(): PostRepositoryInterface;
+    /**
+     * Returns the post repository.
+     */
+    public function getPostRepository(): PostRepositoryInterface;
 
     /**
-     * Creates a post.
+     * Returns the thumb repository.
+     */
+    public function getThumbRepository(): ThumbRepositoryInterface;
+
+    /**
+     * Creates a post as the author under the thread.
      */
     public function create(
         MemberRepositoryInterface $author,
@@ -23,7 +31,7 @@ interface PostInterface
     ): PodiumResponse;
 
     /**
-     * Updates the post.
+     * Edits the post.
      */
     public function edit(PostRepositoryInterface $post, array $data = []): PodiumResponse;
 
@@ -33,7 +41,7 @@ interface PostInterface
     public function remove(PostRepositoryInterface $post): PodiumResponse;
 
     /**
-     * Moves the post to a different thread.
+     * Moves the post to the thread.
      */
     public function move(PostRepositoryInterface $post, ThreadRepositoryInterface $thread): PodiumResponse;
 
@@ -48,17 +56,27 @@ interface PostInterface
     public function revive(PostRepositoryInterface $post): PodiumResponse;
 
     /**
-     * Gives thumb up to the post.
+     * Gives a thumb up to the post as the member.
      */
     public function thumbUp(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse;
 
     /**
-     * Gives thumb down to the post.
+     * Gives a thumb down to the post as the member.
      */
     public function thumbDown(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse;
 
     /**
-     * Resets thumb from the post.
+     * Resets the thumb for the post as the member.
      */
     public function thumbReset(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse;
+
+    /**
+     * Pins the post.
+     */
+    public function pin(PostRepositoryInterface $post): PodiumResponse;
+
+    /**
+     * Unpins the post.
+     */
+    public function unpin(PostRepositoryInterface $post): PodiumResponse;
 }

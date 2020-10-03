@@ -180,6 +180,12 @@ move(
 
 Moves the forum to the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L198)
 
+
+#### Events
+
+- `Podium\Api\Services\Forum\ForumMover::EVENT_BEFORE_MOVING`
+- `Podium\Api\Services\Forum\ForumMover::EVENT_AFTER_MOVING`
+
 ---
 
 ### remove <span id="remove"></span>

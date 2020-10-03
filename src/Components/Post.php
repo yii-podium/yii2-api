@@ -95,7 +95,7 @@ final class Post extends Component implements PostInterface, PollPostInterface
     /**
      * @throws InvalidConfigException
      */
-    public function getRepository(): PostRepositoryInterface
+    public function getPostRepository(): PostRepositoryInterface
     {
         if (null === $this->repository) {
             /** @var PostRepositoryInterface $repository */
@@ -130,7 +130,7 @@ final class Post extends Component implements PostInterface, PollPostInterface
         ThreadRepositoryInterface $thread,
         array $data = []
     ): PodiumResponse {
-        return $this->getBuilder()->create($this->getRepository(), $author, $thread, $data);
+        return $this->getBuilder()->create($this->getPostRepository(), $author, $thread, $data);
     }
 
     /**
