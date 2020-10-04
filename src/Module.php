@@ -234,7 +234,7 @@ class Module extends ServiceLocator
         return $this->get('thread');
     }
 
-    private function prepareTranslations(): void
+    protected function prepareTranslations(): void
     {
         Yii::$app->getI18n()->translations['podium.error'] = [
             'class' => PhpMessageSource::class,
@@ -249,7 +249,7 @@ class Module extends ServiceLocator
      *
      * @throws InvalidConfigException
      */
-    private function completeComponents(): void
+    protected function completeComponents(): void
     {
         $components = $this->getComponents();
 
