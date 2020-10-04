@@ -171,4 +171,32 @@ class PodiumTest extends AppTestCase
 
         self::assertSame(Category::class, $podium->getComponents()['category']);
     }
+
+    public function testExtendingTranslations(): void
+    {
+        $extendedPodium = new class() extends Podium {
+            public bool $flag = false;
+
+            protected function prepareTranslations(): void
+            {
+                $this->flag = true;
+            }
+        };
+
+        self::assertTrue($extendedPodium->flag);
+    }
+
+    public function testExtendingCompleteComponents(): void
+    {
+        $extendedPodium = new class() extends Podium {
+            public bool $flag = false;
+
+            protected function completeComponents(): void
+            {
+                $this->flag = true;
+            }
+        };
+
+        self::assertTrue($extendedPodium->flag);
+    }
 }
