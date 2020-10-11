@@ -24,7 +24,7 @@ use Podium\Api\Interfaces\MessageInterface;
 use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\RankInterface;
 use Podium\Api\Interfaces\ThreadInterface;
-use Podium\Api\Module as Podium;
+use Podium\Api\Podium;
 use Podium\Tests\AppTestCase;
 use Yii;
 

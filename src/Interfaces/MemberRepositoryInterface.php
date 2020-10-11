@@ -17,5 +17,5 @@ interface MemberRepositoryInterface extends RepositoryInterface
 
     public function isBanned(): bool;
 
-    public function isIgnoring(MemberRepositoryInterface $member): bool;
+    public function isIgnoring(MemberRepositoryInterface $target): bool;
 }

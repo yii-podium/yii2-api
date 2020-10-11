@@ -61,7 +61,7 @@ use function is_array;
  * @property RankInterface     $rank
  * @property ThreadInterface   $thread
  */
-class Module extends ServiceLocator
+class Podium extends ServiceLocator
 {
     private string $version = '0.1.0';
 

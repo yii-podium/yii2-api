@@ -25,7 +25,7 @@ use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
-use Podium\Api\Module;
+use Podium\Api\Podium;
 use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 use yii\web\User;
@@ -135,7 +135,7 @@ class AccountComponentTest extends TestCase
         $group = $this->createMock(GroupInterface::class);
         $group->expects(self::once())->method('join')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getGroup')->willReturn($group);
         $this->component->setPodium($podium);
 
@@ -147,7 +147,7 @@ class AccountComponentTest extends TestCase
         $group = $this->createMock(GroupInterface::class);
         $group->expects(self::once())->method('leave')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getGroup')->willReturn($group);
         $this->component->setPodium($podium);
 
@@ -159,7 +159,7 @@ class AccountComponentTest extends TestCase
         $category = $this->createMock(CategoryInterface::class);
         $category->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getCategory')->willReturn($category);
         $this->component->setPodium($podium);
 
@@ -171,7 +171,7 @@ class AccountComponentTest extends TestCase
         $forum = $this->createMock(ForumInterface::class);
         $forum->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getForum')->willReturn($forum);
         $this->component->setPodium($podium);
 
@@ -183,7 +183,7 @@ class AccountComponentTest extends TestCase
         $thread = $this->createMock(ThreadInterface::class);
         $thread->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getThread')->willReturn($thread);
         $this->component->setPodium($podium);
 
@@ -195,7 +195,7 @@ class AccountComponentTest extends TestCase
         $post = $this->createMock(PostInterface::class);
         $post->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getPost')->willReturn($post);
         $this->component->setPodium($podium);
 
@@ -207,7 +207,7 @@ class AccountComponentTest extends TestCase
         $thread = $this->createMock(ThreadInterface::class);
         $thread->expects(self::once())->method('mark')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getThread')->willReturn($thread);
         $this->component->setPodium($podium);
 
@@ -219,7 +219,7 @@ class AccountComponentTest extends TestCase
         $thread = $this->createMock(ThreadInterface::class);
         $thread->expects(self::once())->method('subscribe')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getThread')->willReturn($thread);
         $this->component->setPodium($podium);
 
@@ -231,7 +231,7 @@ class AccountComponentTest extends TestCase
         $thread = $this->createMock(ThreadInterface::class);
         $thread->expects(self::once())->method('unsubscribe')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getThread')->willReturn($thread);
         $this->component->setPodium($podium);
 
@@ -243,7 +243,7 @@ class AccountComponentTest extends TestCase
         $post = $this->createMock(PostInterface::class);
         $post->expects(self::once())->method('thumbUp')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getPost')->willReturn($post);
         $this->component->setPodium($podium);
 
@@ -255,7 +255,7 @@ class AccountComponentTest extends TestCase
         $post = $this->createMock(PostInterface::class);
         $post->expects(self::once())->method('thumbDown')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getPost')->willReturn($post);
         $this->component->setPodium($podium);
 
@@ -267,7 +267,7 @@ class AccountComponentTest extends TestCase
         $post = $this->createMock(PostInterface::class);
         $post->expects(self::once())->method('thumbReset')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getPost')->willReturn($post);
         $this->component->setPodium($podium);
 
@@ -279,7 +279,7 @@ class AccountComponentTest extends TestCase
         $post = $this->createMock(PollPostInterface::class);
         $post->expects(self::once())->method('votePoll')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getPost')->willReturn($post);
         $this->component->setPodium($podium);
 
@@ -291,7 +291,7 @@ class AccountComponentTest extends TestCase
         $member = $this->createMock(MemberInterface::class);
         $member->expects(self::once())->method('edit')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
@@ -303,7 +303,7 @@ class AccountComponentTest extends TestCase
         $member = $this->createMock(MemberInterface::class);
         $member->expects(self::once())->method('befriend')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
@@ -315,7 +315,7 @@ class AccountComponentTest extends TestCase
         $member = $this->createMock(MemberInterface::class);
         $member->expects(self::once())->method('unfriend')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
@@ -327,7 +327,7 @@ class AccountComponentTest extends TestCase
         $member = $this->createMock(MemberInterface::class);
         $member->expects(self::once())->method('ignore')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
@@ -339,7 +339,7 @@ class AccountComponentTest extends TestCase
         $member = $this->createMock(MemberInterface::class);
         $member->expects(self::once())->method('unignore')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
@@ -351,7 +351,7 @@ class AccountComponentTest extends TestCase
         $message = $this->createMock(MessageInterface::class);
         $message->expects(self::once())->method('send')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMessage')->willReturn($message);
         $this->component->setPodium($podium);
 
@@ -363,7 +363,7 @@ class AccountComponentTest extends TestCase
         $message = $this->createMock(MessageInterface::class);
         $message->expects(self::once())->method('remove')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMessage')->willReturn($message);
         $this->component->setPodium($podium);
 
@@ -375,7 +375,7 @@ class AccountComponentTest extends TestCase
         $message = $this->createMock(MessageInterface::class);
         $message->expects(self::once())->method('archive')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMessage')->willReturn($message);
         $this->component->setPodium($podium);
 
@@ -387,7 +387,7 @@ class AccountComponentTest extends TestCase
         $message = $this->createMock(MessageInterface::class);
         $message->expects(self::once())->method('revive')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMessage')->willReturn($message);
         $this->component->setPodium($podium);
 
@@ -399,7 +399,7 @@ class AccountComponentTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::once())->method('create')->willReturn(PodiumResponse::success());
 
-        $podium = $this->createMock(Module::class);
+        $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getLogger')->willReturn($logger);
         $this->component->setPodium($podium);
 

@@ -13,4 +13,6 @@ interface GroupMemberRepositoryInterface
     public function getErrors(): array;
 
     public function delete(): bool;
+
+    public function getParent(): RepositoryInterface;
 }
