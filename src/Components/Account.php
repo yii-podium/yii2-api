@@ -24,7 +24,7 @@ use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\PostRepositoryInterface;
 use Podium\Api\Interfaces\ThreadInterface;
 use Podium\Api\Interfaces\ThreadRepositoryInterface;
-use Podium\Api\Module;
+use Podium\Api\Podium;
 use Podium\Api\PodiumResponse;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -44,9 +44,9 @@ final class Account extends Component implements AccountInterface, PodiumBridgeI
      */
     public $userConfig = 'user';
 
-    private ?Module $podium = null;
+    private ?Podium $podium = null;
 
-    public function setPodium(Module $podium): void
+    public function setPodium(Podium $podium): void
     {
         $this->podium = $podium;
     }
@@ -54,7 +54,7 @@ final class Account extends Component implements AccountInterface, PodiumBridgeI
     /**
      * @throws InvalidConfigException
      */
-    public function getPodium(): Module
+    public function getPodium(): Podium
     {
         if (null === $this->podium) {
             throw new InvalidConfigException('Podium module is not set!');

@@ -8,19 +8,19 @@ file:
 
 ```php
 [
-    'modules' => [
-        'podium' => \Podium\Api\Module::class,
+    'components' => [
+        'podium' => \Podium\Api\Podium::class,
     ],
 ]
 ```
 
-In this case the _module ID_ is `podium`. All application's modules must use unique IDs, so if yours is already using 
+In this case the _component ID_ is `podium`. All application's components must use unique IDs, so if yours is already using 
 `podium`, or you would like to choose another word, you can do so, but notice that this documentation is always assuming 
 the default ID.
 
 # Usage
 
-To use any of Podium components simply call it with module's ID:
+To use any of Podium components simply call it with ID chosen above like:
 
 ```php
 \Yii::$app->podium->componentName->componentMethod();
