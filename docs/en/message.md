@@ -35,15 +35,15 @@ or component's ID or configuration array that can be resolved as the above. Defa
 ## Methods
 
 - [archive](#archive)
-- [getArchiver](#getArchiver)
-- [getMessenger](#getMessenger)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
+- [getArchiver](#getarchiver)
+- [getMessenger](#getmessenger)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
 - [remove](#remove)
 - [revive](#revive)
 - [send](#send)
 
-### archive <span id="archive"></span>
+### archive
 
 ```
 archive(
@@ -52,7 +52,7 @@ archive(
 ): Podium\Api\PodiumResponse
 ```
 
-Archives the member's side of the message. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L130)
+Archives the member's side of the message. See also [revive](#revive).
 
 #### Events
 
@@ -61,47 +61,47 @@ Archives the member's side of the message. [[link]](https://github.com/yii-podiu
 
 ---
 
-### getArchiver <span id="getArchiver"></span>
+### getArchiver
 
 ```
 getArchiver(): Podium\Api\Interfaces\MessageArchiverInterface
 ```
 
-Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L116)
+Returns the archiver service which handles [archiving](#archive) and [reviving](#revive).
 
 ---
 
-### getMessenger <span id="getMessenger"></span>
+### getMessenger
 
 ```
 getMessenger(): Podium\Api\Interfaces\MessengerInterface
 ```
 
-Returns the messenger service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L64)
+Returns the messenger service which handles [sending](#send).
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\MessageRemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L92)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\MessageRepositoryInterface
 ```
 
-Returns the message repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L48)
+Returns the message repository.
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(
@@ -110,7 +110,7 @@ remove(
 ): Podium\Api\PodiumResponse
 ```
 
-Removes the member's side of the message. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L106)
+Removes the member's side of the message. Only archived side of the message can be removed.
 
 #### Events
 
@@ -119,7 +119,7 @@ Removes the member's side of the message. [[link]](https://github.com/yii-podium
 
 ---
 
-### revive <span id="revive"></span>
+### revive
 
 ```
 revive(
@@ -128,7 +128,7 @@ revive(
 ): Podium\Api\PodiumResponse
 ```
 
-Revives the member's side of the message. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L138)
+Revives the member's side of the message. See also [archive](#archive).
 
 #### Events
 
@@ -137,7 +137,7 @@ Revives the member's side of the message. [[link]](https://github.com/yii-podium
 
 ---
 
-### send <span id="send"></span>
+### send
 
 ```
 send(
@@ -148,8 +148,12 @@ send(
 ): Podium\Api\PodiumResponse
 ```
 
-Send a new message (or a reply to the message) from the sender to the receiver. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Message.php#L78)
+Sends a new message (or a reply to the message) from the sender to the receiver if the receiver is not ignoring the 
+sender. A message is saved in two copies for both sides so each side can be handled individually.
+
+Required data:
+- `subject`
+- `content`
 
 #### Events
 

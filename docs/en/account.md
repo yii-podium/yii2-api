@@ -16,8 +16,7 @@ and allows to call their methods from the perspective of a logged-in user.
 
 #### repositoryConfig
 
-Member repository. Expects an instance of 
-[MemberRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/MemberRepositoryInterface.php) 
+Member repository. Expects an instance of [MemberRepositoryInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/MemberRepositoryInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `null`.
 
 #### userConfig
@@ -27,67 +26,64 @@ component's ID or configuration array that can be resolved as the above. Default
 
 ## Methods
 
-- [archiveMessage](#archiveMessage)
-- [befriendMember](#befriendMember)
-- [createCategory](#createCategory)
-- [createForum](#createForum)
-- [createPost](#createPost)
-- [createThread](#createThread)
+- [archiveMessage](#archivemessage)
+- [befriendMember](#befriendmember)
+- [createCategory](#createcategory)
+- [createForum](#createforum)
+- [createPost](#createpost)
+- [createThread](#createthread)
 - [edit](#edit)
-- [getMembership](#getMembership)
-- [getPodium](#getPodium)
-- [ignoreMember](#ignoreMember)
-- [joinGroup](#joinGroup)
-- [leaveGroup](#leaveGroup)
+- [getMembership](#getmembership)
+- [getPodium](#getpodium)
+- [ignoreMember](#ignoremember)
+- [joinGroup](#joingroup)
+- [leaveGroup](#leavegroup)
 - [log](#log)
-- [markThread](#markThread)
-- [removeMessage](#removeMessage)
-- [reviveMessage](#reviveMessage)
-- [sendMessage](#sendMessage)
-- [setPodium](#setPodium)
-- [subscribeThread](#subscribeThread)
-- [thumbDownPost](#thumbDownPost)
-- [thumbResetPost](#thumbResetPost)
-- [thumbUpPost](#thumbUpPost)
-- [unfriendMember](#unfriendMember)
-- [unignoreMember](#unignoreMember)
-- [unsubscribeThread](#unsubscribeThread)
-- [votePoll](#votePoll)
+- [markThread](#markthread)
+- [removeMessage](#removemessage)
+- [reviveMessage](#revivemessage)
+- [sendMessage](#sendmessage)
+- [setPodium](#setpodium)
+- [subscribeThread](#subscribethread)
+- [thumbDownPost](#thumbdownpost)
+- [thumbResetPost](#thumbresetpost)
+- [thumbUpPost](#thumbuppost)
+- [unfriendMember](#unfriendmember)
+- [unignoreMember](#unignoremember)
+- [unsubscribeThread](#unsubscribethread)
+- [votePoll](#votepoll)
 
-### archiveMessage <span id="archiveMessage"></span>
+### archiveMessage
 
 ```
 archiveMessage(Podium\Api\Interfaces\MessageRepositoryInterface $message): Podium\Api\PodiumResponse
 ```
 
-Archives the current user's side of the message. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L321)
+Archives the current user's side of the message. See [archive](message.md#archive).
 
 ---
 
-### befriendMember <span id="befriendMember"></span>
+### befriendMember
 
 ```
 befriendMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
 ```
 
-Befriends the target member as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L252)
+Befriends the target member as the current user. See [befriend](member.md#befriend).
 
 ---
 
-### createCategory <span id="createCategory"></span>
+### createCategory
 
 ```
 createCategory(array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a category as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L119)
+Creates a category as the current user. See [create](category.md#create).
 
 ---
 
-### createForum <span id="createForum"></span>
+### createForum
 
 ```
 createForum(
@@ -96,144 +92,131 @@ createForum(
 ): Podium\Api\PodiumResponse
 ```
 
-Creates a forum under the parent category as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L130)
+Creates a forum under the parent category as the current user. See [create](forum.md#create).
 
 ---
 
-### createPost <span id="createPost"></span>
+### createPost
 
 ```
 createPost(Podium\Api\Interfaces\ThreadRepositoryInterface $parentThread, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a post under the parent thread as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L152)
+Creates a post under the parent thread as the current user. See [create](post.md#create).
 
 ---
 
-### createThread <span id="createThread"></span>
+### createThread
 
 ```
 createThread(Podium\Api\Interfaces\ForumRepositoryInterface $parentForum, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a thread under the parent forum as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L141)
+Creates a thread under the parent forum as the current user. See [create](thread.md#create).
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the current user data. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L241)
+Edits the current user data. See [edit](member.md#edit).
 
 ---
 
-### getMembership <span id="getMembership"></span>
+### getMembership
 
 ```
 getMembership(bool $renew = false): Podium\Api\Interfaces\MemberRepositoryInterface
 ```
 
-Returns member's repository loaded with current user's data. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L72)
+Returns member's repository loaded with current user's data.
 
 ---
 
-### getPodium <span id="getPodium"></span>
+### getPodium
 
 ```
-getPodium(): Podium\Api\Module
+getPodium: Podium\Api\Podium
 ```
 
-Returns Podium module. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L57)
+Returns Podium component.
 
 ---
 
-### ignoreMember <span id="ignoreMember"></span>
+### ignoreMember
 
 ```
 ignoreMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
 ```
 
-Ignores the target member as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L274)
+Ignores the target member as the current user. See [ignore](member.md#ignore).
 
 ---
 
-### joinGroup <span id="joinGroup"></span>
+### joinGroup
 
 ```
 joinGroup(Podium\Api\Interfaces\GroupRepositoryInterface $group): Podium\Api\PodiumResponse
 ```
 
-Adds the current user to the group. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L97)
+Adds the current user to the group. See [join](group.md#join).
 
 ---
 
-### leaveGroup <span id="leaveGroup"></span>
+### leaveGroup
 
 ```
 leaveGroup(Podium\Api\Interfaces\GroupRepositoryInterface $group): Podium\Api\PodiumResponse
 ```
 
-Removes the current user from the group. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L108)
+Removes the current user from the group. See [leave](group.md#leave).
 
 ---
 
-### log <span id="log"></span>
+### log
 
 ```
 log(string $action, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Logs the action as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L343)
+Logs the action as the current user. See [log](logger.md#create).
 
 ---
 
-### markThread <span id="markThread"></span>
+### markThread
 
 ```
 markThread(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Marks the thread for the current user at the post's timestamp. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L163)
+Marks the thread for the current user at the post's timestamp. See [mark](thread.md#mark).
 
 ---
 
-### removeMessage <span id="removeMessage"></span>
+### removeMessage
 
 ```
 removeMessage(Podium\Api\Interfaces\MessageRepositoryInterface $message): Podium\Api\PodiumResponse
 ```
 
-Removes the current user's side of the message. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L310)
+Removes the current user's side of the message. See [remove](message.md#remove).
 
 ---
 
-### reviveMessage <span id="reviveMessage"></span>
+### reviveMessage
 
 ```
 reviveMessage(Podium\Api\Interfaces\MessageRepositoryInterface $message): Podium\Api\PodiumResponse
 ```
 
-Revives the current user's side of the message. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L332)
+Revives the current user's side of the message. See [revive](message.md#revive).
 
 ---
 
-### sendMessage <span id="sendMessage"></span>
+### sendMessage
 
 ```
 sendMessage(
@@ -243,107 +226,97 @@ sendMessage(
 ): Podium\Api\PodiumResponse
 ```
 
-Sends a message to the receiver as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L296)
+Sends a message to the receiver as the current user. See [send](message.md#send).
 
 ---
 
-### setPodium <span id="setPodium"></span>
+### setPodium
 
 ```
-setPodium(Podium\Api\Module $podium): void
+setPodium(Podium\Api\Podium $podium): void
 ```
 
-Sets Podium module's link. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L49)
+Sets link to Podium component.
 
 ---
 
-### subscribeThread <span id="subscribeThread"></span>
+### subscribeThread
 
 ```
 subscribeThread(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Subscribes the current user to the thread. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L175)
+Subscribes the current user to the thread. See [subscribe](thread.md#subscribe).
 
 ---
 
-### thumbDownPost <span id="thumbDownPost"></span>
+### thumbDownPost
 
 ```
 thumbDownPost(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Gives the post a thumb down from the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L208)
+Gives the post a thumb down from the current user. See [thumbDown](post.md#thumbdown).
 
 ---
 
-### thumbResetPost <span id="thumbResetPost"></span>
+### thumbResetPost
 
 ```
 thumbResetPost(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Resets the thumb setting of the current user in the post. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L219)
+Resets the thumb setting of the current user in the post. See [thumbReset](post.md#thumbreset).
 
 ---
 
-### thumbUpPost <span id="thumbUpPost"></span>
+### thumbUpPost
 
 ```
 thumbUpPost(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Gives the post a thumb up from the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L175)
+Gives the post a thumb up from the current user. See [thumbUp](post.md#thumbup).
 
 ---
 
-### unfriendMember <span id="unfriendMember"></span>
+### unfriendMember
 
 ```
 unfriendMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
 ```
 
-Unfriends the target member as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L263)
+Unfriends the target member as the current user. See [unfriend](member.md#unfriend).
 
 ---
 
-### unignoreMember <span id="unignoreMember"></span>
+### unignoreMember
 
 ```
 unignoreMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
 ```
 
-Unignores the target member as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L285)
+Unignores the target member as the current user. See [unignore](member.md#unignore).
 
 ---
 
-### unsubscribeThread <span id="unsubscribeThread"></span>
+### unsubscribeThread
 
 ```
 unsubscribeThread(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Unsubscribes the current user from the thread. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L186)
+Unsubscribes the current user from the thread. See [unsubscribe](thread.md#unsubscribe).
 
 ---
 
-### votePoll <span id="votePoll"></span>
+### votePoll
 
 ```
 votePoll(Podium\Api\Interfaces\PollPostRepositoryInterface $post, array $answer): Podium\Api\PodiumResponse
 ```
 
-Votes in the post's poll as the current user. 
-[[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Account.php#L230)
+Votes in the post's poll as the current user. See [votePoll](post.md#votepoll).
 
 ---
 

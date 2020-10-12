@@ -69,34 +69,34 @@ or component's ID or configuration array that can be resolved as the above. Defa
 
 ## Methods
 
-- [addPoll](#addPoll)
+- [addPoll](#addpoll)
 - [archive](#archive)
 - [create](#create)
 - [edit](#edit)
-- [editPoll](#editPoll)
-- [getArchiver](#getArchiver)
-- [getBuilder](#getBuilder)
-- [getLiker](#getLiker)
-- [getMover](#getMover)
-- [getPinner](#getPinner)
-- [getPollBuilder](#getPollBuilder)
-- [getPollRemover](#getPollRemover)
-- [getPollVoter](#getPollVoter)
-- [getPostRepository](#getPostRepository)
-- [getRemover](#getRemover)
-- [getThumbRepository](#getThumbRepository)
+- [editPoll](#editpoll)
+- [getArchiver](#getarchiver)
+- [getBuilder](#getbuilder)
+- [getLiker](#getliker)
+- [getMover](#getmover)
+- [getPinner](#getpinner)
+- [getPollBuilder](#getpollbuilder)
+- [getPollRemover](#getpollremover)
+- [getPollVoter](#getpollvoter)
+- [getPostRepository](#getpostrepository)
+- [getRemover](#getremover)
+- [getThumbRepository](#getthumbrepository)
 - [move](#move)
 - [pin](#pin)
 - [remove](#remove)
-- [removePoll](#removePoll)
+- [removePoll](#removepoll)
 - [revive](#revive)
-- [thumbDown](#thumbDown)
-- [thumbReset](#thumbReset)
-- [thumbUp](#thumbUp)
+- [thumbDown](#thumbdown)
+- [thumbReset](#thumbreset)
+- [thumbUp](#thumbup)
 - [unpin](#unpin)
-- [votePoll](#votePoll)
+- [votePoll](#votepoll)
 
-### addPoll <span id="addPoll"></span>
+### addPoll
 
 ```
 addPoll(
@@ -106,7 +106,15 @@ addPoll(
 ): Podium\Api\PodiumResponse
 ```
 
-Adds a poll with the poll answers to the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L331)
+Adds a poll with the poll answers to the post. See also [editPoll](#editpoll).
+
+Required data:
+- `question` - the text that will be displayed above the answers
+- `expires_at` - the timestamp for voting end time
+
+Optional data (with defaults):
+- `revealed` (`true`) - whether the poll results should be revealed to the member after voting or kept secret until expiration date
+- `choice_id` (`single`) - whether the poll is single or multiple choice
 
 #### Events
 
@@ -115,13 +123,13 @@ Adds a poll with the poll answers to the post. [[link]](https://github.com/yii-p
 
 ---
 
-### archive <span id="archive"></span>
+### archive
 
 ```
 archive(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Archives the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L224)
+Archives the post. See also [revive](#revive).
 
 #### Events
 
@@ -130,7 +138,7 @@ Archives the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/s
 
 ---
 
-### create <span id="create"></span>
+### create
 
 ```
 create(
@@ -140,7 +148,10 @@ create(
 ): Podium\Api\PodiumResponse
 ```
 
-Creates a post as the author under the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L128)
+Creates a post as the author under the thread. See also [edit](#edit).
+                                               
+Required data:
+- `content`
 
 #### Events
 
@@ -149,13 +160,16 @@ Creates a post as the author under the thread. [[link]](https://github.com/yii-p
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\PostRepositoryInterface $post, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L139)
+Edits the post. See also [create](#create).
+
+Optional data:
+- `content`
 
 #### Events
 
@@ -164,7 +178,7 @@ Edits the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/
 
 ---
 
-### editPoll <span id="editPoll"></span>
+### editPoll
 
 ```
 editPoll(
@@ -174,7 +188,13 @@ editPoll(
 ): Podium\Api\PodiumResponse
 ```
 
-Edits the post's poll with answers. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L339)
+Edits the post's poll with answers. See also [addPoll](#addpoll).
+
+Optional data:
+- `question` - the text that will be displayed above the answers
+- `expires_at` - the timestamp for voting end time
+- `revealed` - whether the poll results should be revealed to the member after voting or kept secret until expiration date
+- `choice_id` - whether the poll is single or multiple choice (changing not possible if members already voted)
 
 #### Events
 
@@ -183,117 +203,117 @@ Edits the post's poll with answers. [[link]](https://github.com/yii-podium/yii2-
 
 ---
 
-### getArchiver <span id="getArchiver"></span>
+### getArchiver
 
 ```
 getArchiver(): Podium\Api\Interfaces\ArchiverInterface
 ```
 
-Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L197)
+Returns the archiver service which handles [archiving](#archive) and [reviving](#revive).
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\CategorisedBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L114)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getLiker <span id="getLiker"></span>
+### getLiker
 
 ```
 getLiker(): Podium\Api\Interfaces\LikerInterface
 ```
 
-Returns the liker service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L229)
+Returns the liker service which handles giving [thumb up](#thumbup), [thumb down](#thumbdown), and [resetting thumb](#thumbreset).
 
 ---
 
-### getMover <span id="getMover"></span>
+### getMover
 
 ```
 getMover(): Podium\Api\Interfaces\MoverInterface
 ```
 
-Returns the mover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L173)
+Returns the mover service which handles [moving](#move) a post between threads.
 
 ---
 
-### getPinner <span id="getPinner"></span>
+### getPinner
 
 ```
 getPinner(): Podium\Api\Interfaces\PinnerInterface
 ```
 
-Returns the pinner service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L285)
+Returns the pinner service which handles [pinning](#pin) and [unpinning](#unpin).
 
 ---
 
-### getPollBuilder <span id="getPollBuilder"></span>
+### getPollBuilder
 
 ```
 getPollBuilder(): Podium\Api\Interfaces\PollBuilderInterface
 ```
 
-Returns the poll builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L317)
+Returns the poll builder service which handles [adding](#addpoll) and [editing](#editpoll) the poll.
 
 ---
 
-### getPollRemover <span id="getPollRemover"></span>
+### getPollRemover
 
 ```
 getPollRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the poll remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L349)
+Returns the poll remover service which handles [removing](#removepoll) the poll.
 
 ---
 
-### getPollVoter <span id="getPollVoter"></span>
+### getPollVoter
 
 ```
 getPollVoter(): Podium\Api\Interfaces\VoterInterface
 ```
 
-Returns the poll voter service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L373)
+Returns the poll voter service which handles [voting](#votepoll) in polls.
 
 ---
 
-### getPostRepository <span id="getPostRepository"></span>
+### getPostRepository
 
 ```
 getPostRepository(): Podium\Api\Interfaces\PostRepositoryInterface
 ```
 
-Returns the post repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L98)
+Returns the post repository.
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L149)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getThumbRepository <span id="getThumbRepository"></span>
+### getThumbRepository
 
 ```
 getThumbRepository(): Podium\Api\Interfaces\ThumbRepositoryInterface
 ```
 
-Returns the thumb repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L245)
+Returns the thumb repository.
 
 ---
 
-### move <span id="move"></span>
+### move
 
 ```
 move(
@@ -302,7 +322,7 @@ move(
 ): Podium\Api\PodiumResponse
 ```
 
-Moves the post to the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L187)
+Moves the post to the thread.
 
 #### Events
 
@@ -311,13 +331,13 @@ Moves the post to the thread. [[link]](https://github.com/yii-podium/yii2-api/bl
 
 ---
 
-### pin <span id="pin"></span>
+### pin
 
 ```
 pin(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Pins the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L299)
+Pins the post. See also [unpin](#unpin).
 
 #### Events
 
@@ -326,13 +346,13 @@ Pins the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/C
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Removes the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L134)
+Removes the post.
 
 #### Events
 
@@ -341,13 +361,13 @@ Removes the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/sr
 
 ---
 
-### removePoll <span id="removePoll"></span>
+### removePoll
 
 ```
 removePoll(Podium\Api\Interfaces\PollPostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Removes the post's poll. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L363)
+Removes the post's poll.
 
 #### Events
 
@@ -356,13 +376,13 @@ Removes the post's poll. [[link]](https://github.com/yii-podium/yii2-api/blob/ma
 
 ---
 
-### revive <span id="revive"></span>
+### revive
 
 ```
 revive(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Revives the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L219)
+Revives the post. See also [archive](#archive).
 
 #### Events
 
@@ -371,7 +391,7 @@ Revives the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/sr
 
 ---
 
-### thumbDown <span id="thumbDown"></span>
+### thumbDown
 
 ```
 thumbDown(
@@ -380,7 +400,7 @@ thumbDown(
 ): Podium\Api\PodiumResponse
 ```
 
-Gives a thumb down to the post as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L267)
+Gives a thumb down to the post as the member. See also [thumbUp](#thumbup) and [thumbReset](#thumbreset).
 
 #### Events
 
@@ -389,7 +409,7 @@ Gives a thumb down to the post as the member. [[link]](https://github.com/yii-po
 
 ---
 
-### thumbReset <span id="thumbReset"></span>
+### thumbReset
 
 ```
 thumbReset(
@@ -398,7 +418,7 @@ thumbReset(
 ): Podium\Api\PodiumResponse
 ```
 
-Resets the thumb for the post as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L275)
+Resets the thumb for the post as the member. See also [thumbUp](#thumbup) and [thumbDown](#thumbdown).
 
 #### Events
 
@@ -407,7 +427,7 @@ Resets the thumb for the post as the member. [[link]](https://github.com/yii-pod
 
 ---
 
-### thumbUp <span id="thumbUp"></span>
+### thumbUp
 
 ```
 thumbUp(
@@ -416,7 +436,7 @@ thumbUp(
 ): Podium\Api\PodiumResponse
 ```
 
-Gives a thumb up to the post as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L259)
+Gives a thumb up to the post as the member. See also [thumbDown](#thumbdown) and [thumbReset](#thumbreset).
 
 #### Events
 
@@ -425,13 +445,13 @@ Gives a thumb up to the post as the member. [[link]](https://github.com/yii-podi
 
 ---
 
-### unpin <span id="unpin"></span>
+### unpin
 
 ```
 unpin(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\PodiumResponse
 ```
 
-Unpins the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L307)
+Unpins the post. See also [pin](#pin).
 
 #### Events
 
@@ -440,7 +460,7 @@ Unpins the post. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### votePoll <span id="votePoll"></span>
+### votePoll
 
 ```
 votePoll(
@@ -450,7 +470,7 @@ votePoll(
 ): Podium\Api\PodiumResponse
 ```
 
-Votes in the post's poll with answers as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Post.php#L387)
+Votes in the post's poll with answers as the member.
 
 #### Events
 

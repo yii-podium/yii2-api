@@ -22,6 +22,11 @@ or component's ID or configuration array that can be resolved as the above. Defa
 Builder service. Expects an instance of [CategorisedBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategorisedBuilderInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Forum\ForumBuilder`.
 
+#### hiderConfig
+
+Hider service. Expects an instance of [HiderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/HiderInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Forum\ForumHider`.
+
 #### moverConfig
 
 Mover service. Expects an instance of [MoverInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/MoverInterface.php) 
@@ -47,26 +52,29 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [archive](#archive)
 - [create](#create)
 - [edit](#edit)
-- [getArchiver](#getArchiver)
-- [getBuilder](#getBuilder)
-- [getMover](#getMover)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
-- [getSorter](#getSorter)
+- [getArchiver](#getarchiver)
+- [getBuilder](#getbuilder)
+- [getHider](#gethider)
+- [getMover](#getmover)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
+- [getSorter](#getsorter)
+- [hide](#hide)
 - [move](#move)
 - [remove](#remove)
 - [replace](#replace)
+- [reveal](#reveal)
 - [revive](#revive)
 - [sort](#sort)
 
-
-### archive <span id="archive"></span>
+### archive
 
 ```
 archive(Podium\Api\Interfaces\ForumRepositoryInterface $forum): Podium\Api\PodiumResponse
 ```
 
-Archives the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L224)
+Archives the forum. Only archived forums can be removed. Archiving a forum does not archive its child threads and posts. 
+See also [revive](#revive).
 
 #### Events
 
@@ -75,7 +83,7 @@ Archives the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### create <span id="create"></span>
+### create
 
 ```
 create(
@@ -85,7 +93,15 @@ create(
 ): Podium\Api\PodiumResponse
 ```
 
-Creates a forum as the author under the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L95)
+Creates a forum as the author under the category. See also [edit](#edit).
+
+Required data:
+- `name`
+
+Optional data (with defaults):
+- `description` (`null`)
+- `slug` (generated from `name`)
+- `sort` (next value after the highest sort order available)
 
 #### Events
 
@@ -94,13 +110,19 @@ Creates a forum as the author under the category. [[link]](https://github.com/yi
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\ForumRepositoryInterface $forum, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L108)
+Edits the forum. See also [create](#create).
+
+Optional data:
+- `name`
+- `description`
+- `slug`
+- `sort`
 
 #### Events
 
@@ -109,67 +131,92 @@ Edits the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### getArchiver <span id="getArchiver"></span>
+### getArchiver
 
 ```
 getArchiver(): Podium\Api\Interfaces\ArchiverInterface
 ```
 
-Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L208)
+Returns the archiver service which handles [archiving](#archive) and [reviving](#revive).
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\CategorisedBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L79)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getMover <span id="getMover"></span>
+### getHider
+
+```
+getHider(): Podium\Api\Interfaces\Hiderface
+```
+
+Returns the hider service which handles [hiding](#hide) and [revealing](#reveal).
+
+---
+
+### getMover
 
 ```
 getMover(): Podium\Api\Interfaces\MoverInterface
 ```
 
-Returns the mover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L182)
+Returns the mover service which handles [moving](#move) a forum between categories.
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L118)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\ForumRepositoryInterface
 ```
 
-Returns the forum repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L63)
+Returns the forum repository.
 
 ---
 
-### getSorter <span id="getSorter"></span>
+### getSorter
 
 ```
 getSorter(): Podium\Api\Interfaces\SorterInterface
 ```
 
-Returns the sorter service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L133)
+Returns the sorter service which handles [replacing](#replace) and [sorting](#sort) the forums order.
 
 ---
 
-### move <span id="move"></span>
+### hide
+
+```
+hide(Podium\Api\Interfaces\ForumRepositoryInterface $forum): Podium\Api\PodiumResponse
+```
+
+Hides the forum. Forum can be hidden from certain groups of users. See also [reveal](#reveal).
+
+#### Events
+
+- `Podium\Api\Services\Forum\ForumHider::EVENT_BEFORE_HIDING`
+- `Podium\Api\Services\Forum\ForumHider::EVENT_AFTER_HIDING`
+
+---
+
+### move
 
 ```
 move(
@@ -178,7 +225,7 @@ move(
 ): Podium\Api\PodiumResponse
 ```
 
-Moves the forum to the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L198)
+Moves the forum to the category.
 
 
 #### Events
@@ -188,13 +235,14 @@ Moves the forum to the category. [[link]](https://github.com/yii-podium/yii2-api
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\ForumRepositoryInterface $forum): Podium\Api\PodiumResponse
 ```
 
-Removes the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L134)
+Removes the forum. Only archived forums can be removed. Removing a forum removes all its child threads and posts, 
+regardless of their archived status.
 
 #### Events
 
@@ -203,7 +251,7 @@ Removes the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/s
 
 ---
 
-### replace <span id="replace"></span>
+### replace
 
 ```
 replace(
@@ -212,7 +260,8 @@ replace(
 ): Podium\Api\PodiumResponse
 ```
 
-Replaces the forums order. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L160)
+Replaces the forums order. Because both forums can have the same order the resulting order can be the same. See also 
+[sort](#sort).
 
 #### Events
 
@@ -221,13 +270,29 @@ Replaces the forums order. [[link]](https://github.com/yii-podium/yii2-api/blob/
 
 ---
 
-### revive <span id="revive"></span>
+### reveal
+
+```
+reveal(Podium\Api\Interfaces\ForumRepositoryInterface $forum): Podium\Api\PodiumResponse
+```
+
+Reveals the forum. Forum that is not hidden (default state) is available for all groups of users. See also [hide](#hide).
+
+#### Events
+
+- `Podium\Api\Services\Forum\ForumHider::EVENT_BEFORE_REVEALING`
+- `Podium\Api\Services\Forum\ForumHider::EVENT_AFTER_REVEALING`
+
+---
+
+### revive
 
 ```
 revive(Podium\Api\Interfaces\ForumRepositoryInterface $forum): Podium\Api\PodiumResponse
 ```
 
-Revives the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L234)
+Revives the forum. The revived forum is no longer archived. It does not affect the archived status of its child threads 
+and posts. See also [archive](#archive).
 
 #### Events
 
@@ -236,13 +301,14 @@ Revives the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/s
 
 ---
 
-### sort <span id="sort"></span>
+### sort
 
 ```
 sort(): Podium\Api\PodiumResponse
 ```
 
-Sorts the forums order. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Forum.php#L172)
+Sorts the forums order. Sorting makes sure two or more forums are not having the same order value anymore. See also 
+[replace](#replace).
 
 #### Events
 

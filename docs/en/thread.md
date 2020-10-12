@@ -32,6 +32,11 @@ or component's ID or configuration array that can be resolved as the above. Defa
 Builder service. Expects an instance of [CategorisedBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategorisedBuilderInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Thread\ThreadBuilder`.
 
+#### hiderConfig
+
+Hider service. Expects an instance of [HiderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/HiderInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Thread\ThreadHider`.
+
 #### lockerConfig
 
 Locker service. Expects an instance of [LockerInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/LockerInterface.php) 
@@ -76,17 +81,20 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [getArchiver](#getArchiver)
 - [getBookmarkRepository](#getBookmarkRepository)
 - [getBuilder](#getBuilder)
+- [getHider](#getHider)
 - [getLocker](#getLocker)
 - [getMover](#getMover)
 - [getPinner](#getPinner)
 - [getRemover](#getRemover)
 - [getSubscriptionRepository](#getSubscriptionRepository)
 - [getThreadRepository](#getThreadRepository)
+- [hide](#hide)
 - [lock](#lock)
 - [mark](#mark)
 - [move](#move)
 - [pin](#pin)
 - [remove](#remove)
+- [reveal](#reveal)
 - [revive](#revive)
 - [subscribe](#subscribe)
 - [unlock](#unlock)
@@ -172,6 +180,16 @@ Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blo
 
 ---
 
+### getHider <span id="getHider"></span>
+
+```
+getHider(): Podium\Api\Interfaces\Hiderface
+```
+
+Returns the hider service.
+
+---
+
 ### getLocker <span id="getLocker"></span>
 
 ```
@@ -239,6 +257,21 @@ getThreadRepository(): Podium\Api\Interfaces\ThreadRepositoryInterface
 ```
 
 Returns the thread repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L97)
+
+---
+
+### hide <span id="hide"></span>
+
+```
+hide(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
+```
+
+Hides the thread.
+
+#### Events
+
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_BEFORE_HIDING`
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_AFTER_HIDING`
 
 ---
 
@@ -320,6 +353,21 @@ Removes the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 - `Podium\Api\Services\Thread\ThreadRemover::EVENT_BEFORE_REMOVING`
 - `Podium\Api\Services\Thread\ThreadRemover::EVENT_AFTER_REMOVING`
+
+---
+
+### reveal <span id="reveal"></span>
+
+```
+reveal(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
+```
+
+Reveals the thread.
+
+#### Events
+
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_BEFORE_REVEALING`
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_AFTER_REVEALING`
 
 ---
 
