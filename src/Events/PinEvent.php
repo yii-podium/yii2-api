@@ -10,12 +10,12 @@ use yii\base\Event;
 class PinEvent extends Event
 {
     /**
-     * @var bool whether models can be pinned
+     * @var bool whether repository can be pinned
      */
     public bool $canPin = true;
 
     /**
-     * @var bool whether models can be unpinned
+     * @var bool whether repository can be unpinned
      */
     public bool $canUnpin = true;
 

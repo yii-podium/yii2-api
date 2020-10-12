@@ -10,12 +10,12 @@ use yii\base\Event;
 class SubscriptionEvent extends Event
 {
     /**
-     * @var bool whether model can be subscribed
+     * @var bool whether repository can be subscribed
      */
     public bool $canSubscribe = true;
 
     /**
-     * @var bool whether model can be unsubscribed
+     * @var bool whether repository can be unsubscribed
      */
     public bool $canUnsubscribe = true;
 

@@ -50,4 +50,14 @@ interface CategoryInterface
      * Revives the category.
      */
     public function revive(CategoryRepositoryInterface $category): PodiumResponse;
+
+    /**
+     * Hides the category.
+     */
+    public function hide(CategoryRepositoryInterface $category): PodiumResponse;
+
+    /**
+     * Reveals the category.
+     */
+    public function reveal(CategoryRepositoryInterface $category): PodiumResponse;
 }

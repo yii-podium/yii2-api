@@ -10,7 +10,7 @@ use yii\base\Event;
 class VoteEvent extends Event
 {
     /**
-     * @var bool whether model can be voted for
+     * @var bool whether repository can be voted for
      */
     public bool $canVote = true;
 

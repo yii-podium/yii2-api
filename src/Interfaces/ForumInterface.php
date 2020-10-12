@@ -59,4 +59,14 @@ interface ForumInterface
      * Revives the forum.
      */
     public function revive(ForumRepositoryInterface $forum): PodiumResponse;
+
+    /**
+     * Hides the forum.
+     */
+    public function hide(ForumRepositoryInterface $forum): PodiumResponse;
+
+    /**
+     * Reveals the forum.
+     */
+    public function reveal(ForumRepositoryInterface $forum): PodiumResponse;
 }

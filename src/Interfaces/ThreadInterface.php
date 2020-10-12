@@ -91,4 +91,14 @@ interface ThreadInterface
      * Marks the thread at the post's timestamp for the member.
      */
     public function mark(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse;
+
+    /**
+     * Hides the thread.
+     */
+    public function hide(ThreadRepositoryInterface $thread): PodiumResponse;
+
+    /**
+     * Reveals the thread.
+     */
+    public function reveal(ThreadRepositoryInterface $thread): PodiumResponse;
 }

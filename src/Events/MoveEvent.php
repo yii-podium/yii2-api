@@ -10,7 +10,7 @@ use yii\base\Event;
 class MoveEvent extends Event
 {
     /**
-     * @var bool whether model can be moved
+     * @var bool whether repository can be moved
      */
     public bool $canMove = true;
 

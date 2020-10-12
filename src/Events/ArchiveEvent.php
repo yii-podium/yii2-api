@@ -10,12 +10,12 @@ use yii\base\Event;
 class ArchiveEvent extends Event
 {
     /**
-     * @var bool whether model can be archived
+     * @var bool whether repository can be archived
      */
     public bool $canArchive = true;
 
     /**
-     * @var bool whether model can be revived
+     * @var bool whether repository can be revived
      */
     public bool $canRevive = true;
 

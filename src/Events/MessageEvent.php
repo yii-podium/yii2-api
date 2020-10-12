@@ -10,7 +10,7 @@ use yii\base\Event;
 class MessageEvent extends Event
 {
     /**
-     * @var bool whether model can be created
+     * @var bool whether repository can be created
      */
     public bool $canSend = true;
 

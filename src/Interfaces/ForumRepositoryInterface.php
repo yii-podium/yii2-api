@@ -27,4 +27,10 @@ interface ForumRepositoryInterface extends RepositoryInterface
     public function getOrder(): int;
 
     public function sort(): bool;
+
+    public function isHidden(): bool;
+
+    public function hide(): bool;
+
+    public function reveal(): bool;
 }

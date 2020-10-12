@@ -9,7 +9,7 @@ use yii\base\Event;
 class RemoveEvent extends Event
 {
     /**
-     * @var bool whether model can be removed
+     * @var bool whether repository can be removed
      */
     public bool $canRemove = true;
 }

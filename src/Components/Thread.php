@@ -9,6 +9,7 @@ use Podium\Api\Interfaces\BookmarkerInterface;
 use Podium\Api\Interfaces\BookmarkRepositoryInterface;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\LockerInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
@@ -370,5 +371,37 @@ final class Thread extends Component implements ThreadInterface
     public function mark(PostRepositoryInterface $post, MemberRepositoryInterface $member): PodiumResponse
     {
         return $this->getBookmarker()->mark($this->getBookmarkRepository(), $post, $member);
+    }
+
+    private ?HiderInterface $hider = null;
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getHider(): HiderInterface
+    {
+        if (null === $this->hider) {
+            /** @var HiderInterface $hider */
+            $hider = Instance::ensure($this->hiderConfig, HiderInterface::class);
+            $this->hider = $hider;
+        }
+
+        return $this->hider;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function hide(ThreadRepositoryInterface $thread): PodiumResponse
+    {
+        return $this->getHider()->hide($thread);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function reveal(ThreadRepositoryInterface $thread): PodiumResponse
+    {
+        return $this->getHider()->reveal($thread);
     }
 }

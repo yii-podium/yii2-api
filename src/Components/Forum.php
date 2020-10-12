@@ -9,6 +9,7 @@ use Podium\Api\Interfaces\CategorisedBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RemoverInterface;
@@ -234,5 +235,37 @@ final class Forum extends Component implements ForumInterface
     public function revive(ForumRepositoryInterface $forum): PodiumResponse
     {
         return $this->getArchiver()->revive($forum);
+    }
+
+    private ?HiderInterface $hider = null;
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getHider(): HiderInterface
+    {
+        if (null === $this->hider) {
+            /** @var HiderInterface $hider */
+            $hider = Instance::ensure($this->hiderConfig, HiderInterface::class);
+            $this->hider = $hider;
+        }
+
+        return $this->hider;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function hide(ForumRepositoryInterface $forum): PodiumResponse
+    {
+        return $this->getHider()->hide($forum);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function reveal(ForumRepositoryInterface $forum): PodiumResponse
+    {
+        return $this->getHider()->reveal($forum);
     }
 }

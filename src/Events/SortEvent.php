@@ -9,12 +9,12 @@ use yii\base\Event;
 class SortEvent extends Event
 {
     /**
-     * @var bool whether models order can be replaced
+     * @var bool whether repositories order can be replaced
      */
     public bool $canReplace = true;
 
     /**
-     * @var bool whether models can be sorted
+     * @var bool whether repositories can be sorted
      */
     public bool $canSort = true;
 }

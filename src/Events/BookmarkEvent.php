@@ -10,7 +10,7 @@ use yii\base\Event;
 class BookmarkEvent extends Event
 {
     /**
-     * @var bool whether model can be marked
+     * @var bool whether repository can be marked
      */
     public bool $canMark = true;
 
