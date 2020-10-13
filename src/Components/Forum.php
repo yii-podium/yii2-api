@@ -17,6 +17,7 @@ use Podium\Api\Interfaces\SorterInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Forum\ForumArchiver;
 use Podium\Api\Services\Forum\ForumBuilder;
+use Podium\Api\Services\Forum\ForumHider;
 use Podium\Api\Services\Forum\ForumMover;
 use Podium\Api\Services\Forum\ForumRemover;
 use Podium\Api\Services\Forum\ForumSorter;
@@ -50,6 +51,11 @@ final class Forum extends Component implements ForumInterface
      * @var string|array|MoverInterface
      */
     public $moverConfig = ForumMover::class;
+
+    /**
+     * @var string|array|HiderInterface
+     */
+    public $hiderConfig = ForumHider::class;
 
     /**
      * @var string|array|ForumRepositoryInterface

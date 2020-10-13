@@ -56,6 +56,10 @@ final class ThreadHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($thread->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.already.hidden')]);
+            }
+
             if (!$thread->hide()) {
                 throw new ServiceException($thread->getErrors());
             }
@@ -118,6 +122,10 @@ final class ThreadHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$thread->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.not.hidden')]);
+            }
+
             if (!$thread->reveal()) {
                 throw new ServiceException($thread->getErrors());
             }

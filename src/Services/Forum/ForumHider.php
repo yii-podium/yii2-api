@@ -56,6 +56,10 @@ final class ForumHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($forum->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'forum.already.hidden')]);
+            }
+
             if (!$forum->hide()) {
                 throw new ServiceException($forum->getErrors());
             }
@@ -118,6 +122,10 @@ final class ForumHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$forum->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'forum.not.hidden')]);
+            }
+
             if (!$forum->reveal()) {
                 throw new ServiceException($forum->getErrors());
             }

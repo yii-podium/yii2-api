@@ -56,6 +56,10 @@ final class CategoryHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($category->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'category.already.hidden')]);
+            }
+
             if (!$category->hide()) {
                 throw new ServiceException($category->getErrors());
             }
@@ -118,6 +122,10 @@ final class CategoryHider extends Component implements HiderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$category->isHidden()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'category.not.hidden')]);
+            }
+
             if (!$category->reveal()) {
                 throw new ServiceException($category->getErrors());
             }

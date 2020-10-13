@@ -24,6 +24,7 @@ use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Thread\ThreadArchiver;
 use Podium\Api\Services\Thread\ThreadBookmarker;
 use Podium\Api\Services\Thread\ThreadBuilder;
+use Podium\Api\Services\Thread\ThreadHider;
 use Podium\Api\Services\Thread\ThreadLocker;
 use Podium\Api\Services\Thread\ThreadMover;
 use Podium\Api\Services\Thread\ThreadPinner;
@@ -74,6 +75,11 @@ final class Thread extends Component implements ThreadInterface
      * @var string|array|PinnerInterface
      */
     public $pinnerConfig = ThreadPinner::class;
+
+    /**
+     * @var string|array|HiderInterface
+     */
+    public $hiderConfig = ThreadHider::class;
 
     /**
      * @var string|array|ThreadRepositoryInterface
