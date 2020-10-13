@@ -57,23 +57,39 @@ class PostBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(false);
         $post->method('getErrors')->willReturn([1]);
+        $result = $this->service->create($post, $author, $this->createMock(ThreadRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame([1], $result->getErrors());
+    }
+
+    public function testCreateShouldReturnErrorWhenAuthorIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(true);
         $result = $this->service->create(
-            $post,
-            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(PostRepositoryInterface::class),
+            $author,
             $this->createMock(ThreadRepositoryInterface::class)
         );
 
         self::assertFalse($result->getResult());
-        self::assertSame([1], $result->getErrors());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -81,7 +97,7 @@ class PostBuilderTest extends AppTestCase
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('updateCounters')->with(0, 1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
-        $result = $this->service->create($post, $this->createMock(MemberRepositoryInterface::class), $thread);
+        $result = $this->service->create($post, $author, $thread);
 
         self::assertTrue($result->getResult());
     }
@@ -99,13 +115,11 @@ class PostBuilderTest extends AppTestCase
             'podium'
         );
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willThrowException(new Exception('exc'));
-        $result = $this->service->create(
-            $post,
-            $this->createMock(MemberRepositoryInterface::class),
-            $this->createMock(ThreadRepositoryInterface::class)
-        );
+        $result = $this->service->create($post, $author, $this->createMock(ThreadRepositoryInterface::class));
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -115,11 +129,13 @@ class PostBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('updateCounters')->willReturn(false);
-        $result = $this->service->create($post, $this->createMock(MemberRepositoryInterface::class), $thread);
+        $result = $this->service->create($post, $author, $thread);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating thread counters!', $result->getErrors()['exception']->getMessage());
@@ -129,6 +145,8 @@ class PostBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
@@ -136,7 +154,7 @@ class PostBuilderTest extends AppTestCase
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('updateCounters')->willReturn(false);
         $thread->method('getParent')->willReturn($forum);
-        $result = $this->service->create($post, $this->createMock(MemberRepositoryInterface::class), $thread);
+        $result = $this->service->create($post, $author, $thread);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating forum counters!', $result->getErrors()['exception']->getMessage());

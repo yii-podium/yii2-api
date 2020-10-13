@@ -56,30 +56,42 @@ class ForumBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willReturn(false);
         $forum->method('getErrors')->willReturn([1]);
+        $result = $this->service->create($forum, $author, $this->createMock(CategoryRepositoryInterface::class));
+
+        self::assertFalse($result->getResult());
+        self::assertSame([1], $result->getErrors());
+    }
+
+    public function testCreateShouldReturnErrorWhenAuthorIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(true);
         $result = $this->service->create(
-            $forum,
-            $this->createMock(MemberRepositoryInterface::class),
+            $this->createMock(ForumRepositoryInterface::class),
+            $author,
             $this->createMock(CategoryRepositoryInterface::class)
         );
 
         self::assertFalse($result->getResult());
-        self::assertSame([1], $result->getErrors());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willReturn(true);
-        $result = $this->service->create(
-            $forum,
-            $this->createMock(MemberRepositoryInterface::class),
-            $this->createMock(CategoryRepositoryInterface::class)
-        );
+        $result = $this->service->create($forum, $author, $this->createMock(CategoryRepositoryInterface::class));
 
         self::assertTrue($result->getResult());
     }
@@ -97,13 +109,11 @@ class ForumBuilderTest extends AppTestCase
             'podium'
         );
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('create')->willThrowException(new Exception('exc'));
-        $result = $this->service->create(
-            $forum,
-            $this->createMock(MemberRepositoryInterface::class),
-            $this->createMock(CategoryRepositoryInterface::class)
-        );
+        $result = $this->service->create($forum, $author, $this->createMock(CategoryRepositoryInterface::class));
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());

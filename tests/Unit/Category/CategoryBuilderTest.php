@@ -24,22 +24,38 @@ class CategoryBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willReturn(false);
         $category->method('getErrors')->willReturn([1]);
-        $result = $this->service->create($category, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->create($category, $author);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testCreateShouldReturnErrorWhenAuthorIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(true);
+        $result = $this->service->create($this->createMock(CategoryRepositoryInterface::class), $author);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willReturn(true);
-        $result = $this->service->create($category, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->create($category, $author);
 
         self::assertTrue($result->getResult());
     }
@@ -57,9 +73,11 @@ class CategoryBuilderTest extends AppTestCase
             'podium'
         );
 
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
         $category = $this->createMock(CategoryRepositoryInterface::class);
         $category->method('create')->willThrowException(new Exception('exc'));
-        $result = $this->service->create($category, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->create($category, $author);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
