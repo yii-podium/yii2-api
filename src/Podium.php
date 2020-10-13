@@ -63,7 +63,7 @@ use function is_array;
  */
 class Podium extends ServiceLocator
 {
-    private string $version = '0.1.0';
+    private string $version = '0.3.0';
 
     public function getVersion(): string
     {
