@@ -47,6 +47,10 @@ final class PollVoter extends Component implements VoterInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $poll = $post->getPoll();
 
             if ($poll->hasMemberVoted($member)) {

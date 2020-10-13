@@ -72,6 +72,10 @@ final class ForumBuilder extends Component implements CategorisedBuilderInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($author->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$forum->create($author, $category, $data)) {
                 throw new ServiceException($forum->getErrors());
             }

@@ -43,6 +43,10 @@ final class MessageRemover extends Component implements MessageRemoverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($participant->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $messageSide = $message->getParticipant($participant);
 
             if (!$messageSide->isArchived()) {

@@ -49,6 +49,10 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if ($subscription->isMemberSubscribed($member, $thread)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'thread.already.subscribed')]);
             }
@@ -108,6 +112,10 @@ final class ThreadSubscriber extends Component implements SubscriberInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$subscription->fetchOne($member, $thread)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'thread.not.subscribed')]);
             }

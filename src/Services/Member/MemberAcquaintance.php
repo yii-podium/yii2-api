@@ -52,6 +52,14 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
+            if ($target->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if ($member->getId() === $target->getId()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
             }
@@ -119,6 +127,14 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
+            if ($target->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if ($member->getId() === $target->getId()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
             }
@@ -186,6 +202,14 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
+            if ($target->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if ($member->getId() === $target->getId()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
             }
@@ -253,6 +277,14 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
+            if ($target->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if ($member->getId() === $target->getId()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
             }

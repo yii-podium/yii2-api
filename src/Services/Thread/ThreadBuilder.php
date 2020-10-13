@@ -73,6 +73,10 @@ final class ThreadBuilder extends Component implements CategorisedBuilderInterfa
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($author->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$thread->create($author, $forum, $data)) {
                 throw new ServiceException($thread->getErrors());
             }
