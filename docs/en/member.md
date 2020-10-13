@@ -102,10 +102,6 @@ edit(Podium\Api\Interfaces\MemberRepositoryInterface $member, array $data = []):
 
 Edits the member. See also [register](#register).
 
-Optional data:
-- `username`
-- `slug`
-
 #### Events
 
 - `Podium\Api\Services\Member\MemberBuilder::EVENT_BEFORE_EDITING`
@@ -200,12 +196,6 @@ register($id, array $data = []): Podium\Api\PodiumResponse
 ```
 
 Registers the member. See also [edit](#edit).
-
-Required data:
-- `username`
-
-Optional data (with defaults):
-- `slug` (generated from `username`)
 
 #### Events
 

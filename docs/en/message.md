@@ -151,10 +151,6 @@ send(
 Sends a new message (or a reply to the message) from the sender to the receiver if the receiver is not ignoring the 
 sender. A message is saved in two copies for both sides so each side can be handled individually.
 
-Required data:
-- `subject`
-- `content`
-
 #### Events
 
 - `Podium\Api\Services\Message\MessageMessenger::EVENT_BEFORE_SENDING`

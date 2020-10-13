@@ -95,14 +95,6 @@ create(
 
 Creates a forum as the author under the category. See also [edit](#edit).
 
-Required data:
-- `name`
-
-Optional data (with defaults):
-- `description` (`null`)
-- `slug` (generated from `name`)
-- `sort` (next value after the highest sort order available)
-
 #### Events
 
 - `Podium\Api\Services\Forum\ForumBuilder::EVENT_BEFORE_CREATING`
@@ -117,12 +109,6 @@ edit(Podium\Api\Interfaces\ForumRepositoryInterface $forum, array $data = []): P
 ```
 
 Edits the forum. See also [create](#create).
-
-Optional data:
-- `name`
-- `description`
-- `slug`
-- `sort`
 
 #### Events
 

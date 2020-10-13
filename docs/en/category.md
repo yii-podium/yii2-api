@@ -84,14 +84,6 @@ create(Podium\Api\Interfaces\MemberRepositoryInterface $author, array $data = []
 
 Creates a category as the author. See also [edit](#edit).
 
-Required data:
-- `name`
-
-Optional data (with defaults):
-- `description` (`null`)
-- `slug` (generated from `name`)
-- `sort` (next value after the highest sort order available)
-
 #### Events
 
 - `Podium\Api\Services\Category\CategoryBuilder::EVENT_BEFORE_CREATING`
@@ -106,12 +98,6 @@ edit(Podium\Api\Interfaces\CategoryRepositoryInterface $category, array $data = 
 ```
 
 Edits the category. See also [create](#create).
-
-Optional data:
-- `name`
-- `description`
-- `slug`
-- `sort`
 
 #### Events
 

@@ -108,14 +108,6 @@ addPoll(
 
 Adds a poll with the poll answers to the post. See also [editPoll](#editpoll).
 
-Required data:
-- `question` - the text that will be displayed above the answers
-- `expires_at` - the timestamp for voting end time
-
-Optional data (with defaults):
-- `revealed` (`true`) - whether the poll results should be revealed to the member after voting or kept secret until expiration date
-- `choice_id` (`single`) - whether the poll is single or multiple choice
-
 #### Events
 
 - `Podium\Api\Services\Poll\PollBuilder::EVENT_BEFORE_CREATING`
@@ -149,9 +141,6 @@ create(
 ```
 
 Creates a post as the author under the thread. See also [edit](#edit).
-                                               
-Required data:
-- `content`
 
 #### Events
 
@@ -167,9 +156,6 @@ edit(Podium\Api\Interfaces\PostRepositoryInterface $post, array $data = []): Pod
 ```
 
 Edits the post. See also [create](#create).
-
-Optional data:
-- `content`
 
 #### Events
 
@@ -189,12 +175,6 @@ editPoll(
 ```
 
 Edits the post's poll with answers. See also [addPoll](#addpoll).
-
-Optional data:
-- `question` - the text that will be displayed above the answers
-- `expires_at` - the timestamp for voting end time
-- `revealed` - whether the poll results should be revealed to the member after voting or kept secret until expiration date
-- `choice_id` - whether the poll is single or multiple choice (changing not possible if members already voted)
 
 #### Events
 

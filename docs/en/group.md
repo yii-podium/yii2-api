@@ -52,9 +52,6 @@ create(array $data = []): Podium\Api\PodiumResponse
 
 Creates a group. See also [edit](#edit).
 
-Required data:
-- `name`
-
 #### Events
 
 - `Podium\Api\Services\Group\GroupBuilder::EVENT_BEFORE_CREATING`
@@ -69,9 +66,6 @@ edit(Podium\Api\Interfaces\GroupRepositoryInterface $group, array $data = []): P
 ```
 
 Edits the group. See also [create](#create).
-                 
-Optional data:
-- `name`
 
 #### Events
 
