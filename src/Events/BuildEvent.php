@@ -10,12 +10,12 @@ use yii\base\Event;
 class BuildEvent extends Event
 {
     /**
-     * @var bool whether model can be created
+     * @var bool whether repository can be created
      */
     public bool $canCreate = true;
 
     /**
-     * @var bool whether model can be edited
+     * @var bool whether repository can be edited
      */
     public bool $canEdit = true;
 

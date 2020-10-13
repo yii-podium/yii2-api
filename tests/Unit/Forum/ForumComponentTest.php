@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
 use Podium\Api\Interfaces\RemoverInterface;
@@ -150,5 +151,32 @@ class ForumComponentTest extends TestCase
             $this->createMock(ForumRepositoryInterface::class),
             $this->createMock(CategoryRepositoryInterface::class)
         );
+    }
+
+    public function testGetHiderShouldThrowExceptionWhenHiderIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->hiderConfig = '';
+
+        $this->component->getHider();
+    }
+
+    public function testHideShouldRunHidersHide(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('hide')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->hide($this->createMock(ForumRepositoryInterface::class));
+    }
+
+    public function testRevealShouldRunHidersReveal(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('reveal')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->reveal($this->createMock(ForumRepositoryInterface::class));
     }
 }

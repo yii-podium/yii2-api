@@ -7,17 +7,17 @@ namespace Podium\Api\Events;
 use Podium\Api\Interfaces\RepositoryInterface;
 use yii\base\Event;
 
-class LockEvent extends Event
+class HideEvent extends Event
 {
     /**
-     * @var bool whether repository can be locked
+     * @var bool whether repository can be hidden
      */
-    public bool $canLock = true;
+    public bool $canHide = true;
 
     /**
-     * @var bool whether repository can be unlocked
+     * @var bool whether repository can be revealed
      */
-    public bool $canUnlock = true;
+    public bool $canReveal = true;
 
     public ?RepositoryInterface $repository = null;
 }

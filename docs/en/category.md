@@ -19,9 +19,13 @@ or component's ID or configuration array that can be resolved as the above. Defa
 
 #### builderConfig
 
-Builder service. Expects an instance of 
-[CategoryBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategoryBuilderInterface.php) 
+Builder service. Expects an instance of [CategoryBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategoryBuilderInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryBuilder`.
+
+#### hiderConfig
+
+Hider service. Expects an instance of [HiderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/HiderInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Category\CategoryHider`.
 
 #### removerConfig
 
@@ -43,23 +47,27 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [archive](#archive)
 - [create](#create)
 - [edit](#edit)
-- [getArchiver](#getArchiver)
-- [getBuilder](#getBuilder)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
-- [getSorter](#getSorter)
+- [getArchiver](#getarchiver)
+- [getBuilder](#getbuilder)
+- [getHider](#gethider)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
+- [getSorter](#getsorter)
+- [hide](#hide)
 - [remove](#remove)
 - [replace](#replace)
+- [reveal](#reveal)
 - [revive](#revive)
 - [sort](#sort)
 
-### archive <span id="archive"></span>
+### archive
 
 ```
 archive(Podium\Api\Interfaces\CategoryRepositoryInterface $category): Podium\Api\PodiumResponse
 ```
 
-Archives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L187)
+Archives the category. Only archived categories can be removed. Archiving a category does not archive its child forums, 
+threads, and posts. See also [revive](#revive).
 
 #### Events
 
@@ -68,13 +76,13 @@ Archives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/mast
 
 ---
 
-### create <span id="create"></span>
+### create
 
 ```
 create(Podium\Api\Interfaces\MemberRepositoryInterface $author, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a category as the author. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L87)
+Creates a category as the author. See also [edit](#edit).
 
 #### Events
 
@@ -83,13 +91,13 @@ Creates a category as the author. [[link]](https://github.com/yii-podium/yii2-ap
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\CategoryRepositoryInterface $category, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L97)
+Edits the category. See also [create](#create).
 
 #### Events
 
@@ -98,63 +106,89 @@ Edits the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### getArchiver <span id="getArchiver"></span>
+### getArchiver
 
 ```
 getArchiver(): Podium\Api\Interfaces\ArchiverInterface
 ```
 
-Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L171)
+Returns the archiver service which handles [archiving](#archive) and [reviving](#revive).
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\CategoryBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L71)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getHider
+
+```
+getHider(): Podium\Api\Interfaces\Hiderface
+```
+
+Returns the hider service which handles [hiding](#hide) and [revealing](#reveal).
+
+---
+
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L107)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\CategoryRepositoryInterface
 ```
 
-Returns the category repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L55)
+Returns the category repository.
 
 ---
 
-### getSorter <span id="getSorter"></span>
+### getSorter
 
 ```
 getSorter(): Podium\Api\Interfaces\SorterInterface
 ```
 
-Returns the sorter service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L133)
+Returns the sorter service which handles [replacing](#replace) and [sorting](#sort) the categories order.
 
 ---
 
-### remove <span id="remove"></span>
+### hide
+
+```
+hide(Podium\Api\Interfaces\CategoryRepositoryInterface $category): Podium\Api\PodiumResponse
+```
+
+Hides the category. Category can be hidden from certain groups of users. See also [reveal](#reveal).
+
+#### Events
+
+- `Podium\Api\Services\Category\CategoryHider::EVENT_BEFORE_HIDING`
+- `Podium\Api\Services\Category\CategoryHider::EVENT_AFTER_HIDING`
+
+---
+
+### remove
 
 ```
 remove(Podium\Api\Interfaces\CategoryRepositoryInterface $category): Podium\Api\PodiumResponse
 ```
 
-Removes the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L123)
+Removes the category. Only archived categories can be removed. Removing a category removes all its child forums, threads, 
+and posts, regardless of their archived status.
 
 #### Events
 
@@ -163,7 +197,7 @@ Removes the category. [[link]](https://github.com/yii-podium/yii2-api/blob/maste
 
 ---
 
-### replace <span id="replace"></span>
+### replace
 
 ```
 replace(
@@ -172,7 +206,8 @@ replace(
 ): Podium\Api\PodiumResponse
 ```
 
-Replaces the categories order. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L149)
+Replaces the categories order. Because both categories can have the same order the resulting order can be the same. See 
+also [sort](#sort).
 
 #### Events
 
@@ -181,13 +216,29 @@ Replaces the categories order. [[link]](https://github.com/yii-podium/yii2-api/b
 
 ---
 
-### revive <span id="revive"></span>
+### reveal
+
+```
+reveal(Podium\Api\Interfaces\CategoryRepositoryInterface $category): Podium\Api\PodiumResponse
+```
+
+Reveals the category. Category that is not hidden (default state) is available for all groups of users. See also [hide](#hide).
+
+#### Events
+
+- `Podium\Api\Services\Category\CategoryHider::EVENT_BEFORE_REVEALING`
+- `Podium\Api\Services\Category\CategoryHider::EVENT_AFTER_REVEALING`
+
+---
+
+### revive
 
 ```
 revive(Podium\Api\Interfaces\CategoryRepositoryInterface $category): Podium\Api\PodiumResponse
 ```
 
-Revives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L197)
+Revives the category. The revived category is no longer archived. It does not affect the archived status of its child 
+forums, threads, and posts. See also [archive](#archive).
 
 #### Events
 
@@ -196,13 +247,14 @@ Revives the category. [[link]](https://github.com/yii-podium/yii2-api/blob/maste
 
 ---
 
-### sort <span id="sort"></span>
+### sort
 
 ```
 sort(): Podium\Api\PodiumResponse
 ```
 
-Sorts the categories order. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Category.php#L161)
+Sorts the categories order. Sorting makes sure two or more categories are not having the same order value anymore. See 
+also [replace](#replace).
 
 #### Events
 

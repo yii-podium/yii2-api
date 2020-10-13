@@ -36,21 +36,21 @@ or component's ID or configuration array that can be resolved as the above. Defa
 
 - [create](#create)
 - [edit](#edit)
-- [getBuilder](#getBuilder)
-- [getKeeper](#getKeeper)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
+- [getBuilder](#getbuilder)
+- [getKeeper](#getkeeper)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
 - [join](#join)
 - [leave](#leave)
 - [remove](#remove)
 
-### create <span id="create"></span>
+### create
 
 ```
 create(array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a group. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L80)
+Creates a group. See also [edit](#edit).
 
 #### Events
 
@@ -59,13 +59,13 @@ Creates a group. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\GroupRepositoryInterface $group, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the group. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L90)
+Edits the group. See also [create](#create).
 
 #### Events
 
@@ -74,47 +74,47 @@ Edits the group. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\BuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L64)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getKeeper <span id="getKeeper"></span>
+### getKeeper
 
 ```
 getKeeper(): Podium\Api\Interfaces\KeeperInterface
 ```
 
-Returns the keeper service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L126)
+Returns the keeper service which handles [joining](#join) and [leaving](#leave) the group.
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L100)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\GroupRepositoryInterface
 ```
 
-Returns the group repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L48)
+Returns the group repository.
 
 ---
 
-### join <span id="join"></span>
+### join
 
 ```
 join(
@@ -123,7 +123,7 @@ join(
 ): Podium\Api\PodiumResponse
 ```
 
-Joins the group as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L142)
+Joins the group as the member. See also [leave](#leave).
 
 #### Events
 
@@ -132,7 +132,7 @@ Joins the group as the member. [[link]](https://github.com/yii-podium/yii2-api/b
 
 ---
 
-### leave <span id="leave"></span>
+### leave
 
 ```
 leave(
@@ -141,7 +141,7 @@ leave(
 ): Podium\Api\PodiumResponse
 ```
 
-Leaves the group as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L152)
+Leaves the group as the member. See also [join](#join).
 
 #### Events
 
@@ -150,13 +150,13 @@ Leaves the group as the member. [[link]](https://github.com/yii-podium/yii2-api/
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\GroupRepositoryInterface $group): Podium\Api\PodiumResponse
 ```
 
-Removes the group. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Group.php#L116)
+Removes the group.
 
 #### Events
 

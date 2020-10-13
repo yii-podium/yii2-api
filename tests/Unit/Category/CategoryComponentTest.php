@@ -9,6 +9,7 @@ use Podium\Api\Components\Category;
 use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategoryBuilderInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SorterInterface;
@@ -124,5 +125,32 @@ class CategoryComponentTest extends TestCase
         $this->component->archiverConfig = $archiver;
 
         $this->component->revive($this->createMock(CategoryRepositoryInterface::class));
+    }
+
+    public function testGetHiderShouldThrowExceptionWhenHiderIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->hiderConfig = '';
+
+        $this->component->getHider();
+    }
+
+    public function testHideShouldRunHidersHide(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('hide')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->hide($this->createMock(CategoryRepositoryInterface::class));
+    }
+
+    public function testRevealShouldRunHidersReveal(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('reveal')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->reveal($this->createMock(CategoryRepositoryInterface::class));
     }
 }

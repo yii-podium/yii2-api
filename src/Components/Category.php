@@ -8,12 +8,14 @@ use Podium\Api\Interfaces\ArchiverInterface;
 use Podium\Api\Interfaces\CategoryBuilderInterface;
 use Podium\Api\Interfaces\CategoryInterface;
 use Podium\Api\Interfaces\CategoryRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\Interfaces\SorterInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Category\CategoryArchiver;
 use Podium\Api\Services\Category\CategoryBuilder;
+use Podium\Api\Services\Category\CategoryHider;
 use Podium\Api\Services\Category\CategoryRemover;
 use Podium\Api\Services\Category\CategorySorter;
 use yii\base\Component;
@@ -41,6 +43,11 @@ final class Category extends Component implements CategoryInterface
      * @var string|array|ArchiverInterface
      */
     public $archiverConfig = CategoryArchiver::class;
+
+    /**
+     * @var string|array|HiderInterface
+     */
+    public $hiderConfig = CategoryHider::class;
 
     /**
      * @var string|array|CategoryRepositoryInterface
@@ -183,5 +190,37 @@ final class Category extends Component implements CategoryInterface
     public function revive(CategoryRepositoryInterface $category): PodiumResponse
     {
         return $this->getArchiver()->revive($category);
+    }
+
+    private ?HiderInterface $hider = null;
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function getHider(): HiderInterface
+    {
+        if (null === $this->hider) {
+            /** @var HiderInterface $hider */
+            $hider = Instance::ensure($this->hiderConfig, HiderInterface::class);
+            $this->hider = $hider;
+        }
+
+        return $this->hider;
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function hide(CategoryRepositoryInterface $category): PodiumResponse
+    {
+        return $this->getHider()->hide($category);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function reveal(CategoryRepositoryInterface $category): PodiumResponse
+    {
+        return $this->getHider()->reveal($category);
     }
 }

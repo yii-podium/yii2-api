@@ -11,6 +11,7 @@ use Podium\Api\Interfaces\BookmarkerInterface;
 use Podium\Api\Interfaces\BookmarkRepositoryInterface;
 use Podium\Api\Interfaces\CategorisedBuilderInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
+use Podium\Api\Interfaces\HiderInterface;
 use Podium\Api\Interfaces\LockerInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MoverInterface;
@@ -265,5 +266,32 @@ class ThreadComponentTest extends TestCase
         $this->component->bookmarkRepositoryConfig = '';
 
         $this->component->getBookmarkRepository();
+    }
+
+    public function testGetHiderShouldThrowExceptionWhenHiderIsMisconfigured(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        $this->component->hiderConfig = '';
+
+        $this->component->getHider();
+    }
+
+    public function testHideShouldRunHidersHide(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('hide')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->hide($this->createMock(ThreadRepositoryInterface::class));
+    }
+
+    public function testRevealShouldRunHidersReveal(): void
+    {
+        $hider = $this->createMock(HiderInterface::class);
+        $hider->expects(self::once())->method('reveal')->willReturn(PodiumResponse::success());
+        $this->component->hiderConfig = $hider;
+
+        $this->component->reveal($this->createMock(ThreadRepositoryInterface::class));
     }
 }

@@ -28,5 +28,9 @@ interface ThreadRepositoryInterface extends RepositoryInterface
 
     public function updateCounters(int $posts): bool;
 
-    public function hasPoll(): bool;
+    public function isHidden(): bool;
+
+    public function hide(): bool;
+
+    public function reveal(): bool;
 }

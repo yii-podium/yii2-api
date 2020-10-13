@@ -30,12 +30,12 @@ or component's ID or configuration array that can be resolved as the above. Defa
 ## Methods
 
 - [create](#create)
-- [getBuilder](#getBuilder)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
+- [getBuilder](#getbuilder)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
 - [remove](#remove)
 
-### create <span id="create"></span>
+### create
 
 ```
 create(
@@ -45,7 +45,7 @@ create(
 ): Podium\Api\PodiumResponse
 ```
 
-Creates a log for action as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L71)
+Creates a log for action as the member.
 
 #### Events
 
@@ -54,43 +54,43 @@ Creates a log for action as the member. [[link]](https://github.com/yii-podium/y
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\LogBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L57)
+Returns the builder service which handles [creating](#create).
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L81)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\LogRepositoryInterface
 ```
 
-Returns the log repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L41)
+Returns the log repository.
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\LogRepositoryInterface $log): Podium\Api\PodiumResponse
 ```
 
-Removes the log. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Logger.php#L95)
+Removes the log.
 
 #### Events
 

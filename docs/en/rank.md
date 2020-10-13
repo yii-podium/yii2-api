@@ -31,18 +31,18 @@ or component's ID or configuration array that can be resolved as the above. Defa
 
 - [create](#create)
 - [edit](#edit)
-- [getBuilder](#getBuilder)
-- [getRemover](#getRemover)
-- [getRepository](#getRepository)
+- [getBuilder](#getbuilder)
+- [getRemover](#getremover)
+- [getRepository](#getrepository)
 - [remove](#remove)
 
-### create <span id="create"></span>
+### create
 
 ```
 create(array $data = []): Podium\Api\PodiumResponse
 ```
 
-Creates a rank. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L70)
+Creates a rank. See also [edit](#edit).
 
 #### Events
 
@@ -51,13 +51,13 @@ Creates a rank. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\RankRepositoryInterface $rank, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the rank. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L78)
+Edits the rank. See also [create](#create).
 
 #### Events
 
@@ -66,43 +66,43 @@ Edits the rank. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\BuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L56)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L88)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getRepository <span id="getRepository"></span>
+### getRepository
 
 ```
 getRepository(): Podium\Api\Interfaces\RankRepositoryInterface
 ```
 
-Returns the rank repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L40)
+Returns the rank repository.
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\RankRepositoryInterface $rank): Podium\Api\PodiumResponse
 ```
 
-Removes the rank. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Rank.php#L102)
+Removes the rank.
 
 #### Events
 

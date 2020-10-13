@@ -32,6 +32,11 @@ or component's ID or configuration array that can be resolved as the above. Defa
 Builder service. Expects an instance of [CategorisedBuilderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/CategorisedBuilderInterface.php) 
 or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Thread\ThreadBuilder`.
 
+#### hiderConfig
+
+Hider service. Expects an instance of [HiderInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/HiderInterface.php) 
+or component's ID or configuration array that can be resolved as the above. Default: `Podium\Api\Services\Thread\ThreadHider`.
+
 #### lockerConfig
 
 Locker service. Expects an instance of [LockerInterface](https://github.com/yii-podium/yii2-api/blob/master/src/Interfaces/LockerInterface.php) 
@@ -73,33 +78,37 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [archive](#archive)
 - [create](#create)
 - [edit](#edit)
-- [getArchiver](#getArchiver)
-- [getBookmarkRepository](#getBookmarkRepository)
-- [getBuilder](#getBuilder)
-- [getLocker](#getLocker)
-- [getMover](#getMover)
-- [getPinner](#getPinner)
-- [getRemover](#getRemover)
-- [getSubscriptionRepository](#getSubscriptionRepository)
-- [getThreadRepository](#getThreadRepository)
+- [getArchiver](#getarchiver)
+- [getBookmarkRepository](#getbookmarkrepository)
+- [getBuilder](#getbuilder)
+- [getHider](#gethider)
+- [getLocker](#getlocker)
+- [getMover](#getmover)
+- [getPinner](#getpinner)
+- [getRemover](#getremover)
+- [getSubscriptionRepository](#getsubscriptionrepository)
+- [getThreadRepository](#getthreadrepository)
+- [hide](#hide)
 - [lock](#lock)
 - [mark](#mark)
 - [move](#move)
 - [pin](#pin)
 - [remove](#remove)
+- [reveal](#reveal)
 - [revive](#revive)
 - [subscribe](#subscribe)
 - [unlock](#unlock)
 - [unpin](#unpin)
 - [unsubscribe](#unsubscribe)
 
-### archive <span id="archive"></span>
+### archive
 
 ```
 archive(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Archives the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L274)
+Archives the thread. Only archived threads can be removed. Archiving a thread does not archive its child posts. See also 
+[revive](#revive).
 
 #### Events
 
@@ -108,7 +117,7 @@ Archives the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master
 
 ---
 
-### create <span id="create"></span>
+### create
 
 ```
 create(
@@ -118,7 +127,7 @@ create(
 ): Podium\Api\PodiumResponse
 ```
 
-Creates a thread as the author under the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L127)
+Creates a thread as the author under the forum. See also [edit](#edit).
 
 #### Events
 
@@ -127,13 +136,13 @@ Creates a thread as the author under the forum. [[link]](https://github.com/yii-
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\ThreadRepositoryInterface $thread, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L138)
+Edits the thread. See also [create](#create).
 
 #### Events
 
@@ -142,113 +151,128 @@ Edits the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/sr
 
 ---
 
-### getArchiver <span id="getArchiver"></span>
+### getArchiver
 
 ```
 getArchiver(): Podium\Api\Interfaces\ArchiverInterface
 ```
 
-Returns the archiver service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L260)
+Returns the archiver service which handles [archiving](#archive) and [reviving](#revive).
 
 ---
 
-### getBookmarkRepository <span id="getBookmarkRepository"></span>
+### getBookmarkRepository
 
 ```
 getBookmarkRepository(): Podium\Api\Interfaces\BookmarkRepositoryInterface
 ```
 
-Returns the bookmark repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L356)
+Returns the bookmark repository.
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\CategorisedBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L113)
+Returns the builder service which handles [creating](#create) and [editing](#edit).
 
 ---
 
-### getLocker <span id="getLocker"></span>
+### getHider
+
+```
+getHider(): Podium\Api\Interfaces\Hiderface
+```
+
+Returns the hider service which handles [hiding](#hide) and [revealing](#reveal).
+
+---
+
+### getLocker
 
 ```
 getLocker(): Podium\Api\Interfaces\LockerInterface
 ```
 
-Returns the locker service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L228)
+Returns the locker service which handles [locking](#lock) and [unlocking](#unlock).
 
 ---
 
-### getMover <span id="getMover"></span>
+### getMover
 
 ```
 getMover(): Podium\Api\Interfaces\MoverInterface
 ```
 
-Returns the mover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L172)
+Returns the mover service which handles [moving](#move) a thread between forums.
 
 ---
 
-### getPinner <span id="getPinner"></span>
+### getPinner
 
 ```
 getPinner(): Podium\Api\Interfaces\PinnerInterface
 ```
 
-Returns the pinner service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L196)
+Returns the pinner service which handles [pinning](#pin) and [unpinning](#unpin).
 
 ---
 
-### getPostRepository <span id="getPostRepository"></span>
-
-```
-getPostRepository(): Podium\Api\Interfaces\PostRepositoryInterface
-```
-
-Returns the thread repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L98)
-
----
-
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L148)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### getSubscriptionRepository <span id="getSubscriptionRepository"></span>
+### getSubscriptionRepository
 
 ```
 getSubscriptionRepository(): Podium\Api\Interfaces\SubscriptionRepositoryInterface
 ```
 
-Returns the subscription repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L308)
+Returns the subscription repository.
 
 ---
 
-### getThreadRepository <span id="getThreadRepository"></span>
+### getThreadRepository
 
 ```
 getThreadRepository(): Podium\Api\Interfaces\ThreadRepositoryInterface
 ```
 
-Returns the thread repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L97)
+Returns the thread repository.
 
 ---
 
-### lock <span id="lock"></span>
+### hide
+
+```
+hide(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
+```
+
+Hides the thread. Thread can be hidden from certain groups of users. See also [reveal](#reveal).
+
+#### Events
+
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_BEFORE_HIDING`
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_AFTER_HIDING`
+
+---
+
+### lock
 
 ```
 lock(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Locks the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L242)
+Locks the thread. The locked thread does not accept new posts. See also [unlock](#unlock).
 
 #### Events
 
@@ -257,7 +281,7 @@ Locks the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/sr
 
 ---
 
-### mark <span id="mark"></span>
+### mark
 
 ```
 mark(
@@ -266,7 +290,7 @@ mark(
 ): Podium\Api\PodiumResponse
 ```
 
-Marks the thread at the post's timestamp for the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L370)
+Marks the thread at the post's timestamp for the member.
 
 #### Events
 
@@ -275,7 +299,7 @@ Marks the thread at the post's timestamp for the member. [[link]](https://github
 
 ---
 
-### move <span id="move"></span>
+### move
 
 ```
 move(
@@ -284,7 +308,7 @@ move(
 ): Podium\Api\PodiumResponse
 ```
 
-Moves the thread to the forum. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L186)
+Moves the thread to the forum.
 
 #### Events
 
@@ -293,13 +317,13 @@ Moves the thread to the forum. [[link]](https://github.com/yii-podium/yii2-api/b
 
 ---
 
-### pin <span id="pin"></span>
+### pin
 
 ```
 pin(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Pins the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L210)
+Pins the thread. See also [unpin](#unpin).
 
 #### Events
 
@@ -308,13 +332,14 @@ Pins the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Removes the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L162)
+Removes the thread. Only archived threads can be removed. Removing a thread removes all its child posts, regardless of 
+their archived status.
 
 #### Events
 
@@ -323,13 +348,29 @@ Removes the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### revive <span id="revive"></span>
+### reveal
+
+```
+reveal(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
+```
+
+Reveals the thread. Thread that is not hidden (default state) is available for all groups of users. See also [hide](#hide).
+
+#### Events
+
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_BEFORE_REVEALING`
+- `Podium\Api\Services\Thread\ThreadHider::EVENT_AFTER_REVEALING`
+
+---
+
+### revive
 
 ```
 revive(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Revives the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L282)
+Revives the thread. The revived thread is no longer archived. It does not affect the archived status of its child posts. 
+See also [archive](#archive).
 
 #### Events
 
@@ -338,7 +379,7 @@ Revives the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### subscribe <span id="subscribe"></span>
+### subscribe
 
 ```
 subscribe(
@@ -347,7 +388,7 @@ subscribe(
 ): Podium\Api\PodiumResponse
 ```
 
-Subscribes to the thread as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L322)
+Subscribes to the thread as the member. See also [unsubscribe](#unsubscribe).
 
 #### Events
 
@@ -356,13 +397,13 @@ Subscribes to the thread as the member. [[link]](https://github.com/yii-podium/y
 
 ---
 
-### unlock <span id="unlock"></span>
+### unlock
 
 ```
 unlock(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Unlocks the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L250)
+Unlocks the thread. See also [lock](#lock).
 
 #### Events
 
@@ -371,13 +412,13 @@ Unlocks the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### unpin <span id="unpin"></span>
+### unpin
 
 ```
 unpin(Podium\Api\Interfaces\ThreadRepositoryInterface $thread): Podium\Api\PodiumResponse
 ```
 
-Unpins the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L218)
+Unpins the thread. See also [pin](#pin).
 
 #### Events
 
@@ -386,7 +427,7 @@ Unpins the thread. [[link]](https://github.com/yii-podium/yii2-api/blob/master/s
 
 ---
 
-### unsubscribe <span id="unsubscribe"></span>
+### unsubscribe
 
 ```
 unsubscribe(
@@ -395,7 +436,7 @@ unsubscribe(
 ): Podium\Api\PodiumResponse
 ```
 
-Unsubscribes from the thread as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Thread.php#L330)
+Unsubscribes from the thread as the member. See also [subscribe](#subscribe).
 
 #### Events
 

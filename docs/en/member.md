@@ -47,12 +47,12 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [ban](#ban)
 - [befriend](#befriend)
 - [edit](#edit)
-- [getAcquaintance](#getAcquaintance)
-- [getAcquaintanceRepository](#getAcquaintanceRepository)
-- [getBanisher](#getBanisher)
-- [getBuilder](#getBuilder)
-- [getMemberRepository](#getMemberRepository)
-- [getRemover](#getRemover)
+- [getAcquaintance](#getacquaintance)
+- [getAcquaintanceRepository](#getacquaintancerepository)
+- [getBanisher](#getbanisher)
+- [getBuilder](#getbuilder)
+- [getMemberRepository](#getmemberrepository)
+- [getRemover](#getremover)
 - [ignore](#ignore)
 - [register](#register)
 - [remove](#remove)
@@ -60,13 +60,13 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [unfriend](#unfriend)
 - [unignore](#unignore)
 
-### ban <span id="ban"></span>
+### ban
 
 ```
 ban(Podium\Api\Interfaces\MemberRepositoryInterface $member): Podium\Api\PodiumResponse
 ```
 
-Bans the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L189)
+Bans the member. The banned member cannot use Podium. See also [unban](#unban).
 
 #### Events
 
@@ -75,7 +75,7 @@ Bans the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src
 
 ---
 
-### befriend <span id="befriend"></span>
+### befriend
 
 ```
 befriend(
@@ -84,7 +84,8 @@ befriend(
 ): Podium\Api\PodiumResponse
 ```
 
-Befriends the target as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L141)
+Befriends the target as the member if the target is not befriended already (can be ignored though). See also [unfriend](#unfriend), 
+[ignore](#ignore), and [unignore](#unignore).
 
 #### Events
 
@@ -93,13 +94,13 @@ Befriends the target as the member. [[link]](https://github.com/yii-podium/yii2-
 
 ---
 
-### edit <span id="edit"></span>
+### edit
 
 ```
 edit(Podium\Api\Interfaces\MemberRepositoryInterface $member, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Edits the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L98)
+Edits the member. See also [register](#register).
 
 #### Events
 
@@ -108,67 +109,68 @@ Edits the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/sr
 
 ---
 
-### getAcquaintance <span id="getAcquaintance"></span>
+### getAcquaintance
 
 ```
 getAcquaintance(): Podium\Api\Interfaces\AcquaintanceInterface
 ```
 
-Returns the acquaintance service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L108)
+Returns the acquaintance service which handles [befriending](#befriend), [unfriending](#unfriend), [ignoring](#ignore), 
+and [unignoring](#unignore).
 
 ---
 
-### getAcquaintanceRepository <span id="getAcquaintanceRepository"></span>
+### getAcquaintanceRepository
 
 ```
 getAcquaintanceRepository(): Podium\Api\Interfaces\AcquaintanceRepositoryInterface
 ```
 
-Returns the acquaintance repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L124)
+Returns the acquaintance repository.
 
 ---
 
-### getBanisher <span id="getBanisher"></span>
+### getBanisher
 
 ```
 getBanisher(): Podium\Api\Interfaces\BanisherInterface
 ```
 
-Returns the banisher service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L175)
+Returns the banisher service which handles [banning](#ban) and [unbanning](#unban).
 
 ---
 
-### getBuilder <span id="getBuilder"></span>
+### getBuilder
 
 ```
 getBuilder(): Podium\Api\Interfaces\MemberBuilderInterface
 ```
 
-Returns the builder service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L76)
+Returns the builder service which handles [registering](#register) and [editing](#edit).
 
 ---
 
-### getMemberRepository <span id="getMemberRepository"></span>
+### getMemberRepository
 
 ```
 getMemberRepository(): Podium\Api\Interfaces\MemberRepositoryInterface
 ```
 
-Returns the member repository. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L60)
+Returns the member repository.
 
 ---
 
-### getRemover <span id="getRemover"></span>
+### getRemover
 
 ```
 getRemover(): Podium\Api\Interfaces\RemoverInterface
 ```
 
-Returns the remover service. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L207)
+Returns the remover service which handles [removing](#remove).
 
 ---
 
-### ignore <span id="ignore"></span>
+### ignore
 
 ```
 ignore(
@@ -177,7 +179,8 @@ ignore(
 ): Podium\Api\PodiumResponse
 ```
 
-Ignores the target as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L157)
+Ignores the target as the member if the target is not ignored already (can be befriended though). Member cannot send 
+messages to the member that ignores him. See also [befriend](#unfriend), [unfriend](#unfriend), and [unignore](#unignore).
 
 #### Events
 
@@ -186,13 +189,13 @@ Ignores the target as the member. [[link]](https://github.com/yii-podium/yii2-ap
 
 ---
 
-### register <span id="register"></span>
+### register
 
 ```
 register($id, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Registers the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L90)
+Registers the member. See also [edit](#edit).
 
 #### Events
 
@@ -201,13 +204,13 @@ Registers the member. [[link]](https://github.com/yii-podium/yii2-api/blob/maste
 
 ---
 
-### remove <span id="remove"></span>
+### remove
 
 ```
 remove(Podium\Api\Interfaces\MemberRepositoryInterface $member): Podium\Api\PodiumResponse
 ```
 
-Removes the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L221)
+Removes the member.
 
 #### Events
 
@@ -216,13 +219,13 @@ Removes the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/
 
 ---
 
-### unban <span id="unban"></span>
+### unban
 
 ```
 unban(Podium\Api\Interfaces\MemberRepositoryInterface $member): Podium\Api\PodiumResponse
 ```
 
-Unbans the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L197)
+Unbans the member. See also [ban](#ban).
 
 #### Events
 
@@ -231,7 +234,7 @@ Unbans the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/s
 
 ---
 
-### unfriend <span id="unfriend"></span>
+### unfriend
 
 ```
 unfriend(
@@ -240,7 +243,8 @@ unfriend(
 ): Podium\Api\PodiumResponse
 ```
 
-Unfriends the target as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L149)
+Unfriends the target as the member if the target is befriended. See also [befriend](#befriend), [ignore](#ignore), 
+and [unignore](#unignore).
 
 #### Events
 
@@ -249,7 +253,7 @@ Unfriends the target as the member. [[link]](https://github.com/yii-podium/yii2-
 
 ---
 
-### unignore <span id="unignore"></span>
+### unignore
 
 ```
 unignore(
@@ -258,7 +262,8 @@ unignore(
 ): Podium\Api\PodiumResponse
 ```
 
-Unignores the target as the member. [[link]](https://github.com/yii-podium/yii2-api/blob/master/src/Components/Member.php#L165)
+Unignores the target as the member if the target is ignored. See also [befriend](#befriend), [unfriend](#unfriend), 
+and [ignore](#ignore).
 
 #### Events
 
