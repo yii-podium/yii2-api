@@ -25,33 +25,45 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
         $thumb->method('up')->willReturn(false);
         $thumb->method('getErrors')->willReturn([1]);
-        $result = $this->service->thumbUp(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbUp($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testThumbUpShouldReturnErrorWhenMemberIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
+        $result = $this->service->thumbUp(
+            $this->createMock(ThumbRepositoryInterface::class),
+            $this->createMock(PostRepositoryInterface::class),
+            $member
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testThumbUpShouldReturnErrorWhenIsUpIsTrue(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(true);
-        $result = $this->service->thumbUp(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbUp($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('post.already.liked', $result->getErrors()['api']);
@@ -61,6 +73,8 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
@@ -68,7 +82,7 @@ class PostLikerTest extends AppTestCase
         $thumb->expects(self::never())->method('prepare');
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(1, -1)->willReturn(true);
-        $result = $this->service->thumbUp($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbUp($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -77,6 +91,8 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isUp')->willReturn(false);
@@ -84,7 +100,7 @@ class PostLikerTest extends AppTestCase
         $thumb->expects(self::once())->method('prepare');
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(1, 0)->willReturn(true);
-        $result = $this->service->thumbUp($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbUp($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -102,15 +118,13 @@ class PostLikerTest extends AppTestCase
             'podium'
         );
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
         $thumb->method('up')->willThrowException(new Exception('exc'));
-        $result = $this->service->thumbUp(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbUp($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -120,13 +134,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
         $thumb->method('up')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbUp($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbUp($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
@@ -136,13 +152,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isUp')->willReturn(false);
         $thumb->method('up')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbUp($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbUp($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
@@ -152,33 +170,45 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
         $thumb->method('down')->willReturn(false);
         $thumb->method('getErrors')->willReturn([1]);
-        $result = $this->service->thumbDown(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbDown($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testThumbDownShouldReturnErrorWhenMemberIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
+        $result = $this->service->thumbDown(
+            $this->createMock(ThumbRepositoryInterface::class),
+            $this->createMock(PostRepositoryInterface::class),
+            $member
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testThumbDownShouldReturnErrorWhenIsDownIsTrue(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(true);
-        $result = $this->service->thumbDown(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbDown($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('post.already.disliked', $result->getErrors()['api']);
@@ -188,6 +218,8 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
@@ -195,7 +227,7 @@ class PostLikerTest extends AppTestCase
         $thumb->expects(self::never())->method('prepare');
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(-1, 1)->willReturn(true);
-        $result = $this->service->thumbDown($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbDown($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -204,6 +236,8 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isDown')->willReturn(false);
@@ -211,7 +245,7 @@ class PostLikerTest extends AppTestCase
         $thumb->expects(self::once())->method('prepare');
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(0, 1)->willReturn(true);
-        $result = $this->service->thumbDown($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbDown($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -229,15 +263,13 @@ class PostLikerTest extends AppTestCase
             'podium'
         );
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
         $thumb->method('down')->willThrowException(new Exception('exc'));
-        $result = $this->service->thumbDown(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbDown($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -247,13 +279,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('isDown')->willReturn(false);
         $thumb->method('down')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbDown($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbDown($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
@@ -263,13 +297,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
         $thumb->method('isDown')->willReturn(false);
         $thumb->method('down')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbDown($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbDown($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
@@ -279,31 +315,43 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(false);
         $thumb->method('getErrors')->willReturn([2]);
-        $result = $this->service->thumbReset(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbReset($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame([2], $result->getErrors());
+    }
+
+    public function testThumbResetShouldReturnErrorWhenMemberIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
+        $result = $this->service->thumbReset(
+            $this->createMock(ThumbRepositoryInterface::class),
+            $this->createMock(PostRepositoryInterface::class),
+            $member
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testThumbResetShouldReturnErrorWhenPostIsNotRated(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(false);
-        $result = $this->service->thumbReset(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbReset($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('post.not.rated', $result->getErrors()['api']);
@@ -313,13 +361,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
         $thumb->method('isUp')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(-1, 0)->willReturn(true);
-        $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbReset($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -328,13 +378,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->with(0, -1)->willReturn(true);
-        $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbReset($thumb, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -352,14 +404,12 @@ class PostLikerTest extends AppTestCase
             'podium'
         );
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willThrowException(new Exception('exc'));
-        $result = $this->service->thumbReset(
-            $thumb,
-            $this->createMock(PostRepositoryInterface::class),
-            $this->createMock(MemberRepositoryInterface::class)
-        );
+        $result = $this->service->thumbReset($thumb, $this->createMock(PostRepositoryInterface::class), $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -369,13 +419,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
         $thumb->method('isUp')->willReturn(true);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbReset($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());
@@ -385,13 +437,15 @@ class PostLikerTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
         $thumb = $this->createMock(ThumbRepositoryInterface::class);
         $thumb->method('fetchOne')->willReturn(true);
         $thumb->method('reset')->willReturn(true);
         $thumb->method('isUp')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('updateCounters')->willReturn(false);
-        $result = $this->service->thumbReset($thumb, $post, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->thumbReset($thumb, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('Error while updating post counters!', $result->getErrors()['exception']->getMessage());

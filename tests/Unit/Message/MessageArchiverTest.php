@@ -25,6 +25,8 @@ class MessageArchiverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willReturn(false);
@@ -32,22 +34,37 @@ class MessageArchiverTest extends AppTestCase
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->archive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->archive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testArchiveShouldReturnErrorWhenParticipantIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(true);
+
+        $result = $this->service->archive($this->createMock(MessageRepositoryInterface::class), $participant);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testArchiveShouldReturnErrorWhenMessageIsAlreadyArchived(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->archive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->archive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('message.already.archived', $result->getErrors()['api']);
@@ -57,13 +74,15 @@ class MessageArchiverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willReturn(true);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->archive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->archive($message, $participant);
 
         self::assertTrue($result->getResult());
     }
@@ -81,13 +100,15 @@ class MessageArchiverTest extends AppTestCase
             'podium'
         );
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
         $messageSide->method('archive')->willThrowException(new Exception('exc'));
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->archive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->archive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -97,6 +118,8 @@ class MessageArchiverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willReturn(false);
@@ -104,22 +127,37 @@ class MessageArchiverTest extends AppTestCase
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->revive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->revive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testReviveShouldReturnErrorWhenParticipantIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(true);
+
+        $result = $this->service->revive($this->createMock(MessageRepositoryInterface::class), $participant);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testReviveShouldReturnErrorWhenMessageIsNotArchived(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->revive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->revive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('message.not.archived', $result->getErrors()['api']);
@@ -129,13 +167,15 @@ class MessageArchiverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willReturn(true);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->revive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->revive($message, $participant);
 
         self::assertTrue($result->getResult());
     }
@@ -153,13 +193,15 @@ class MessageArchiverTest extends AppTestCase
             'podium'
         );
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('revive')->willThrowException(new Exception('exc'));
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->revive($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->revive($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());

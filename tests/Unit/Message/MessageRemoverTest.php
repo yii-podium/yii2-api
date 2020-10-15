@@ -25,28 +25,45 @@ class MessageRemoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(false);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->remove($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->remove($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
+    }
+
+    public function testRemoveShouldReturnErrorWhenParticipantIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(true);
+
+        $result = $this->service->remove($this->createMock(MessageRepositoryInterface::class), $participant);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testRemoveShouldReturnErrorWhenMessageIsNotArchived(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(false);
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->remove($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->remove($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('message.must.be.archived', $result->getErrors()['api']);
@@ -56,6 +73,8 @@ class MessageRemoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(true);
@@ -64,7 +83,7 @@ class MessageRemoverTest extends AppTestCase
         $message->method('getParticipant')->willReturn($messageSide);
         $message->method('isCompletelyDeleted')->willReturn(true);
         $message->method('delete')->willReturn(false);
-        $result = $this->service->remove($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->remove($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
@@ -74,6 +93,8 @@ class MessageRemoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willReturn(true);
@@ -81,7 +102,7 @@ class MessageRemoverTest extends AppTestCase
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
         $message->method('isCompletelyDeleted')->willReturn(false);
-        $result = $this->service->remove($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->remove($message, $participant);
 
         self::assertTrue($result->getResult());
     }
@@ -99,13 +120,15 @@ class MessageRemoverTest extends AppTestCase
             'podium'
         );
 
+        $participant = $this->createMock(MemberRepositoryInterface::class);
+        $participant->method('isBanned')->willReturn(false);
         $messageSide = $this->createMock(MessageParticipantRepositoryInterface::class);
         $messageSide->method('isArchived')->willReturn(true);
         $messageSide->method('delete')->willThrowException(new Exception('exc'));
 
         $message = $this->createMock(MessageRepositoryInterface::class);
         $message->method('getParticipant')->willReturn($messageSide);
-        $result = $this->service->remove($message, $this->createMock(MemberRepositoryInterface::class));
+        $result = $this->service->remove($message, $participant);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());

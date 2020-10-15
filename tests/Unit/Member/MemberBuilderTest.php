@@ -73,10 +73,23 @@ class MemberBuilderTest extends AppTestCase
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willReturn(false);
         $member->method('getErrors')->willReturn([1]);
+        $member->method('isBanned')->willReturn(false);
         $result = $this->service->edit($member);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
+    }
+
+    public function testEditShouldReturnErrorWhenMemberIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
+        $result = $this->service->edit($member);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testEditShouldReturnSuccessWhenEditingIsDone(): void
@@ -85,6 +98,7 @@ class MemberBuilderTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willReturn(true);
+        $member->method('isBanned')->willReturn(false);
         $result = $this->service->edit($member);
 
         self::assertTrue($result->getResult());
@@ -105,6 +119,7 @@ class MemberBuilderTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('edit')->willThrowException(new Exception('exc'));
+        $member->method('isBanned')->willReturn(false);
         $result = $this->service->edit($member);
 
         self::assertFalse($result->getResult());
