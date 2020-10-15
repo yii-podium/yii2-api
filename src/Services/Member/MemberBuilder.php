@@ -98,6 +98,10 @@ final class MemberBuilder extends Component implements MemberBuilderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$member->edit($data)) {
                 throw new ServiceException($member->getErrors());
             }

@@ -74,6 +74,10 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($author->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             /** @var ForumRepositoryInterface $threadParent */
             $threadParent = $thread->getParent();
             if (!$post->create($author, $thread, $data)) {

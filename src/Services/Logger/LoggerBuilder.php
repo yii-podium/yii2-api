@@ -47,6 +47,10 @@ final class LoggerBuilder extends Component implements LogBuilderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($author->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$log->create($author, $action, $data)) {
                 throw new ServiceException($log->getErrors());
             }

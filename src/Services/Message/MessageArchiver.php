@@ -45,6 +45,10 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($participant->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $messageSide = $message->getParticipant($participant);
 
             if ($messageSide->isArchived()) {
@@ -103,6 +107,10 @@ final class MessageArchiver extends Component implements MessageArchiverInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($participant->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $messageSide = $message->getParticipant($participant);
 
             if (!$messageSide->isArchived()) {

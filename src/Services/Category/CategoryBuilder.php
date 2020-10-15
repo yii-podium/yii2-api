@@ -48,6 +48,10 @@ final class CategoryBuilder extends Component implements CategoryBuilderInterfac
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($author->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$category->create($author, $data)) {
                 throw new ServiceException($category->getErrors());
             }

@@ -36,7 +36,9 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(2);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -55,7 +57,9 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(1);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -74,7 +78,9 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(2);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -93,7 +99,9 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(2);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertTrue($result->getResult());
     }
@@ -112,10 +120,28 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(2);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame([3], $result->getErrors());
+    }
+
+    public function testMarkShouldReturnErrorWhenMemberIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(true);
+        $result = $this->service->mark(
+            $this->createMock(BookmarkRepositoryInterface::class),
+            $this->createMock(PostRepositoryInterface::class),
+            $member
+        );
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testMarkShouldReturnErrorWhenMarkingThrowsException(): void
@@ -143,7 +169,9 @@ class ThreadBookmarkerTest extends AppTestCase
         $post->method('getParent')->willReturn($this->createMock(ThreadRepositoryInterface::class));
         $post->method('getCreatedAt')->willReturn(2);
 
-        $result = $this->service->mark($bookmark, $post, $this->createMock(MemberRepositoryInterface::class));
+        $member = $this->createMock(MemberRepositoryInterface::class);
+        $member->method('isBanned')->willReturn(false);
+        $result = $this->service->mark($bookmark, $post, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());

@@ -28,13 +28,43 @@ class MessageMessengerTest extends AppTestCase
         $message->method('send')->willReturn(false);
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
         $receiver->method('isIgnoring')->willReturn(false);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send($message, $sender, $receiver);
 
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
+    }
+
+    public function testSendShouldReturnErrorWhenSenderIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('isBanned')->willReturn(true);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('isBanned')->willReturn(false);
+        $result = $this->service->send($this->createMock(MessageRepositoryInterface::class), $sender, $receiver);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
+    }
+
+    public function testSendShouldReturnErrorWhenReceiverIsBanned(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $sender = $this->createMock(MemberRepositoryInterface::class);
+        $sender->method('isBanned')->willReturn(false);
+        $receiver = $this->createMock(MemberRepositoryInterface::class);
+        $receiver->method('isBanned')->willReturn(true);
+        $result = $this->service->send($this->createMock(MessageRepositoryInterface::class), $sender, $receiver);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
     public function testSendShouldReturnErrorWhenSenderAndReceiverAreTheSame(): void
@@ -43,8 +73,7 @@ class MessageMessengerTest extends AppTestCase
 
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
-        $receiver = $this->createMock(MemberRepositoryInterface::class);
-        $receiver->method('getId')->willReturn(2);
+        $sender->method('isBanned')->willReturn(false);
         $result = $this->service->send(
             $this->createMock(MessageRepositoryInterface::class),
             $sender,
@@ -63,8 +92,10 @@ class MessageMessengerTest extends AppTestCase
         $replyTo->method('verifyParticipants')->willReturn(false);
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send(
             $this->createMock(MessageRepositoryInterface::class),
             $sender,
@@ -82,9 +113,11 @@ class MessageMessengerTest extends AppTestCase
 
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
         $receiver->method('isIgnoring')->willReturn(true);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send(
             $this->createMock(MessageRepositoryInterface::class),
             $sender,
@@ -103,9 +136,11 @@ class MessageMessengerTest extends AppTestCase
         $message->method('send')->willReturn(true);
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
         $receiver->method('isIgnoring')->willReturn(false);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send($message, $sender, $receiver);
 
         self::assertTrue($result->getResult());
@@ -121,9 +156,11 @@ class MessageMessengerTest extends AppTestCase
         $message->method('send')->willReturn(true);
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
         $receiver->method('isIgnoring')->willReturn(false);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send($message, $sender, $receiver, $replyTo);
 
         self::assertTrue($result->getResult());
@@ -146,9 +183,11 @@ class MessageMessengerTest extends AppTestCase
         $message->method('send')->willThrowException(new Exception('exc'));
         $sender = $this->createMock(MemberRepositoryInterface::class);
         $sender->method('getId')->willReturn(1);
+        $sender->method('isBanned')->willReturn(false);
         $receiver = $this->createMock(MemberRepositoryInterface::class);
         $receiver->method('getId')->willReturn(2);
         $receiver->method('isIgnoring')->willReturn(false);
+        $receiver->method('isBanned')->willReturn(false);
         $result = $this->service->send($message, $sender, $receiver);
 
         self::assertFalse($result->getResult());

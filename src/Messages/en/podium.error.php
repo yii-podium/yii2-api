@@ -15,6 +15,7 @@ return [
     'group.already.joined' => 'Member has already joined the Group.',
     'group.not.joined' => 'Member has not joined the Group yet.',
     'member.already.banned' => 'Member is already banned.',
+    'member.banned' => 'Member has been banned.',
     'member.befriends.target' => 'Member is befriending the target.',
     'member.ignores.target' => 'Member is ignoring the target.',
     'member.not.banned' => 'Member has not been banned.',

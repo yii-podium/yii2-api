@@ -52,6 +52,10 @@ final class PostLiker extends Component implements LikerInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $rated = true;
             if (!$thumb->fetchOne($member, $post)) {
                 $thumb->prepare($member, $post);
@@ -122,6 +126,10 @@ final class PostLiker extends Component implements LikerInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             $rated = true;
             if (!$thumb->fetchOne($member, $post)) {
                 $thumb->prepare($member, $post);
@@ -192,6 +200,10 @@ final class PostLiker extends Component implements LikerInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->isBanned()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
+            }
+
             if (!$thumb->fetchOne($member, $post)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'post.not.rated')]);
             }
