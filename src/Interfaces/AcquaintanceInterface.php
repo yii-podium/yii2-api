@@ -18,15 +18,6 @@ interface AcquaintanceInterface
     ): PodiumResponse;
 
     /**
-     * Handles unfriending process.
-     */
-    public function unfriend(
-        AcquaintanceRepositoryInterface $acquaintance,
-        MemberRepositoryInterface $member,
-        MemberRepositoryInterface $target
-    ): PodiumResponse;
-
-    /**
      * Handles ignoring process.
      */
     public function ignore(
@@ -36,9 +27,9 @@ interface AcquaintanceInterface
     ): PodiumResponse;
 
     /**
-     * Handles unignoring process.
+     * Handles disconnecting process.
      */
-    public function unignore(
+    public function disconnect(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
         MemberRepositoryInterface $target

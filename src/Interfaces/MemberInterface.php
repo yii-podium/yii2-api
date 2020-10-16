@@ -41,19 +41,14 @@ interface MemberInterface
     public function befriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unfriends the target as the member.
-     */
-    public function unfriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
-
-    /**
      * Ignores the target as the member.
      */
     public function ignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unignores the target as the member.
+     * Disconnects the target from the member.
      */
-    public function unignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
+    public function disconnect(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse;
 
     /**
      * Bans the member.

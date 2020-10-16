@@ -19,12 +19,10 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
 {
     public const EVENT_BEFORE_BEFRIENDING = 'podium.acquaintance.befriending.before';
     public const EVENT_AFTER_BEFRIENDING = 'podium.acquaintance.befriending.after';
-    public const EVENT_BEFORE_UNFRIENDING = 'podium.acquaintance.unfriending.before';
-    public const EVENT_AFTER_UNFRIENDING = 'podium.acquaintance.unfriending.after';
     public const EVENT_BEFORE_IGNORING = 'podium.acquaintance.ignoring.before';
     public const EVENT_AFTER_IGNORING = 'podium.acquaintance.ignoring.after';
-    public const EVENT_BEFORE_UNIGNORING = 'podium.acquaintance.unignoring.before';
-    public const EVENT_AFTER_UNIGNORING = 'podium.acquaintance.unignoring.after';
+    public const EVENT_BEFORE_DISCONNECTING = 'podium.acquaintance.disconnecting.before';
+    public const EVENT_AFTER_DISCONNECTING = 'podium.acquaintance.disconnecting.after';
 
     /**
      * Calls before befriending the member.
@@ -99,81 +97,6 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     private function afterBefriend(AcquaintanceRepositoryInterface $acquaintance): void
     {
         $this->trigger(self::EVENT_AFTER_BEFRIENDING, new AcquaintanceEvent(['repository' => $acquaintance]));
-    }
-
-    /**
-     * Calls before unfriending the member.
-     */
-    private function beforeUnfriend(): bool
-    {
-        $event = new AcquaintanceEvent();
-        $this->trigger(self::EVENT_BEFORE_UNFRIENDING, $event);
-
-        return $event->canUnfriend;
-    }
-
-    /**
-     * Unfriends the member.
-     */
-    public function unfriend(
-        AcquaintanceRepositoryInterface $acquaintance,
-        MemberRepositoryInterface $member,
-        MemberRepositoryInterface $target
-    ): PodiumResponse {
-        if (!$this->beforeUnfriend()) {
-            return PodiumResponse::error();
-        }
-
-        /** @var Transaction $transaction */
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-            if ($member->isBanned()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
-            }
-
-            if ($target->isBanned()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
-            }
-
-            if ($member->getId() === $target->getId()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.member')]);
-            }
-
-            if (!$acquaintance->fetchOne($member, $target)) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
-            }
-
-            if (!$acquaintance->isFriend()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.not.friend')]);
-            }
-
-            if (!$acquaintance->delete()) {
-                throw new ServiceException($acquaintance->getErrors());
-            }
-
-            $transaction->commit();
-        } catch (ServiceException $exc) {
-            $transaction->rollBack();
-
-            return PodiumResponse::error($exc->getErrorList());
-        } catch (Throwable $exc) {
-            $transaction->rollBack();
-            Yii::error(['Exception while unfriending member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
-
-            return PodiumResponse::error(['exception' => $exc]);
-        }
-
-        $this->afterUnfriend();
-
-        return PodiumResponse::success();
-    }
-
-    /**
-     * Calls after unfriending the member successfully.
-     */
-    private function afterUnfriend(): void
-    {
-        $this->trigger(self::EVENT_AFTER_UNFRIENDING);
     }
 
     /**
@@ -252,25 +175,25 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
     }
 
     /**
-     * Calls before unignoring the member.
+     * Calls before disconnecting the member.
      */
-    private function beforeUnignore(): bool
+    private function beforeDisconnect(): bool
     {
         $event = new AcquaintanceEvent();
-        $this->trigger(self::EVENT_BEFORE_UNIGNORING, $event);
+        $this->trigger(self::EVENT_BEFORE_DISCONNECTING, $event);
 
-        return $event->canUnignore;
+        return $event->canDisconnect;
     }
 
     /**
-     * Unignores the member.
+     * Disconnects the member.
      */
-    public function unignore(
+    public function disconnect(
         AcquaintanceRepositoryInterface $acquaintance,
         MemberRepositoryInterface $member,
         MemberRepositoryInterface $target
     ): PodiumResponse {
-        if (!$this->beforeUnignore()) {
+        if (!$this->beforeDisconnect()) {
             return PodiumResponse::error();
         }
 
@@ -293,10 +216,6 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
                 throw new ServiceException(['api' => Yii::t('podium.error', 'acquaintance.not.exists')]);
             }
 
-            if (!$acquaintance->isIgnoring()) {
-                throw new ServiceException(['api' => Yii::t('podium.error', 'target.is.not.ignored')]);
-            }
-
             if (!$acquaintance->delete()) {
                 throw new ServiceException($acquaintance->getErrors());
             }
@@ -308,21 +227,24 @@ final class MemberAcquaintance extends Component implements AcquaintanceInterfac
             return PodiumResponse::error($exc->getErrorList());
         } catch (Throwable $exc) {
             $transaction->rollBack();
-            Yii::error(['Exception while unignoring member', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
+            Yii::error(
+                ['Exception while disconnecting member', $exc->getMessage(), $exc->getTraceAsString()],
+                'podium'
+            );
 
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterUnignore();
+        $this->afterDisconnect();
 
         return PodiumResponse::success();
     }
 
     /**
-     * Calls after unignoring the member successfully.
+     * Calls after disconnecting the member successfully.
      */
-    private function afterUnignore(): void
+    private function afterDisconnect(): void
     {
-        $this->trigger(self::EVENT_AFTER_UNIGNORING);
+        $this->trigger(self::EVENT_AFTER_DISCONNECTING);
     }
 }

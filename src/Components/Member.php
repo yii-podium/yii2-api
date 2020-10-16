@@ -146,14 +146,6 @@ final class Member extends Component implements MemberInterface
     /**
      * @throws InvalidConfigException
      */
-    public function unfriend(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
-    {
-        return $this->getAcquaintance()->unfriend($this->getAcquaintanceRepository(), $member, $target);
-    }
-
-    /**
-     * @throws InvalidConfigException
-     */
     public function ignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
     {
         return $this->getAcquaintance()->ignore($this->getAcquaintanceRepository(), $member, $target);
@@ -162,9 +154,9 @@ final class Member extends Component implements MemberInterface
     /**
      * @throws InvalidConfigException
      */
-    public function unignore(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
+    public function disconnect(MemberRepositoryInterface $member, MemberRepositoryInterface $target): PodiumResponse
     {
-        return $this->getAcquaintance()->unignore($this->getAcquaintanceRepository(), $member, $target);
+        return $this->getAcquaintance()->disconnect($this->getAcquaintanceRepository(), $member, $target);
     }
 
     private ?BanisherInterface $banisher = null;

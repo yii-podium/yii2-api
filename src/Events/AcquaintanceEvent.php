@@ -15,19 +15,14 @@ class AcquaintanceEvent extends Event
     public bool $canBeFriends = true;
 
     /**
-     * @var bool whether member can unfriend target
-     */
-    public bool $canUnfriend = true;
-
-    /**
      * @var bool whether member can ignore target
      */
     public bool $canIgnore = true;
 
     /**
-     * @var bool whether member can unignore target
+     * @var bool whether member can disconnect target
      */
-    public bool $canUnignore = true;
+    public bool $canDisconnect = true;
 
     public ?AcquaintanceRepositoryInterface $repository = null;
 }

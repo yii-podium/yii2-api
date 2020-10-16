@@ -100,134 +100,6 @@ class MemberAcquaintanceTest extends AppTestCase
         Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_BEFRIENDING, $handler);
     }
 
-    public function testUnfriendShouldTriggerBeforeAndAfterEventsWhenUnfriendingIsDone(): void
-    {
-        $beforeHandler = function ($event) {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING] = $event instanceof AcquaintanceEvent;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
-        $acquaintance->method('delete')->willReturn(true);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING]);
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-    }
-
-    public function testUnfriendShouldOnlyTriggerBeforeEventWhenUnfriendingErrored(): void
-    {
-        $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
-        $acquaintance->method('delete')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-    }
-
-    public function testUnfriendShouldOnlyTriggerBeforeEventWhenAcquaintanceNotExists(): void
-    {
-        $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-    }
-
-    public function testUnfriendShouldOnlyTriggerBeforeEventWhenTargetIsNotFriend(): void
-    {
-        $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNFRIENDING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNFRIENDING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $this->eventsRaised);
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNFRIENDING, $afterHandler);
-    }
-
-    public function testUnfriendShouldReturnErrorWhenEventPreventsUnfriending(): void
-    {
-        $handler = static function (AcquaintanceEvent $event) {
-            $event->canUnfriend = false;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $handler);
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unfriend(
-            $this->createMock(AcquaintanceRepositoryInterface::class),
-            $member,
-            $member
-        );
-        self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNFRIENDING, $handler);
-    }
-
     public function testIgnoreShouldTriggerBeforeAndAfterEventsWhenIgnoringIsDone(): void
     {
         $beforeHandler = function ($event) {
@@ -304,72 +176,70 @@ class MemberAcquaintanceTest extends AppTestCase
         Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_IGNORING, $handler);
     }
 
-    public function testUnignoreShouldTriggerBeforeAndAfterEventsWhenUnignoringIsDone(): void
+    public function testDisconnectShouldTriggerBeforeAndAfterEventsWhenDisconnectingIsDone(): void
     {
         $beforeHandler = function ($event) {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING] = $event instanceof AcquaintanceEvent;
+            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING] = $event instanceof AcquaintanceEvent;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
         $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING] = true;
+            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_DISCONNECTING] = true;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
-        $this->service->unignore($acquaintance, $member, $target);
+        $this->service->disconnect($acquaintance, $member, $target);
 
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING]);
+        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING]);
+        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_AFTER_DISCONNECTING]);
 
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
     }
 
-    public function testUnignoreShouldOnlyTriggerBeforeEventWhenUnignoringErrored(): void
+    public function testDisconnectShouldOnlyTriggerBeforeEventWhenDisconnectingErrored(): void
     {
         $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING] = true;
+            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING] = true;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
         $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING] = true;
+            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_DISCONNECTING] = true;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
-        $this->service->unignore($acquaintance, $member, $target);
+        $this->service->disconnect($acquaintance, $member, $target);
 
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);
+        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING]);
+        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $this->eventsRaised);
 
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
     }
 
-    public function testUnignoreShouldOnlyTriggerBeforeEventWhenAcquaintanceNotExists(): void
+    public function testDisconnectShouldOnlyTriggerBeforeEventWhenAcquaintanceNotExists(): void
     {
         $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING] = true;
+            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING] = true;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
         $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING] = true;
+            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_DISCONNECTING] = true;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(false);
@@ -377,51 +247,24 @@ class MemberAcquaintanceTest extends AppTestCase
         $member->method('getId')->willReturn(1);
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
-        $this->service->unignore($acquaintance, $member, $target);
+        $this->service->disconnect($acquaintance, $member, $target);
 
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);
+        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_DISCONNECTING]);
+        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $this->eventsRaised);
 
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $beforeHandler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_DISCONNECTING, $afterHandler);
     }
 
-    public function testUnignoreShouldOnlyTriggerBeforeEventWhenTargetIsNotIgnored(): void
-    {
-        $beforeHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
-        $afterHandler = function () {
-            $this->eventsRaised[MemberAcquaintance::EVENT_AFTER_UNIGNORING] = true;
-        };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $this->service->unignore($acquaintance, $member, $target);
-
-        self::assertTrue($this->eventsRaised[MemberAcquaintance::EVENT_BEFORE_UNIGNORING]);
-        self::assertArrayNotHasKey(MemberAcquaintance::EVENT_AFTER_UNIGNORING, $this->eventsRaised);
-
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $beforeHandler);
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_AFTER_UNIGNORING, $afterHandler);
-    }
-
-    public function testUnignoreShouldReturnErrorWhenEventPreventsUnignoring(): void
+    public function testDisconnectShouldReturnErrorWhenEventPreventsDisconnecting(): void
     {
         $handler = static function (AcquaintanceEvent $event) {
-            $event->canUnignore = false;
+            $event->canDisconnect = false;
         };
-        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $handler);
+        Event::on(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $handler);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $result = $this->service->unignore(
+        $result = $this->service->disconnect(
             $this->createMock(AcquaintanceRepositoryInterface::class),
             $member,
             $member
@@ -429,6 +272,6 @@ class MemberAcquaintanceTest extends AppTestCase
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
 
-        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_UNIGNORING, $handler);
+        Event::off(MemberAcquaintance::class, MemberAcquaintance::EVENT_BEFORE_DISCONNECTING, $handler);
     }
 }

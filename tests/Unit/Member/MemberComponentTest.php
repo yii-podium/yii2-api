@@ -99,17 +99,6 @@ class MemberComponentTest extends TestCase
         $this->component->befriend($member, $member);
     }
 
-    public function testUnfriendShouldRunAcquaintanceUnfriend(): void
-    {
-        $acquaintance = $this->createMock(AcquaintanceInterface::class);
-        $acquaintance->expects(self::once())->method('unfriend')->willReturn(PodiumResponse::success());
-        $this->component->acquaintanceConfig = $acquaintance;
-        $this->component->acquaintanceRepositoryConfig = $this->createMock(AcquaintanceRepositoryInterface::class);
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->component->unfriend($member, $member);
-    }
-
     public function testIgnoreShouldRunAcquaintanceIgnore(): void
     {
         $acquaintance = $this->createMock(AcquaintanceInterface::class);
@@ -121,15 +110,15 @@ class MemberComponentTest extends TestCase
         $this->component->ignore($member, $member);
     }
 
-    public function testUnignoreShouldRunAcquaintanceUnignore(): void
+    public function testDisconnectShouldRunAcquaintanceDisconnect(): void
     {
         $acquaintance = $this->createMock(AcquaintanceInterface::class);
-        $acquaintance->expects(self::once())->method('unignore')->willReturn(PodiumResponse::success());
+        $acquaintance->expects(self::once())->method('disconnect')->willReturn(PodiumResponse::success());
         $this->component->acquaintanceConfig = $acquaintance;
         $this->component->acquaintanceRepositoryConfig = $this->createMock(AcquaintanceRepositoryInterface::class);
 
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $this->component->unignore($member, $member);
+        $this->component->disconnect($member, $member);
     }
 
     public function testGetBanisherShouldThrowExceptionWhenBanisherIsMisconfigured(): void

@@ -260,17 +260,6 @@ final class Account extends Component implements AccountInterface, PodiumBridgeI
     /**
      * @throws InvalidConfigException|NoMembershipException
      */
-    public function unfriendMember(MemberRepositoryInterface $target): PodiumResponse
-    {
-        /** @var MemberInterface $memberComponent */
-        $memberComponent = $this->getPodium()->getMember();
-
-        return $memberComponent->unfriend($this->getMembership(), $target);
-    }
-
-    /**
-     * @throws InvalidConfigException|NoMembershipException
-     */
     public function ignoreMember(MemberRepositoryInterface $target): PodiumResponse
     {
         /** @var MemberInterface $memberComponent */
@@ -282,12 +271,12 @@ final class Account extends Component implements AccountInterface, PodiumBridgeI
     /**
      * @throws InvalidConfigException|NoMembershipException
      */
-    public function unignoreMember(MemberRepositoryInterface $target): PodiumResponse
+    public function disconnectMember(MemberRepositoryInterface $target): PodiumResponse
     {
         /** @var MemberInterface $memberComponent */
         $memberComponent = $this->getPodium()->getMember();
 
-        return $memberComponent->unignore($this->getMembership(), $target);
+        return $memberComponent->disconnect($this->getMembership(), $target);
     }
 
     /**
