@@ -46,6 +46,7 @@ or component's ID or configuration array that can be resolved as the above. Defa
 
 - [ban](#ban)
 - [befriend](#befriend)
+- [disconnect](#disconnect)
 - [edit](#edit)
 - [getAcquaintance](#getacquaintance)
 - [getAcquaintanceRepository](#getacquaintancerepository)
@@ -57,8 +58,6 @@ or component's ID or configuration array that can be resolved as the above. Defa
 - [register](#register)
 - [remove](#remove)
 - [unban](#unban)
-- [unfriend](#unfriend)
-- [unignore](#unignore)
 
 ### ban
 
@@ -84,13 +83,31 @@ befriend(
 ): Podium\Api\PodiumResponse
 ```
 
-Befriends the target as the member if the target is not befriended already (can be ignored though). See also [unfriend](#unfriend), 
-[ignore](#ignore), and [unignore](#unignore).
+Befriends the target as the member if the target is not befriended already (can be ignored though). See also [ignore](#ignore) 
+and [disconnect](#disconnect).
 
 #### Events
 
 - `Podium\Api\Services\Member\MemberAcquaintance::EVENT_BEFORE_BEFRIENDING`
 - `Podium\Api\Services\Member\MemberAcquaintance::EVENT_AFTER_BEFRIENDING`
+
+---
+
+### disconnect
+
+```
+disconnect(
+    Podium\Api\Interfaces\MemberRepositoryInterface $member,
+    Podium\Api\Interfaces\MemberRepositoryInterface $target
+): Podium\Api\PodiumResponse
+```
+
+Disconnects the target from the member if there is a relationship between them. See also [befriend](#befriend) and [ignore](#ignore).
+
+#### Events
+
+- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_BEFORE_DISCONNECTING`
+- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_AFTER_DISCONNECTING`
 
 ---
 
@@ -180,7 +197,7 @@ ignore(
 ```
 
 Ignores the target as the member if the target is not ignored already (can be befriended though). Member cannot send 
-messages to the member that ignores him. See also [befriend](#unfriend), [unfriend](#unfriend), and [unignore](#unignore).
+messages to the member that ignores him. See also [befriend](#unfriend) and [disconnect](#disconnect).
 
 #### Events
 
@@ -231,44 +248,6 @@ Unbans the member. See also [ban](#ban).
 
 - `Podium\Api\Services\Member\MemberBanisher::EVENT_BEFORE_UNBANNING`
 - `Podium\Api\Services\Member\MemberBanisher::EVENT_AFTER_UNBANNING`
-
----
-
-### unfriend
-
-```
-unfriend(
-    Podium\Api\Interfaces\MemberRepositoryInterface $member,
-    Podium\Api\Interfaces\MemberRepositoryInterface $target
-): Podium\Api\PodiumResponse
-```
-
-Unfriends the target as the member if the target is befriended. See also [befriend](#befriend), [ignore](#ignore), 
-and [unignore](#unignore).
-
-#### Events
-
-- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_BEFORE_UNFRIENDING`
-- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_AFTER_UNFRIENDING`
-
----
-
-### unignore
-
-```
-unignore(
-    Podium\Api\Interfaces\MemberRepositoryInterface $member,
-    Podium\Api\Interfaces\MemberRepositoryInterface $target
-): Podium\Api\PodiumResponse
-```
-
-Unignores the target as the member if the target is ignored. See also [befriend](#befriend), [unfriend](#unfriend), 
-and [ignore](#ignore).
-
-#### Events
-
-- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_BEFORE_UNIGNORING`
-- `Podium\Api\Services\Member\MemberAcquaintance::EVENT_AFTER_UNIGNORING`
 
 ---
 

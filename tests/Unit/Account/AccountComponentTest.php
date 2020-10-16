@@ -310,18 +310,6 @@ class AccountComponentTest extends TestCase
         $this->component->befriendMember($this->createMock(MemberRepositoryInterface::class));
     }
 
-    public function testUnfriendMemberShouldCallMemberComponentUnfriend(): void
-    {
-        $member = $this->createMock(MemberInterface::class);
-        $member->expects(self::once())->method('unfriend')->willReturn(PodiumResponse::success());
-
-        $podium = $this->createMock(Podium::class);
-        $podium->expects(self::once())->method('getMember')->willReturn($member);
-        $this->component->setPodium($podium);
-
-        $this->component->unfriendMember($this->createMock(MemberRepositoryInterface::class));
-    }
-
     public function testIgnoreMemberShouldCallMemberComponentIgnore(): void
     {
         $member = $this->createMock(MemberInterface::class);
@@ -334,16 +322,16 @@ class AccountComponentTest extends TestCase
         $this->component->ignoreMember($this->createMock(MemberRepositoryInterface::class));
     }
 
-    public function testUnignoreMemberShouldCallMemberComponentUnignore(): void
+    public function testDisconnectMemberShouldCallMemberComponentDisconnect(): void
     {
         $member = $this->createMock(MemberInterface::class);
-        $member->expects(self::once())->method('unignore')->willReturn(PodiumResponse::success());
+        $member->expects(self::once())->method('disconnect')->willReturn(PodiumResponse::success());
 
         $podium = $this->createMock(Podium::class);
         $podium->expects(self::once())->method('getMember')->willReturn($member);
         $this->component->setPodium($podium);
 
-        $this->component->unignoreMember($this->createMock(MemberRepositoryInterface::class));
+        $this->component->disconnectMember($this->createMock(MemberRepositoryInterface::class));
     }
 
     public function testSendMessageShouldCallMessageComponentSend(): void

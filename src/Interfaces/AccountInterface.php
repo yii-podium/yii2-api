@@ -89,19 +89,14 @@ interface AccountInterface
     public function befriendMember(MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unfriends the target member as the current user.
-     */
-    public function unfriendMember(MemberRepositoryInterface $target): PodiumResponse;
-
-    /**
      * Ignores the target member as the current user.
      */
     public function ignoreMember(MemberRepositoryInterface $target): PodiumResponse;
 
     /**
-     * Unignores the target member as the current user.
+     * Disconnects the target member from the current user.
      */
-    public function unignoreMember(MemberRepositoryInterface $target): PodiumResponse;
+    public function disconnectMember(MemberRepositoryInterface $target): PodiumResponse;
 
     /**
      * Sends a message to the receiver as the current user.

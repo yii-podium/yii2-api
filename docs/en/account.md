@@ -32,6 +32,7 @@ component's ID or configuration array that can be resolved as the above. Default
 - [createForum](#createforum)
 - [createPost](#createpost)
 - [createThread](#createthread)
+- [disconnectMember](#disconnectmember)
 - [edit](#edit)
 - [getMembership](#getmembership)
 - [getPodium](#getpodium)
@@ -48,8 +49,6 @@ component's ID or configuration array that can be resolved as the above. Default
 - [thumbDownPost](#thumbdownpost)
 - [thumbResetPost](#thumbresetpost)
 - [thumbUpPost](#thumbuppost)
-- [unfriendMember](#unfriendmember)
-- [unignoreMember](#unignoremember)
 - [unsubscribeThread](#unsubscribethread)
 - [votePoll](#votepoll)
 
@@ -113,6 +112,16 @@ createThread(Podium\Api\Interfaces\ForumRepositoryInterface $parentForum, array 
 ```
 
 Creates a thread under the parent forum as the current user. See [create](thread.md#create).
+
+---
+
+### disconnectMember
+
+```
+disconnectMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
+```
+
+Disconnects the target member from the current user. See [disconnect](member.md#disconnect).
 
 ---
 
@@ -277,26 +286,6 @@ thumbUpPost(Podium\Api\Interfaces\PostRepositoryInterface $post): Podium\Api\Pod
 ```
 
 Gives the post a thumb up from the current user. See [thumbUp](post.md#thumbup).
-
----
-
-### unfriendMember
-
-```
-unfriendMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
-```
-
-Unfriends the target member as the current user. See [unfriend](member.md#unfriend).
-
----
-
-### unignoreMember
-
-```
-unignoreMember(Podium\Api\Interfaces\MemberRepositoryInterface $target): Podium\Api\PodiumResponse
-```
-
-Unignores the target member as the current user. See [unignore](member.md#unignore).
 
 ---
 

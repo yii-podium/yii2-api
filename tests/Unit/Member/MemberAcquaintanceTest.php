@@ -176,160 +176,6 @@ class MemberAcquaintanceTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testUnfriendShouldReturnErrorWhenUnfriendingErrored(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
-        $acquaintance->method('delete')->willReturn(false);
-        $acquaintance->method('getErrors')->willReturn([1]);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame([1], $result->getErrors());
-    }
-
-    public function testUnfriendShouldReturnErrorWhenMemberIsBanned(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(true);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($this->createMock(AcquaintanceRepositoryInterface::class), $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame(['api' => 'member.banned'], $result->getErrors());
-    }
-
-    public function testUnfriendShouldReturnErrorWhenTargetIsBanned(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(true);
-        $result = $this->service->unfriend($this->createMock(AcquaintanceRepositoryInterface::class), $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame(['api' => 'member.banned'], $result->getErrors());
-    }
-
-    public function testUnfriendShouldReturnErrorWhenTargetIsMember(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $member);
-
-        self::assertFalse($result->getResult());
-        self::assertSame('target.is.member', $result->getErrors()['api']);
-    }
-
-    public function testUnfriendShouldReturnSuccessWhenUnfriendingIsDone(): void
-    {
-        $this->transaction->expects(self::once())->method('commit');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
-        $acquaintance->method('delete')->willReturn(true);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertTrue($result->getResult());
-    }
-
-    public function testUnfriendShouldReturnErrorWhenUnfriendingThrowsException(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-        $this->logger->expects(self::once())->method('log')->with(
-            self::callback(
-                static function (array $data) {
-                    return 3 === count($data)
-                        && 'Exception while unfriending member' === $data[0]
-                        && 'exc' === $data[1];
-                }
-            ),
-            1,
-            'podium'
-        );
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(true);
-        $acquaintance->method('delete')->willThrowException(new Exception('exc'));
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame('exc', $result->getErrors()['exception']->getMessage());
-    }
-
-    public function testUnfriendShouldReturnErrorWhenAcquaintanceNotExists(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame('acquaintance.not.exists', $result->getErrors()['api']);
-    }
-
-    public function testUnfriendShouldReturnErrorWhenTargetIsNotFriend(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isFriend')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unfriend($acquaintance, $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame('target.is.not.friend', $result->getErrors()['api']);
-    }
-
     public function testIgnoreShouldReturnErrorWhenIgnoringErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
@@ -484,13 +330,12 @@ class MemberAcquaintanceTest extends AppTestCase
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testUnignoreShouldReturnErrorWhenUnignoringErrored(): void
+    public function testDisconnectShouldReturnErrorWhenDisconnectingErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(false);
         $acquaintance->method('getErrors')->willReturn([1]);
         $member = $this->createMock(MemberRepositoryInterface::class);
@@ -499,13 +344,13 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $target);
+        $result = $this->service->disconnect($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
     }
 
-    public function testUnignoreShouldReturnErrorWhenMemberIsBanned(): void
+    public function testDisconnectShouldReturnErrorWhenMemberIsBanned(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
@@ -515,13 +360,17 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($this->createMock(AcquaintanceRepositoryInterface::class), $member, $target);
+        $result = $this->service->disconnect(
+            $this->createMock(AcquaintanceRepositoryInterface::class),
+            $member,
+            $target
+        );
 
         self::assertFalse($result->getResult());
         self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
-    public function testUnignoreShouldReturnErrorWhenTargetIsBanned(): void
+    public function testDisconnectShouldReturnErrorWhenTargetIsBanned(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
@@ -531,13 +380,17 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(true);
-        $result = $this->service->unignore($this->createMock(AcquaintanceRepositoryInterface::class), $member, $target);
+        $result = $this->service->disconnect(
+            $this->createMock(AcquaintanceRepositoryInterface::class),
+            $member,
+            $target
+        );
 
         self::assertFalse($result->getResult());
         self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
-    public function testUnignoreShouldReturnErrorWhenTargetIsMember(): void
+    public function testDisconnectShouldReturnErrorWhenTargetIsMember(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
@@ -545,19 +398,18 @@ class MemberAcquaintanceTest extends AppTestCase
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
         $member->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $member);
+        $result = $this->service->disconnect($acquaintance, $member, $member);
 
         self::assertFalse($result->getResult());
         self::assertSame('target.is.member', $result->getErrors()['api']);
     }
 
-    public function testUnignoreShouldReturnSuccessWhenUnignoringIsDone(): void
+    public function testDisconnectShouldReturnSuccessWhenDisconnectingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willReturn(true);
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -565,18 +417,20 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $target);
+        $result = $this->service->disconnect($acquaintance, $member, $target);
 
         self::assertTrue($result->getResult());
     }
 
-    public function testUnignoreShouldReturnErrorWhenUnignoringThrowsException(): void
+    public function testDisconnectShouldReturnErrorWhenDisconnectingThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
         $this->logger->expects(self::once())->method('log')->with(
             self::callback(
                 static function (array $data) {
-                    return 3 === count($data) && 'Exception while unignoring member' === $data[0] && 'exc' === $data[1];
+                    return 3 === count($data)
+                        && 'Exception while disconnecting member' === $data[0]
+                        && 'exc' === $data[1];
                 }
             ),
             1,
@@ -585,7 +439,6 @@ class MemberAcquaintanceTest extends AppTestCase
 
         $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
         $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(true);
         $acquaintance->method('delete')->willThrowException(new Exception('exc'));
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('getId')->willReturn(1);
@@ -593,13 +446,13 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $target);
+        $result = $this->service->disconnect($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testUnignoreShouldReturnErrorWhenAcquaintanceNotExists(): void
+    public function testDisconnectShouldReturnErrorWhenAcquaintanceNotExists(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
@@ -611,28 +464,9 @@ class MemberAcquaintanceTest extends AppTestCase
         $target = $this->createMock(MemberRepositoryInterface::class);
         $target->method('getId')->willReturn(2);
         $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $target);
+        $result = $this->service->disconnect($acquaintance, $member, $target);
 
         self::assertFalse($result->getResult());
         self::assertSame('acquaintance.not.exists', $result->getErrors()['api']);
-    }
-
-    public function testUnignoreShouldReturnErrorWhenTargetIsNotIgnored(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $acquaintance = $this->createMock(AcquaintanceRepositoryInterface::class);
-        $acquaintance->method('fetchOne')->willReturn(true);
-        $acquaintance->method('isIgnoring')->willReturn(false);
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('getId')->willReturn(1);
-        $member->method('isBanned')->willReturn(false);
-        $target = $this->createMock(MemberRepositoryInterface::class);
-        $target->method('getId')->willReturn(2);
-        $target->method('isBanned')->willReturn(false);
-        $result = $this->service->unignore($acquaintance, $member, $target);
-
-        self::assertFalse($result->getResult());
-        self::assertSame('target.is.not.ignored', $result->getErrors()['api']);
     }
 }
