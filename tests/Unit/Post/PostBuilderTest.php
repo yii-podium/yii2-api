@@ -62,7 +62,9 @@ class PostBuilderTest extends AppTestCase
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willReturn(false);
         $post->method('getErrors')->willReturn([1]);
-        $result = $this->service->create($post, $author, $this->createMock(ThreadRepositoryInterface::class));
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isLocked')->willReturn(false);
+        $result = $this->service->create($post, $author, $thread);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
@@ -84,6 +86,20 @@ class PostBuilderTest extends AppTestCase
         self::assertSame(['api' => 'member.banned'], $result->getErrors());
     }
 
+    public function testCreateShouldReturnErrorWhenThreadIsLocked(): void
+    {
+        $this->transaction->expects(self::once())->method('rollBack');
+
+        $author = $this->createMock(MemberRepositoryInterface::class);
+        $author->method('isBanned')->willReturn(false);
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isLocked')->willReturn(true);
+        $result = $this->service->create($this->createMock(PostRepositoryInterface::class), $author, $thread);
+
+        self::assertFalse($result->getResult());
+        self::assertSame(['api' => 'thread.locked'], $result->getErrors());
+    }
+
     public function testCreateShouldReturnSuccessWhenCreatingIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
@@ -94,6 +110,7 @@ class PostBuilderTest extends AppTestCase
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('updateCounters')->with(1)->willReturn(true);
+        $thread->method('isLocked')->willReturn(false);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('updateCounters')->with(0, 1)->willReturn(true);
         $thread->method('getParent')->willReturn($forum);
@@ -119,7 +136,9 @@ class PostBuilderTest extends AppTestCase
         $author->method('isBanned')->willReturn(false);
         $post = $this->createMock(PostRepositoryInterface::class);
         $post->method('create')->willThrowException(new Exception('exc'));
-        $result = $this->service->create($post, $author, $this->createMock(ThreadRepositoryInterface::class));
+        $thread = $this->createMock(ThreadRepositoryInterface::class);
+        $thread->method('isLocked')->willReturn(false);
+        $result = $this->service->create($post, $author, $thread);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
@@ -135,6 +154,7 @@ class PostBuilderTest extends AppTestCase
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('updateCounters')->willReturn(false);
+        $thread->method('isLocked')->willReturn(false);
         $result = $this->service->create($post, $author, $thread);
 
         self::assertFalse($result->getResult());
@@ -151,6 +171,7 @@ class PostBuilderTest extends AppTestCase
         $post->method('create')->willReturn(true);
         $thread = $this->createMock(ThreadRepositoryInterface::class);
         $thread->method('updateCounters')->willReturn(true);
+        $thread->method('isLocked')->willReturn(false);
         $forum = $this->createMock(ForumRepositoryInterface::class);
         $forum->method('updateCounters')->willReturn(false);
         $thread->method('getParent')->willReturn($forum);

@@ -78,6 +78,10 @@ final class PostBuilder extends Component implements CategorisedBuilderInterface
                 throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
             }
 
+            if ($thread->isLocked()) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'thread.locked')]);
+            }
+
             /** @var ForumRepositoryInterface $threadParent */
             $threadParent = $thread->getParent();
             if (!$post->create($author, $thread, $data)) {

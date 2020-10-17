@@ -42,6 +42,7 @@ return [
     'thread.already.archived' => 'Thread is already archived.',
     'thread.already.hidden' => 'Thread is already hidden.',
     'thread.already.subscribed' => 'Thread is already subscribed.',
+    'thread.locked' => 'Thread is locked.',
     'thread.must.be.archived' => 'Thread must be archived first.',
     'thread.not.archived' => 'Thread is not archived.',
     'thread.not.hidden' => 'Thread is not hidden.',
