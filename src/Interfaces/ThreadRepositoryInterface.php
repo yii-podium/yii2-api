@@ -18,6 +18,8 @@ interface ThreadRepositoryInterface extends RepositoryInterface
 
     public function lock(): bool;
 
+    public function isLocked(): bool;
+
     public function unlock(): bool;
 
     public function archive(): bool;
