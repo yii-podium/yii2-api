@@ -7,17 +7,17 @@ namespace Podium\Tests\Unit\Logger;
 use Exception;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
-use Podium\Api\Services\Logger\LoggerBuilder;
+use Podium\Api\Services\Log\LogBuilder;
 use Podium\Tests\AppTestCase;
 
 class LoggerBuilderTest extends AppTestCase
 {
-    private LoggerBuilder $service;
+    private LogBuilder $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new LoggerBuilder();
+        $this->service = new LogBuilder();
     }
 
     public function testCreateShouldReturnErrorWhenCreatingErrored(): void

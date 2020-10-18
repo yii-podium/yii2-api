@@ -191,7 +191,7 @@ Removes the current user from the group. See [leave](group.md#leave).
 log(string $action, array $data = []): Podium\Api\PodiumResponse
 ```
 
-Logs the action as the current user. See [log](logger.md#create).
+Logs the action as the current user. See [log](log.md#create).
 
 ---
 

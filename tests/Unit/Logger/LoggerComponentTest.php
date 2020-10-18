@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Logger;
 
 use PHPUnit\Framework\TestCase;
-use Podium\Api\Components\Logger;
+use Podium\Api\Components\Log;
 use Podium\Api\Interfaces\LogBuilderInterface;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
@@ -15,11 +15,11 @@ use yii\base\InvalidConfigException;
 
 class LoggerComponentTest extends TestCase
 {
-    private Logger $component;
+    private Log $component;
 
     protected function setUp(): void
     {
-        $this->component = new Logger();
+        $this->component = new Log();
     }
 
     public function testGetBuilderShouldThrowExceptionWhenBuilderIsMisconfigured(): void

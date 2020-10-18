@@ -6,7 +6,7 @@ namespace Podium\Api\Interfaces;
 
 use Podium\Api\PodiumResponse;
 
-interface LoggerInterface
+interface LogInterface
 {
     /**
      * Returns the log repository.

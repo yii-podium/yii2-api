@@ -165,4 +165,4 @@ Removes the group.
 
 ---
 
-[<<< Index](../README.md) | [Next >>> Logger](logger.md)
+[<<< Index](../README.md) | [Next >>> Log](log.md)

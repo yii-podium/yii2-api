@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace Podium\Api\Components;
 
 use Podium\Api\Interfaces\LogBuilderInterface;
-use Podium\Api\Interfaces\LoggerInterface;
+use Podium\Api\Interfaces\LogInterface;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\PodiumResponse;
-use Podium\Api\Services\Logger\LoggerBuilder;
-use Podium\Api\Services\Logger\LoggerRemover;
+use Podium\Api\Services\Log\LogBuilder;
+use Podium\Api\Services\Log\LogRemover;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 
-final class Logger extends Component implements LoggerInterface
+final class Log extends Component implements LogInterface
 {
     /**
      * @var string|array|LogBuilderInterface
      */
-    public $builderConfig = LoggerBuilder::class;
+    public $builderConfig = LogBuilder::class;
 
     /**
      * @var string|array|RemoverInterface
      */
-    public $removerConfig = LoggerRemover::class;
+    public $removerConfig = LogRemover::class;
 
     /**
      * @var string|array|LogRepositoryInterface
