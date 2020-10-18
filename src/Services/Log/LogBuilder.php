@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Api\Services\Logger;
+namespace Podium\Api\Services\Log;
 
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\LogBuilderInterface;
@@ -15,7 +15,7 @@ use Yii;
 use yii\base\Component;
 use yii\db\Transaction;
 
-final class LoggerBuilder extends Component implements LogBuilderInterface
+final class LogBuilder extends Component implements LogBuilderInterface
 {
     public const EVENT_BEFORE_CREATING = 'podium.log.creating.before';
     public const EVENT_AFTER_CREATING = 'podium.log.creating.after';

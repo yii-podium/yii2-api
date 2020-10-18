@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Api\Services\Logger;
+namespace Podium\Api\Services\Log;
 
 use InvalidArgumentException;
 use Podium\Api\Events\RemoveEvent;
@@ -16,7 +16,7 @@ use Yii;
 use yii\base\Component;
 use yii\db\Transaction;
 
-final class LoggerRemover extends Component implements RemoverInterface
+final class LogRemover extends Component implements RemoverInterface
 {
     public const EVENT_BEFORE_REMOVING = 'podium.log.removing.before';
     public const EVENT_AFTER_REMOVING = 'podium.log.removing.after';

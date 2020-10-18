@@ -8,7 +8,7 @@
  - [Category](en/category.md)
  - [Forum](en/forum.md)
  - [Group](en/group.md)
- - [Logger](en/logger.md)
+ - [Log](en/log.md)
  - [Member](en/member.md)
  - [Message](en/message.md)
  - [Post](en/post.md)

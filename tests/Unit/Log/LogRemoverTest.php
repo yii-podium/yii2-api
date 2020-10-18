@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Podium\Tests\Unit\Logger;
+namespace Podium\Tests\Unit\Log;
 
 use Exception;
 use Podium\Api\Interfaces\LogRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
-use Podium\Api\Services\Logger\LoggerRemover;
+use Podium\Api\Services\Log\LogRemover;
 use Podium\Tests\AppTestCase;
 
-class LoggerRemoverTest extends AppTestCase
+class LogRemoverTest extends AppTestCase
 {
-    private LoggerRemover $service;
+    private LogRemover $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new LoggerRemover();
+        $this->service = new LogRemover();
     }
 
     public function testRemoveShouldReturnErrorWhenRepositoryIsWrong(): void

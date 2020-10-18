@@ -8,7 +8,7 @@ use Podium\Api\Components\Account;
 use Podium\Api\Components\Category;
 use Podium\Api\Components\Forum;
 use Podium\Api\Components\Group;
-use Podium\Api\Components\Logger;
+use Podium\Api\Components\Log;
 use Podium\Api\Components\Member;
 use Podium\Api\Components\Message;
 use Podium\Api\Components\Post;
@@ -18,7 +18,7 @@ use Podium\Api\Interfaces\AccountInterface;
 use Podium\Api\Interfaces\CategoryInterface;
 use Podium\Api\Interfaces\ForumInterface;
 use Podium\Api\Interfaces\GroupInterface;
-use Podium\Api\Interfaces\LoggerInterface;
+use Podium\Api\Interfaces\LogInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MessageInterface;
 use Podium\Api\Interfaces\PostInterface;
@@ -48,7 +48,7 @@ class PodiumTest extends AppTestCase
                 'category' => ['class' => Category::class],
                 'forum' => ['class' => Forum::class],
                 'group' => ['class' => Group::class],
-                'logger' => ['class' => Logger::class],
+                'log' => ['class' => Log::class],
                 'member' => ['class' => Member::class],
                 'message' => ['class' => Message::class],
                 'post' => ['class' => Post::class],
@@ -82,6 +82,7 @@ class PodiumTest extends AppTestCase
         self::assertArrayHasKey('category', $components);
         self::assertArrayHasKey('forum', $components);
         self::assertArrayHasKey('group', $components);
+        self::assertArrayHasKey('log', $components);
         self::assertArrayHasKey('member', $components);
         self::assertArrayHasKey('message', $components);
         self::assertArrayHasKey('post', $components);
@@ -109,9 +110,9 @@ class PodiumTest extends AppTestCase
         self::assertInstanceOf(GroupInterface::class, $this->podium->getGroup());
     }
 
-    public function testGetLogger(): void
+    public function testGetLog(): void
     {
-        self::assertInstanceOf(LoggerInterface::class, $this->podium->getLogger());
+        self::assertInstanceOf(LogInterface::class, $this->podium->getLog());
     }
 
     public function testGetMember(): void

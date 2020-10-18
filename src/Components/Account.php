@@ -12,7 +12,7 @@ use Podium\Api\Interfaces\ForumInterface;
 use Podium\Api\Interfaces\ForumRepositoryInterface;
 use Podium\Api\Interfaces\GroupInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
-use Podium\Api\Interfaces\LoggerInterface;
+use Podium\Api\Interfaces\LogInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\MessageInterface;
@@ -331,9 +331,9 @@ final class Account extends Component implements AccountInterface, PodiumBridgeI
      */
     public function log(string $action, array $data = []): PodiumResponse
     {
-        /** @var LoggerInterface $loggerComponent */
-        $loggerComponent = $this->getPodium()->getLogger();
+        /** @var LogInterface $logComponent */
+        $logComponent = $this->getPodium()->getLog();
 
-        return $loggerComponent->create($this->getMembership(), $action, $data);
+        return $logComponent->create($this->getMembership(), $action, $data);
     }
 }
