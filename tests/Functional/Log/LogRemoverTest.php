@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Tests\Functional\Logger;
+namespace Podium\Tests\Functional\Log;
 
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\LogRepositoryInterface;
@@ -10,7 +10,7 @@ use Podium\Api\Services\Log\LogRemover;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class LoggerRemoverTest extends AppTestCase
+class LogRemoverTest extends AppTestCase
 {
     private LogRemover $service;
 

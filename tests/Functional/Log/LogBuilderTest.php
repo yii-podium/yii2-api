@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Tests\Functional\Logger;
+namespace Podium\Tests\Functional\Log;
 
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\LogRepositoryInterface;
@@ -11,7 +11,7 @@ use Podium\Api\Services\Log\LogBuilder;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
 
-class LoggerBuilderTest extends AppTestCase
+class LogBuilderTest extends AppTestCase
 {
     private LogBuilder $service;
 

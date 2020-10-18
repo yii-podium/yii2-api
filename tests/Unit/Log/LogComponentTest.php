@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Podium\Tests\Unit\Logger;
+namespace Podium\Tests\Unit\Log;
 
 use PHPUnit\Framework\TestCase;
 use Podium\Api\Components\Log;
@@ -13,7 +13,7 @@ use Podium\Api\Interfaces\RemoverInterface;
 use Podium\Api\PodiumResponse;
 use yii\base\InvalidConfigException;
 
-class LoggerComponentTest extends TestCase
+class LogComponentTest extends TestCase
 {
     private Log $component;
 
