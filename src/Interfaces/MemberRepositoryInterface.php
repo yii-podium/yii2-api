@@ -18,4 +18,8 @@ interface MemberRepositoryInterface extends RepositoryInterface
     public function isBanned(): bool;
 
     public function isIgnoring(MemberRepositoryInterface $target): bool;
+
+    public function addRole(RoleRepositoryInterface $role): bool;
+
+    public function removeRole(RoleRepositoryInterface $role): bool;
 }

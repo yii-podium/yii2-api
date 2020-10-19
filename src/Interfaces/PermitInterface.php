@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Podium\Api\Interfaces;
+
+use Podium\Api\PodiumResponse;
+
+interface PermitInterface
+{
+    public function createRole(array $data): PodiumResponse;
+
+    public function editRole(RoleRepositoryInterface $role, array $data): PodiumResponse;
+
+    public function removeRole(RoleRepositoryInterface $role): PodiumResponse;
+
+    public function grantRole(MemberRepositoryInterface $member, RoleRepositoryInterface $role): PodiumResponse;
+
+    public function revokeRole(MemberRepositoryInterface $member, RoleRepositoryInterface $role): PodiumResponse;
+
+    public function check(AllowerInterface $allower): bool;
+}

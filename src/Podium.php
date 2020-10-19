@@ -11,6 +11,7 @@ use Podium\Api\Components\Group;
 use Podium\Api\Components\Log;
 use Podium\Api\Components\Member;
 use Podium\Api\Components\Message;
+use Podium\Api\Components\Permit;
 use Podium\Api\Components\Post;
 use Podium\Api\Components\Rank;
 use Podium\Api\Components\Thread;
@@ -21,6 +22,7 @@ use Podium\Api\Interfaces\GroupInterface;
 use Podium\Api\Interfaces\LogInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MessageInterface;
+use Podium\Api\Interfaces\PermitInterface;
 use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\RankInterface;
 use Podium\Api\Interfaces\ThreadInterface;
@@ -57,13 +59,14 @@ use function is_array;
  * @property LogInterface      $log
  * @property MemberInterface   $member
  * @property MessageInterface  $message
+ * @property PermitInterface   $permit
  * @property PostInterface     $post
  * @property RankInterface     $rank
  * @property ThreadInterface   $thread
  */
 class Podium extends ServiceLocator
 {
-    private string $version = '0.3.0';
+    private string $version = '0.4.0';
 
     public function getVersion(): string
     {
@@ -108,6 +111,7 @@ class Podium extends ServiceLocator
             'log' => ['class' => Log::class],
             'member' => ['class' => Member::class],
             'message' => ['class' => Message::class],
+            'permit' => ['class' => Permit::class],
             'post' => ['class' => Post::class],
             'rank' => ['class' => Rank::class],
             'thread' => ['class' => Thread::class],
@@ -196,6 +200,18 @@ class Podium extends ServiceLocator
     public function getMessage()
     {
         return $this->get('message');
+    }
+
+    /**
+     * Returns permit component.
+     *
+     * @return PermitInterface|object|null
+     *
+     * @throws InvalidConfigException
+     */
+    public function getPermit()
+    {
+        return $this->get('permit');
     }
 
     /**
