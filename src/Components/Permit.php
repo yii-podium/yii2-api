@@ -90,7 +90,7 @@ final class Permit extends Component implements PermitInterface
         return $this->getBuilder()->create($this->getRepository(), $data);
     }
 
-    public function editRole(RoleRepositoryInterface $role, array $data): PodiumResponse
+    public function editRole(RoleRepositoryInterface $role, array $data = []): PodiumResponse
     {
         return $this->getBuilder()->edit($role, $data);
     }

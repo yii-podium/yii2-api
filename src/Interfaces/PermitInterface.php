@@ -11,7 +11,7 @@ interface PermitInterface
 {
     public function createRole(array $data): PodiumResponse;
 
-    public function editRole(RoleRepositoryInterface $role, array $data): PodiumResponse;
+    public function editRole(RoleRepositoryInterface $role, array $data = []): PodiumResponse;
 
     public function removeRole(RoleRepositoryInterface $role): PodiumResponse;
 
