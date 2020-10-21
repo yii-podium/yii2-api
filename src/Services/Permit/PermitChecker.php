@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Permit;
 
 use Podium\Api\Events\PermitEvent;
-use Podium\Api\Interfaces\AllowerInterface;
 use Podium\Api\Interfaces\CheckerInterface;
+use Podium\Api\Interfaces\DeciderInterface;
+use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
+use Podium\Api\PodiumDecision;
 use Throwable;
 use Yii;
 use yii\base\Component;
@@ -30,23 +33,30 @@ final class PermitChecker extends Component implements CheckerInterface
     /**
      * Checks the permit.
      */
-    public function check(AllowerInterface $allower): bool
-    {
+    public function check(
+        DeciderInterface $decider,
+        string $type,
+        RepositoryInterface $subject = null,
+        MemberRepositoryInterface $member = null
+    ): PodiumDecision {
         if (!$this->beforeCheck()) {
-            return false;
+            return PodiumDecision::deny();
         }
 
         try {
-            $allowed = $allower->isAllowed();
+            $decider->setType($type);
+            $decider->setSubject($subject);
+            $decider->setMember($member);
+            $decision = $decider->decide();
         } catch (Throwable $exc) {
             Yii::error(['Exception while checking permit', $exc->getMessage(), $exc->getTraceAsString()], 'podium');
 
-            return false;
+            return PodiumDecision::deny();
         }
 
         $this->afterCheck();
 
-        return $allowed;
+        return $decision;
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Interfaces;
 
+use Podium\Api\PodiumDecision;
 use Podium\Api\PodiumResponse;
 
 interface PermitInterface
@@ -18,5 +19,10 @@ interface PermitInterface
 
     public function revokeRole(MemberRepositoryInterface $member, RoleRepositoryInterface $role): PodiumResponse;
 
-    public function check(AllowerInterface $allower): bool;
+    public function check(
+        DeciderInterface $decider,
+        string $type,
+        RepositoryInterface $subject = null,
+        MemberRepositoryInterface $member = null
+    ): PodiumDecision;
 }

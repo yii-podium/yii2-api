@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Podium\Api\Components;
 
-use Podium\Api\Interfaces\AllowerInterface;
 use Podium\Api\Interfaces\BuilderInterface;
 use Podium\Api\Interfaces\CheckerInterface;
+use Podium\Api\Interfaces\DeciderInterface;
 use Podium\Api\Interfaces\GranterInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PermitInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Interfaces\RoleRepositoryInterface;
+use Podium\Api\PodiumDecision;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Permit\PermitChecker;
 use Podium\Api\Services\Permit\RoleBuilder;
@@ -159,8 +161,12 @@ final class Permit extends Component implements PermitInterface
         return $this->checker;
     }
 
-    public function check(AllowerInterface $allower): bool
-    {
-        return $this->getChecker()->check($allower);
+    public function check(
+        DeciderInterface $decider,
+        string $type,
+        RepositoryInterface $subject = null,
+        MemberRepositoryInterface $member = null
+    ): PodiumDecision {
+        return $this->getChecker()->check($decider, $type, $subject, $member);
     }
 }

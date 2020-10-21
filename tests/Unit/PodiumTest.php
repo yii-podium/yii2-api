@@ -11,6 +11,7 @@ use Podium\Api\Components\Group;
 use Podium\Api\Components\Log;
 use Podium\Api\Components\Member;
 use Podium\Api\Components\Message;
+use Podium\Api\Components\Permit;
 use Podium\Api\Components\Post;
 use Podium\Api\Components\Rank;
 use Podium\Api\Components\Thread;
@@ -21,6 +22,7 @@ use Podium\Api\Interfaces\GroupInterface;
 use Podium\Api\Interfaces\LogInterface;
 use Podium\Api\Interfaces\MemberInterface;
 use Podium\Api\Interfaces\MessageInterface;
+use Podium\Api\Interfaces\PermitInterface;
 use Podium\Api\Interfaces\PostInterface;
 use Podium\Api\Interfaces\RankInterface;
 use Podium\Api\Interfaces\ThreadInterface;
@@ -51,6 +53,7 @@ class PodiumTest extends AppTestCase
                 'log' => ['class' => Log::class],
                 'member' => ['class' => Member::class],
                 'message' => ['class' => Message::class],
+                'permit' => ['class' => Permit::class],
                 'post' => ['class' => Post::class],
                 'rank' => ['class' => Rank::class],
                 'thread' => ['class' => Thread::class],
@@ -85,6 +88,7 @@ class PodiumTest extends AppTestCase
         self::assertArrayHasKey('log', $components);
         self::assertArrayHasKey('member', $components);
         self::assertArrayHasKey('message', $components);
+        self::assertArrayHasKey('permit', $components);
         self::assertArrayHasKey('post', $components);
         self::assertArrayHasKey('rank', $components);
         self::assertArrayHasKey('thread', $components);
@@ -123,6 +127,11 @@ class PodiumTest extends AppTestCase
     public function testGetMessage(): void
     {
         self::assertInstanceOf(MessageInterface::class, $this->podium->getMessage());
+    }
+
+    public function testGetPermit(): void
+    {
+        self::assertInstanceOf(PermitInterface::class, $this->podium->getPermit());
     }
 
     public function testGetPost(): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Events;
 
-use Podium\Api\Interfaces\AllowerInterface;
+use Podium\Api\Interfaces\VoterInterface;
 use yii\base\Event;
 
 class PermitEvent extends Event
@@ -14,5 +14,5 @@ class PermitEvent extends Event
      */
     public bool $canCheck = true;
 
-    public ?AllowerInterface $allower = null;
+    public ?VoterInterface $allower = null;
 }
