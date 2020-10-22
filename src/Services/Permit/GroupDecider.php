@@ -17,7 +17,7 @@ final class GroupDecider implements DeciderInterface
 
     private ?MemberRepositoryInterface $member = null;
 
-    public function setType(string $type): void
+    public function setType(?string $type): void
     {
         $this->type = $type;
     }

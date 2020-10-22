@@ -34,6 +34,8 @@ return [
     'post.must.be.archived' => 'Post must be archived first.',
     'post.not.archived' => 'Post is not archived.',
     'post.not.rated' => 'Post is not rated.',
+    'role.already.granted' => 'Role is already granted.',
+    'role.not.granted' => 'Role is not granted.',
     'target.already.friend' => 'Target is already friend.',
     'target.already.ignored' => 'Target is already ignored.',
     'target.is.member' => 'Target is the member.',

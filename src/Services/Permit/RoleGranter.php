@@ -45,6 +45,10 @@ final class RoleGranter extends Component implements GranterInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if ($member->hasRole($role)) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'role.already.granted')]);
+            }
+
             if (!$member->addRole($role)) {
                 throw new ServiceException($member->getErrors());
             }
@@ -97,6 +101,10 @@ final class RoleGranter extends Component implements GranterInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            if (!$member->hasRole($role)) {
+                throw new ServiceException(['api' => Yii::t('podium.error', 'role.not.granted')]);
+            }
+
             if (!$member->removeRole($role)) {
                 throw new ServiceException($member->getErrors());
             }
@@ -123,6 +131,6 @@ final class RoleGranter extends Component implements GranterInterface
      */
     private function afterRevoke(MemberRepositoryInterface $member): void
     {
-        $this->trigger(self::EVENT_AFTER_GRANTING, new GrantEvent(['repository' => $member]));
+        $this->trigger(self::EVENT_AFTER_REVOKING, new GrantEvent(['repository' => $member]));
     }
 }
