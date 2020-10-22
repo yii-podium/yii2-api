@@ -17,7 +17,7 @@ final class RoleDecider implements DeciderInterface
 
     private ?MemberRepositoryInterface $member = null;
 
-    public function setType(string $type): void
+    public function setType(?string $type): void
     {
         $this->type = $type;
     }
@@ -34,12 +34,7 @@ final class RoleDecider implements DeciderInterface
 
     public function decide(): PodiumDecision
     {
-        if (null === $this->subject || null === $this->member) {
-            return PodiumDecision::deny();
-        }
-
-        $subjectGroups = $this->subject->getAllowedGroups();
-        if ($subjectGroups && !$this->member->isGroupMember($subjectGroups)) {
+        if (null === $this->member) {
             return PodiumDecision::deny();
         }
 

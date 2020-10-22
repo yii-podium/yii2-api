@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Podium\Api\Services\Permit;
 
-use Podium\Api\Enums\PermitType;
 use Podium\Api\Interfaces\DeciderInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\PodiumDecision;
 
-use function in_array;
-
-final class AuthorDecider implements DeciderInterface
+final class GroupDecider implements DeciderInterface
 {
     private ?string $type = null;
 
@@ -20,7 +17,7 @@ final class AuthorDecider implements DeciderInterface
 
     private ?MemberRepositoryInterface $member = null;
 
-    public function setType(?string $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -37,15 +34,20 @@ final class AuthorDecider implements DeciderInterface
 
     public function decide(): PodiumDecision
     {
-        if (!in_array($this->type, [PermitType::UPDATE, PermitType::DELETE], true)) {
+        if (null === $this->subject) {
+            return PodiumDecision::deny();
+        }
+
+        $subjectGroups = $this->subject->getAllowedGroups();
+        if ([] === $subjectGroups) {
             return PodiumDecision::abstain();
         }
 
-        if (
-            null !== $this->subject
-            && null !== $this->member
-            && $this->member->getId() === $this->subject->getAuthor()->getId()
-        ) {
+        if (null === $this->member) {
+            return PodiumDecision::deny();
+        }
+
+        if ($this->member->isGroupMember($subjectGroups)) {
             return PodiumDecision::allow();
         }
 

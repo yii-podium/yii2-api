@@ -8,7 +8,7 @@ interface MemberRepositoryInterface extends RepositoryInterface
 {
     public function isGroupMember(array $groups): bool;
 
-    public function hasRole(RepositoryInterface $subject, string $type = null): bool;
+    public function hasRole(RepositoryInterface $subject = null, string $type = null): bool;
 
     public function ban(): bool;
 

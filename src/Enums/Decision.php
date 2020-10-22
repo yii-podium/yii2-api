@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Enums;
 
-final class VoterDecision
+final class Decision
 {
     public const ALLOW = 1;
     public const DENY = -1;

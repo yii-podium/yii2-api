@@ -8,7 +8,7 @@ use Podium\Api\PodiumDecision;
 
 interface DeciderInterface
 {
-    public function setType(string $type): void;
+    public function setType(?string $type): void;
 
     public function setSubject(?RepositoryInterface $subject): void;
 
