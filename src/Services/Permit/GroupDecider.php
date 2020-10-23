@@ -17,6 +17,9 @@ final class GroupDecider implements DeciderInterface
 
     private ?MemberRepositoryInterface $member = null;
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function setType(?string $type): void
     {
         $this->type = $type;
@@ -35,7 +38,7 @@ final class GroupDecider implements DeciderInterface
     public function decide(): PodiumDecision
     {
         if (null === $this->subject) {
-            return PodiumDecision::deny();
+            return PodiumDecision::abstain();
         }
 
         $subjectGroups = $this->subject->getAllowedGroups();
