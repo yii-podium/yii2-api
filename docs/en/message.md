@@ -158,4 +158,4 @@ sender. A message is saved in two copies for both sides so each side can be hand
 
 ---
 
-[<<< Index](../README.md) | [Next >>> Post](post.md)
+[<<< Index](../README.md) | [Next >>> Permit](permit.md)
