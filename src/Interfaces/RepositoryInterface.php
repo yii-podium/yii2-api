@@ -17,6 +17,10 @@ interface RepositoryInterface
 
     public function getParent(): RepositoryInterface;
 
+    public function getAuthor(): MemberRepositoryInterface;
+
+    public function getAllowedGroups(): array;
+
     /**
      * @param int|string|array $id
      */

@@ -6,6 +6,10 @@ namespace Podium\Api\Interfaces;
 
 interface MemberRepositoryInterface extends RepositoryInterface
 {
+    public function isGroupMember(array $groups): bool;
+
+    public function hasRole(RepositoryInterface $subject = null, string $type = null): bool;
+
     public function ban(): bool;
 
     public function unban(): bool;
@@ -18,4 +22,8 @@ interface MemberRepositoryInterface extends RepositoryInterface
     public function isBanned(): bool;
 
     public function isIgnoring(MemberRepositoryInterface $target): bool;
+
+    public function addRole(RoleRepositoryInterface $role): bool;
+
+    public function removeRole(RoleRepositoryInterface $role): bool;
 }
