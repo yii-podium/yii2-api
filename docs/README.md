@@ -11,6 +11,7 @@
  - [Log](en/log.md)
  - [Member](en/member.md)
  - [Message](en/message.md)
+ - [Permit](en/permit.md)
  - [Post](en/post.md)
  - [Rank](en/rank.md)
  - [Thread](en/thread.md)
