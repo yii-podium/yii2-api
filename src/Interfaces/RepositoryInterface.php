@@ -37,7 +37,11 @@ interface RepositoryInterface
 
     public function edit(array $data = []): bool;
 
-    public function getAllowedGroups(): array;
+    public function getGroups(): array;
 
-    public function hasAllowedGroups(): bool;
+    public function hasGroups(array $groups): bool;
+
+    public function join(GroupRepositoryInterface $group): bool;
+
+    public function leave(GroupRepositoryInterface $group): bool;
 }

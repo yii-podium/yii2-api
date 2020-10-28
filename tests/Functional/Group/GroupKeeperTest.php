@@ -7,6 +7,7 @@ namespace Podium\Tests\Functional\Group;
 use Podium\Api\Events\GroupEvent;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Group\GroupKeeper;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
@@ -24,7 +25,7 @@ class GroupKeeperTest extends AppTestCase
         $this->eventsRaised = [];
     }
 
-    public function testJoinShouldTriggerBeforeAndAfterEventsWhenAddingGroupMemberIsDone(): void
+    public function testJoinShouldTriggerBeforeAndAfterEventsWhenAddingGroupRepositoryIsDone(): void
     {
         $beforeHandler = function ($event) {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING] = $event instanceof GroupEvent;
@@ -32,15 +33,14 @@ class GroupKeeperTest extends AppTestCase
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_BEFORE_JOINING, $beforeHandler);
         $afterHandler = function ($event) {
             $this->eventsRaised[GroupKeeper::EVENT_AFTER_JOINING] = $event instanceof GroupEvent
-                && $event->repository instanceof GroupRepositoryInterface;
+                && $event->repository instanceof RepositoryInterface;
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_JOINING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(false);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('addMember')->willReturn(true);
-        $this->service->join($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $repository->method('join')->willReturn(true);
+        $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING]);
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_AFTER_JOINING]);
@@ -49,7 +49,7 @@ class GroupKeeperTest extends AppTestCase
         Event::off(GroupKeeper::class, GroupKeeper::EVENT_AFTER_JOINING, $afterHandler);
     }
 
-    public function testJoinShouldOnlyTriggerBeforeEventWhenMemberAlreadyJoined(): void
+    public function testJoinShouldOnlyTriggerBeforeEventWhenRepositoryAlreadyJoined(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING] = true;
@@ -60,9 +60,9 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_JOINING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(true);
-        $this->service->join($this->createMock(GroupRepositoryInterface::class), $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING]);
         self::assertArrayNotHasKey(GroupKeeper::EVENT_AFTER_JOINING, $this->eventsRaised);
@@ -71,7 +71,7 @@ class GroupKeeperTest extends AppTestCase
         Event::off(GroupKeeper::class, GroupKeeper::EVENT_AFTER_JOINING, $afterHandler);
     }
 
-    public function testJoinShouldOnlyTriggerBeforeEventWhenAddingGroupMemberErrored(): void
+    public function testJoinShouldOnlyTriggerBeforeEventWhenAddingGroupRepositoryErrored(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING] = true;
@@ -82,11 +82,10 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_JOINING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(false);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('addMember')->willReturn(false);
-        $this->service->join($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $repository->method('join')->willReturn(false);
+        $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_JOINING]);
         self::assertArrayNotHasKey(GroupKeeper::EVENT_AFTER_JOINING, $this->eventsRaised);
@@ -112,7 +111,7 @@ class GroupKeeperTest extends AppTestCase
         Event::off(GroupKeeper::class, GroupKeeper::EVENT_BEFORE_JOINING, $handler);
     }
 
-    public function testLeaveShouldTriggerBeforeAndAfterEventsWhenRemovingGroupMemberIsDone(): void
+    public function testLeaveShouldTriggerBeforeAndAfterEventsWhenRemovingGroupRepositoryIsDone(): void
     {
         $beforeHandler = function ($event) {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING] = $event instanceof GroupEvent;
@@ -123,11 +122,10 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(true);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('removeMember')->willReturn(true);
-        $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $repository->method('leave')->willReturn(true);
+        $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING]);
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_AFTER_LEAVING]);
@@ -136,7 +134,7 @@ class GroupKeeperTest extends AppTestCase
         Event::off(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
     }
 
-    public function testEditShouldOnlyTriggerBeforeEventWhenMemberNotJoinedGroupBefore(): void
+    public function testEditShouldOnlyTriggerBeforeEventWhenRepositoryNotJoinedGroupBefore(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING] = true;
@@ -147,9 +145,9 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(false);
-        $this->service->leave($this->createMock(GroupRepositoryInterface::class), $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING]);
         self::assertArrayNotHasKey(GroupKeeper::EVENT_AFTER_LEAVING, $this->eventsRaised);
@@ -158,7 +156,7 @@ class GroupKeeperTest extends AppTestCase
         Event::off(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
     }
 
-    public function testEditShouldOnlyTriggerBeforeEventWhenRemovingMemberErrored(): void
+    public function testEditShouldOnlyTriggerBeforeEventWhenRemovingRepositoryErrored(): void
     {
         $beforeHandler = function () {
             $this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING] = true;
@@ -169,11 +167,10 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->willReturn(true);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('removeMember')->willReturn(false);
-        $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $repository->method('leave')->willReturn(false);
+        $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($this->eventsRaised[GroupKeeper::EVENT_BEFORE_LEAVING]);
         self::assertArrayNotHasKey(GroupKeeper::EVENT_AFTER_LEAVING, $this->eventsRaised);
