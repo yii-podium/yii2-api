@@ -41,7 +41,7 @@ final class GroupDecider implements DeciderInterface
             return PodiumDecision::abstain();
         }
 
-        $subjectGroups = $this->subject->getAllowedGroups();
+        $subjectGroups = $this->subject->getGroups();
         if ([] === $subjectGroups) {
             return PodiumDecision::abstain();
         }
@@ -50,7 +50,7 @@ final class GroupDecider implements DeciderInterface
             return PodiumDecision::deny();
         }
 
-        if ($this->member->isGroupMember($subjectGroups)) {
+        if ($this->member->hasGroups($subjectGroups)) {
             return PodiumDecision::allow();
         }
 

@@ -28,7 +28,7 @@ class GroupDeciderTest extends TestCase
     public function testDeciderShouldAbstainWhenSubjectHasNoGroups(): void
     {
         $subject = $this->createMock(RepositoryInterface::class);
-        $subject->method('getAllowedGroups')->willReturn([]);
+        $subject->method('getGroups')->willReturn([]);
         $this->decider->setSubject($subject);
         self::assertSame(Decision::ABSTAIN, $this->decider->decide()->getDecision());
     }
@@ -36,7 +36,7 @@ class GroupDeciderTest extends TestCase
     public function testDeciderShouldDenyWhenMemberIsNull(): void
     {
         $subject = $this->createMock(RepositoryInterface::class);
-        $subject->method('getAllowedGroups')->willReturn(
+        $subject->method('getGroups')->willReturn(
             [$this->createMock(GroupRepositoryInterface::class)]
         );
         $this->decider->setSubject($subject);
@@ -46,12 +46,12 @@ class GroupDeciderTest extends TestCase
     public function testDeciderShouldDenyWhenMemberIsNotInRequiredGroups(): void
     {
         $subject = $this->createMock(RepositoryInterface::class);
-        $subject->method('getAllowedGroups')->willReturn(
+        $subject->method('getGroups')->willReturn(
             [$this->createMock(GroupRepositoryInterface::class)]
         );
         $this->decider->setSubject($subject);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->with(
+        $member->method('hasGroups')->with(
             self::callback(
                 static function ($groups) {
                     return $groups[0] instanceof GroupRepositoryInterface;
@@ -65,12 +65,12 @@ class GroupDeciderTest extends TestCase
     public function testDeciderShouldAllowWhenMemberIsInRequiredGroups(): void
     {
         $subject = $this->createMock(RepositoryInterface::class);
-        $subject->method('getAllowedGroups')->willReturn(
+        $subject->method('getGroups')->willReturn(
             [$this->createMock(GroupRepositoryInterface::class)]
         );
         $this->decider->setSubject($subject);
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isGroupMember')->with(
+        $member->method('hasGroups')->with(
             self::callback(
                 static function ($groups) {
                     return $groups[0] instanceof GroupRepositoryInterface;

@@ -29,12 +29,12 @@ interface GroupInterface
     public function remove(GroupRepositoryInterface $group): PodiumResponse;
 
     /**
-     * Joins the group as the member.
+     * Adds the repository to the group.
      */
-    public function join(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse;
+    public function join(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse;
 
     /**
-     * Leaves the group as the member.
+     * Removes the repository from the group.
      */
-    public function leave(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse;
+    public function leave(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse;
 }

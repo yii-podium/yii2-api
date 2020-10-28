@@ -119,11 +119,11 @@ Returns the group repository.
 ```
 join(
     Podium\Api\Interfaces\GroupRepositoryInterface $group,
-    Podium\Api\Interfaces\MemberRepositoryInterface $member
+    Podium\Api\Interfaces\RepositoryInterface $repository
 ): Podium\Api\PodiumResponse
 ```
 
-Joins the group as the member. See also [leave](#leave).
+Adds the repository to the group. See also [leave](#leave).
 
 #### Events
 
@@ -141,7 +141,7 @@ leave(
 ): Podium\Api\PodiumResponse
 ```
 
-Leaves the group as the member. See also [join](#join).
+Removes the repository from the group. See also [join](#join).
 
 #### Events
 

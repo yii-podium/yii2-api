@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Podium\Tests\Unit\Group;
 
 use Exception;
-use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
-use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Group\GroupKeeper;
 use Podium\Tests\AppTestCase;
 
@@ -21,70 +20,51 @@ class GroupKeeperTest extends AppTestCase
         $this->service = new GroupKeeper();
     }
 
-    public function testJoinShouldReturnErrorWhenMemberAlreadyJoined(): void
+    public function testJoinShouldReturnErrorWhenRepositoryAlreadyJoined(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(true);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->join($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
         self::assertSame('group.already.joined', $result->getErrors()['api']);
     }
 
-    public function testJoinShouldReturnErrorWhenGroupMemberCreatingErrored(): void
+    public function testJoinShouldReturnErrorWhenAddingGroupRepositoryErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(false);
-        $groupMember->method('create')->willReturn(false);
-        $groupMember->method('getErrors')->willReturn([1]);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->join($group, $this->createMock(MemberRepositoryInterface::class));
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $repository->method('join')->willReturn(false);
+        $repository->method('getErrors')->willReturn([1]);
+        $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
         self::assertSame([1], $result->getErrors());
     }
 
-    public function testJoinShouldReturnErrorWhenMemberIsBanned(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(true);
-        $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $member);
-
-        self::assertFalse($result->getResult());
-        self::assertSame(['api' => 'member.banned'], $result->getErrors());
-    }
-
-    public function testJoinShouldReturnSuccessWhenCreatingGroupMemberIsDone(): void
+    public function testJoinShouldReturnSuccessWhenAddingGroupRepositoryIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(false);
-        $groupMember->method('create')->willReturn(true);
-        $groupMember->method('getErrors')->willReturn([1]);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->join($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->with(
+            self::callback(
+                static function (array $group) {
+                    return $group[0] instanceof GroupRepositoryInterface;
+                }
+            )
+        )->willReturn(false);
+        $repository->method('join')->willReturn(true);
+        $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($result->getResult());
     }
 
-    public function testCreateShouldReturnErrorWhenCreatingGroupMemberThrowsException(): void
+    public function testJoinShouldReturnErrorWhenAddingGroupRepositoryThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
         $this->logger->expects(self::once())->method('log')->with(
@@ -97,81 +77,60 @@ class GroupKeeperTest extends AppTestCase
             'podium'
         );
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(false);
-        $groupMember->method('create')->willThrowException(new Exception('exc'));
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->join($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $repository->method('join')->willThrowException(new Exception('exc'));
+        $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
     }
 
-    public function testLeaveShouldReturnErrorWhenMemberNotJoinedBefore(): void
+    public function testLeaveShouldReturnErrorWhenRepositoryNotJoinedBefore(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(false);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(false);
+        $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
         self::assertSame('group.not.joined', $result->getErrors()['api']);
     }
 
-    public function testLeaveShouldReturnErrorWhenDeletingGroupMemberErrored(): void
+    public function testLeaveShouldReturnErrorWhenRemovingGroupRepositoryErrored(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(true);
-        $groupMember->method('delete')->willReturn(false);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $repository->method('leave')->willReturn(false);
+        $repository->method('getErrors')->willReturn([1]);
+        $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
-        self::assertEmpty($result->getErrors());
+        self::assertSame([1], $result->getErrors());
     }
 
-    public function testLeaveShouldReturnErrorWhenMemberIsBanned(): void
-    {
-        $this->transaction->expects(self::once())->method('rollBack');
-
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(true);
-        $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $member);
-
-        self::assertFalse($result->getResult());
-        self::assertSame(['api' => 'member.banned'], $result->getErrors());
-    }
-
-    public function testLeaveShouldReturnSuccessWhenDeletingGroupMemberIsDone(): void
+    public function testLeaveShouldReturnSuccessWhenRemovingGroupRepositoryIsDone(): void
     {
         $this->transaction->expects(self::once())->method('commit');
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(true);
-        $groupMember->method('delete')->willReturn(true);
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->with(
+            self::callback(
+                static function (array $group) {
+                    return $group[0] instanceof GroupRepositoryInterface;
+                }
+            )
+        )->willReturn(true);
+        $repository->method('leave')->willReturn(true);
+        $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertTrue($result->getResult());
     }
 
-    public function testLeaveShouldReturnErrorWhenDeletingGroupMemberThrowsException(): void
+    public function testLeaveShouldReturnErrorWhenRemovingGroupRepositoryThrowsException(): void
     {
         $this->transaction->expects(self::once())->method('rollBack');
         $this->logger->expects(self::once())->method('log')->with(
@@ -184,14 +143,10 @@ class GroupKeeperTest extends AppTestCase
             'podium'
         );
 
-        $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('isBanned')->willReturn(false);
-        $groupMember = $this->createMock(GroupMemberRepositoryInterface::class);
-        $groupMember->method('fetchOne')->willReturn(true);
-        $groupMember->method('delete')->willThrowException(new Exception('exc'));
-        $group = $this->createMock(GroupRepositoryInterface::class);
-        $group->method('getGroupMember')->willReturn($groupMember);
-        $result = $this->service->leave($group, $member);
+        $repository = $this->createMock(RepositoryInterface::class);
+        $repository->method('hasGroups')->willReturn(true);
+        $repository->method('leave')->willThrowException(new Exception('exc'));
+        $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 
         self::assertFalse($result->getResult());
         self::assertSame('exc', $result->getErrors()['exception']->getMessage());
