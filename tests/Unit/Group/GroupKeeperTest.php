@@ -51,7 +51,13 @@ class GroupKeeperTest extends AppTestCase
         $this->transaction->expects(self::once())->method('commit');
 
         $repository = $this->createMock(RepositoryInterface::class);
-        $repository->method('hasGroups')->willReturn(false);
+        $repository->method('hasGroups')->with(
+            self::callback(
+                static function (array $group) {
+                    return $group[0] instanceof GroupRepositoryInterface;
+                }
+            )
+        )->willReturn(false);
         $repository->method('join')->willReturn(true);
         $result = $this->service->join($this->createMock(GroupRepositoryInterface::class), $repository);
 
@@ -111,7 +117,13 @@ class GroupKeeperTest extends AppTestCase
         $this->transaction->expects(self::once())->method('commit');
 
         $repository = $this->createMock(RepositoryInterface::class);
-        $repository->method('hasGroups')->willReturn(true);
+        $repository->method('hasGroups')->with(
+            self::callback(
+                static function (array $group) {
+                    return $group[0] instanceof GroupRepositoryInterface;
+                }
+            )
+        )->willReturn(true);
         $repository->method('leave')->willReturn(true);
         $result = $this->service->leave($this->createMock(GroupRepositoryInterface::class), $repository);
 

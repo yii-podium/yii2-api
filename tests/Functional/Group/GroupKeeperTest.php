@@ -118,7 +118,8 @@ class GroupKeeperTest extends AppTestCase
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_BEFORE_LEAVING, $beforeHandler);
         $afterHandler = function ($event) {
-            $this->eventsRaised[GroupKeeper::EVENT_AFTER_LEAVING] = $event instanceof GroupEvent;
+            $this->eventsRaised[GroupKeeper::EVENT_AFTER_LEAVING] = $event instanceof GroupEvent
+                && $event->repository instanceof RepositoryInterface;
         };
         Event::on(GroupKeeper::class, GroupKeeper::EVENT_AFTER_LEAVING, $afterHandler);
 
