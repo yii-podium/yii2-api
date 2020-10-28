@@ -8,5 +8,7 @@ interface GroupRepositoryInterface extends RepositoryInterface
 {
     public function create(array $data = []): bool;
 
-    public function getGroupMember(): GroupMemberRepositoryInterface;
+    public function addMember(MemberRepositoryInterface $member): bool;
+
+    public function removeMember(MemberRepositoryInterface $member): bool;
 }

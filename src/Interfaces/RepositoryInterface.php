@@ -19,8 +19,6 @@ interface RepositoryInterface
 
     public function getAuthor(): MemberRepositoryInterface;
 
-    public function getAllowedGroups(): array;
-
     /**
      * @param int|string|array $id
      */
@@ -38,4 +36,8 @@ interface RepositoryInterface
     public function delete(): bool;
 
     public function edit(array $data = []): bool;
+
+    public function getAllowedGroups(): array;
+
+    public function hasAllowedGroups(): bool;
 }

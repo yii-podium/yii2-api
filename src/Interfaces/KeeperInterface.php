@@ -17,4 +17,14 @@ interface KeeperInterface
      * Leaves group.
      */
     public function leave(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse;
+
+    /**
+     * Adds to the group.
+     */
+    public function addTo(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse;
+
+    /**
+     * Removes from the group.
+     */
+    public function removeFrom(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse;
 }

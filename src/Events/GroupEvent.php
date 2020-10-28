@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Podium\Api\Events;
 
-use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use yii\base\Event;
 
 class GroupEvent extends Event
@@ -19,5 +19,5 @@ class GroupEvent extends Event
      */
     public bool $canLeave = true;
 
-    public ?GroupMemberRepositoryInterface $repository = null;
+    public ?RepositoryInterface $repository = null;
 }

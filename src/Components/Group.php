@@ -10,6 +10,7 @@ use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\RemoverInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\Group\GroupBuilder;
 use Podium\Api\Services\Group\GroupKeeper;
@@ -142,5 +143,21 @@ final class Group extends Component implements GroupInterface
     public function leave(GroupRepositoryInterface $group, MemberRepositoryInterface $member): PodiumResponse
     {
         return $this->getKeeper()->leave($group, $member);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function addTo(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse
+    {
+        return $this->getKeeper()->addTo($group, $repository);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function removeFrom(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse
+    {
+        return $this->getKeeper()->removeFrom($group, $repository);
     }
 }

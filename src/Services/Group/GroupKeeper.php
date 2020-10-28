@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Podium\Api\Services\Group;
 
 use Podium\Api\Events\GroupEvent;
-use Podium\Api\Interfaces\GroupMemberRepositoryInterface;
 use Podium\Api\Interfaces\GroupRepositoryInterface;
 use Podium\Api\Interfaces\KeeperInterface;
+use Podium\Api\Interfaces\LimitedRepositoryInterface;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
+use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
@@ -22,6 +23,10 @@ final class GroupKeeper extends Component implements KeeperInterface
     public const EVENT_AFTER_JOINING = 'podium.group.joining.after';
     public const EVENT_BEFORE_LEAVING = 'podium.group.leaving.before';
     public const EVENT_AFTER_LEAVING = 'podium.group.leaving.after';
+    public const EVENT_BEFORE_ADDING = 'podium.group.adding.before';
+    public const EVENT_AFTER_ADDING = 'podium.group.adding.after';
+    public const EVENT_BEFORE_REMOVING = 'podium.group.removing.before';
+    public const EVENT_AFTER_REMOVING = 'podium.group.removing.after';
 
     /**
      * Calls before joining the group.
@@ -50,14 +55,12 @@ final class GroupKeeper extends Component implements KeeperInterface
                 throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
             }
 
-            $groupMember = $group->getGroupMember();
-
-            if ($groupMember->fetchOne($group, $member)) {
+            if ($member->isGroupMember([$group])) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'group.already.joined')]);
             }
 
-            if (!$groupMember->create($group, $member)) {
-                throw new ServiceException($groupMember->getErrors());
+            if (!$group->addMember($member)) {
+                throw new ServiceException($group->getErrors());
             }
 
             $transaction->commit();
@@ -72,7 +75,7 @@ final class GroupKeeper extends Component implements KeeperInterface
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterJoin($groupMember);
+        $this->afterJoin($group);
 
         return PodiumResponse::success();
     }
@@ -80,9 +83,9 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls after joining the group successfully.
      */
-    private function afterJoin(GroupMemberRepositoryInterface $groupMember): void
+    private function afterJoin(GroupRepositoryInterface $group): void
     {
-        $this->trigger(self::EVENT_AFTER_JOINING, new GroupEvent(['repository' => $groupMember]));
+        $this->trigger(self::EVENT_AFTER_JOINING, new GroupEvent(['repository' => $group]));
     }
 
     /**
@@ -112,14 +115,12 @@ final class GroupKeeper extends Component implements KeeperInterface
                 throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
             }
 
-            $groupMember = $group->getGroupMember();
-
-            if (!$groupMember->fetchOne($group, $member)) {
+            if (!$member->isGroupMember([$group])) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'group.not.joined')]);
             }
 
-            if (!$groupMember->delete()) {
-                throw new ServiceException($groupMember->getErrors());
+            if (!$group->removeMember($member)) {
+                throw new ServiceException($group->getErrors());
             }
 
             $transaction->commit();
@@ -134,7 +135,7 @@ final class GroupKeeper extends Component implements KeeperInterface
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterLeave();
+        $this->afterLeave($group);
 
         return PodiumResponse::success();
     }
@@ -142,8 +143,18 @@ final class GroupKeeper extends Component implements KeeperInterface
     /**
      * Calls after leaving the group successfully.
      */
-    private function afterLeave(): void
+    private function afterLeave(GroupRepositoryInterface $group): void
     {
-        $this->trigger(self::EVENT_AFTER_LEAVING);
+        $this->trigger(self::EVENT_AFTER_LEAVING, new GroupEvent(['repository' => $group]));
+    }
+
+    public function addTo(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse
+    {
+        // TODO: Implement addTo() method.
+    }
+
+    public function removeFrom(GroupRepositoryInterface $group, RepositoryInterface $repository): PodiumResponse
+    {
+        // TODO: Implement removeFrom() method.
     }
 }
