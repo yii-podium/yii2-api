@@ -12,16 +12,4 @@ interface PollRepositoryInterface extends RepositoryInterface
     ): bool;
 
     public function edit(array $answers = [], array $data = []): bool;
-
-    public function getAnswerRepository(): PollAnswerRepositoryInterface;
-
-    public function getVoteRepository(): PollVoteRepositoryInterface;
-
-    public function hasMemberVoted(MemberRepositoryInterface $member): bool;
-
-    public function isSingleChoice(): bool;
-
-    public function vote(MemberRepositoryInterface $member, array $answers): bool;
-
-    public function areAnswersAcceptable(array $answers): bool;
 }

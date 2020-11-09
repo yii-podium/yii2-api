@@ -7,7 +7,6 @@ namespace Podium\Api\Services\Poll;
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\PollBuilderInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
 use Throwable;
@@ -42,9 +41,8 @@ final class PollBuilder extends Component implements PollBuilderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $poll = $post->getPoll();
-            if (!$poll->create($answers, $data)) {
-                throw new ServiceException($poll->getErrors());
+            if (!$post->addPoll($answers, $data)) {
+                throw new ServiceException($post->getErrors());
             }
 
             $transaction->commit();
@@ -59,14 +57,14 @@ final class PollBuilder extends Component implements PollBuilderInterface
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterCreate($poll);
+        $this->afterCreate($post);
 
         return PodiumResponse::success();
     }
 
-    private function afterCreate(PollRepositoryInterface $poll): void
+    private function afterCreate(PollPostRepositoryInterface $post): void
     {
-        $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $poll]));
+        $this->trigger(self::EVENT_AFTER_CREATING, new BuildEvent(['repository' => $post]));
     }
 
     private function beforeEdit(): bool
@@ -78,7 +76,7 @@ final class PollBuilder extends Component implements PollBuilderInterface
     }
 
     /**
-     * Edits the thread.
+     * Edits the poll.
      */
     public function edit(PollPostRepositoryInterface $post, array $answers = [], array $data = []): PodiumResponse
     {
@@ -89,9 +87,8 @@ final class PollBuilder extends Component implements PollBuilderInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $poll = $post->getPoll();
-            if (!$poll->edit($answers, $data)) {
-                throw new ServiceException($poll->getErrors());
+            if (!$post->editPoll($answers, $data)) {
+                throw new ServiceException($post->getErrors());
             }
 
             $transaction->commit();
@@ -106,13 +103,13 @@ final class PollBuilder extends Component implements PollBuilderInterface
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterEdit($poll);
+        $this->afterEdit($post);
 
         return PodiumResponse::success();
     }
 
-    private function afterEdit(PollRepositoryInterface $poll): void
+    private function afterEdit(PollPostRepositoryInterface $post): void
     {
-        $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $poll]));
+        $this->trigger(self::EVENT_AFTER_EDITING, new BuildEvent(['repository' => $post]));
     }
 }

@@ -7,7 +7,6 @@ namespace Podium\Api\Services\Poll;
 use Podium\Api\Events\VoteEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Interfaces\VoterInterface;
 use Podium\Api\PodiumResponse;
 use Podium\Api\Services\ServiceException;
@@ -51,22 +50,20 @@ final class PollVoter extends Component implements VoterInterface
                 throw new ServiceException(['api' => Yii::t('podium.error', 'member.banned')]);
             }
 
-            $poll = $post->getPoll();
-
-            if ($poll->hasMemberVoted($member)) {
+            if ($post->hasMemberPollVoted($member)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'poll.already.voted')]);
             }
 
-            if ($answersCount > 1 && $poll->isSingleChoice()) {
+            if ($answersCount > 1 && $post->isPollSingleChoice()) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'poll.one.vote.allowed')]);
             }
 
-            if (!$poll->areAnswersAcceptable($answers)) {
+            if (!$post->arePollAnswersAcceptable($answers)) {
                 throw new ServiceException(['api' => Yii::t('podium.error', 'poll.wrong.answer')]);
             }
 
-            if (!$poll->vote($member, $answers)) {
-                throw new ServiceException($poll->getErrors());
+            if (!$post->votePoll($member, $answers)) {
+                throw new ServiceException($post->getErrors());
             }
 
             $transaction->commit();
@@ -81,13 +78,13 @@ final class PollVoter extends Component implements VoterInterface
             return PodiumResponse::error(['exception' => $exc]);
         }
 
-        $this->afterVote($poll);
+        $this->afterVote($post);
 
         return PodiumResponse::success();
     }
 
-    private function afterVote(PollRepositoryInterface $poll): void
+    private function afterVote(PollPostRepositoryInterface $post): void
     {
-        $this->trigger(self::EVENT_AFTER_VOTING, new VoteEvent(['repository' => $poll]));
+        $this->trigger(self::EVENT_AFTER_VOTING, new VoteEvent(['repository' => $post]));
     }
 }

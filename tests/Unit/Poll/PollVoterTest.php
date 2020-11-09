@@ -7,7 +7,6 @@ namespace Podium\Tests\Unit\Poll;
 use Exception;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollVoter;
 use Podium\Tests\AppTestCase;
 
@@ -27,13 +26,11 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('vote')->willReturn(false);
-        $poll->method('getErrors')->willReturn([1]);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('votePoll')->willReturn(false);
+        $post->method('getErrors')->willReturn([1]);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertFalse($result->getResult());
@@ -54,9 +51,11 @@ class PollVoterTest extends AppTestCase
 
     public function testVoteShouldReturnErrorWhenAnswersAreEmpty(): void
     {
-        $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($this->createMock(PollRepositoryInterface::class));
-        $result = $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), []);
+        $result = $this->service->vote(
+            $this->createMock(PollPostRepositoryInterface::class),
+            $this->createMock(MemberRepositoryInterface::class),
+            []
+        );
 
         self::assertFalse($result->getResult());
         self::assertEmpty($result->getErrors());
@@ -68,10 +67,8 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(true);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertFalse($result->getResult());
@@ -84,11 +81,9 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('isSingleChoice')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('isPollSingleChoice')->willReturn(true);
         $result = $this->service->vote($post, $member, [1, 2]);
 
         self::assertFalse($result->getResult());
@@ -101,12 +96,9 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('getErrors')->willReturn([1]);
-        $poll->method('areAnswersAcceptable')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('arePollAnswersAcceptable')->willReturn(false);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertFalse($result->getResult());
@@ -119,13 +111,11 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willReturn(true);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('isSingleChoice')->willReturn(true);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willReturn(true);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('isPollSingleChoice')->willReturn(true);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertTrue($result->getResult());
@@ -137,13 +127,11 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willReturn(true);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('isSingleChoice')->willReturn(false);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willReturn(true);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('isPollSingleChoice')->willReturn(false);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertTrue($result->getResult());
@@ -155,13 +143,11 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willReturn(true);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('isSingleChoice')->willReturn(false);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willReturn(true);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('isPollSingleChoice')->willReturn(false);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $result = $this->service->vote($post, $member, [1, 2]);
 
         self::assertTrue($result->getResult());
@@ -182,12 +168,10 @@ class PollVoterTest extends AppTestCase
 
         $member = $this->createMock(MemberRepositoryInterface::class);
         $member->method('isBanned')->willReturn(false);
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willThrowException(new Exception('exc'));
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willThrowException(new Exception('exc'));
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $result = $this->service->vote($post, $member, [1]);
 
         self::assertFalse($result->getResult());
