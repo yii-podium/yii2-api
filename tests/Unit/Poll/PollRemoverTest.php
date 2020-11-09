@@ -6,7 +6,6 @@ namespace Podium\Tests\Unit\Poll;
 
 use Exception;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Interfaces\RepositoryInterface;
 use Podium\Api\Services\Poll\PollRemover;
 use Podium\Tests\AppTestCase;
@@ -36,10 +35,8 @@ class PollRemoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('delete')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('removePoll')->willReturn(false);
         $result = $this->service->remove($post);
 
         self::assertFalse($result->getResult());
@@ -50,10 +47,8 @@ class PollRemoverTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('delete')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('removePoll')->willReturn(true);
         $result = $this->service->remove($post);
 
         self::assertTrue($result->getResult());
@@ -72,10 +67,8 @@ class PollRemoverTest extends AppTestCase
             'podium'
         );
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('delete')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('removePoll')->willThrowException(new Exception('exc'));
         $result = $this->service->remove($post);
 
         self::assertFalse($result->getResult());

@@ -7,7 +7,6 @@ namespace Podium\Tests\Functional\Poll;
 use Podium\Api\Events\VoteEvent;
 use Podium\Api\Interfaces\MemberRepositoryInterface;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollVoter;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
@@ -37,13 +36,11 @@ class PollVoterTest extends AppTestCase
         };
         Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willReturn(true);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('getId')->willReturn(9);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willReturn(true);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('getId')->willReturn(9);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
 
         self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
@@ -64,12 +61,10 @@ class PollVoterTest extends AppTestCase
         };
         Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('vote')->willReturn(false);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('areAnswersAcceptable')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('votePoll')->willReturn(false);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('arePollAnswersAcceptable')->willReturn(true);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
 
         self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
@@ -90,10 +85,8 @@ class PollVoterTest extends AppTestCase
         };
         Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(true);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1]);
 
         self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);
@@ -114,11 +107,9 @@ class PollVoterTest extends AppTestCase
         };
         Event::on(PollVoter::class, PollVoter::EVENT_AFTER_VOTING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('hasMemberVoted')->willReturn(false);
-        $poll->method('isSingleChoice')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('hasMemberPollVoted')->willReturn(false);
+        $post->method('isPollSingleChoice')->willReturn(true);
         $this->service->vote($post, $this->createMock(MemberRepositoryInterface::class), [1, 2]);
 
         self::assertTrue($this->eventsRaised[PollVoter::EVENT_BEFORE_VOTING]);

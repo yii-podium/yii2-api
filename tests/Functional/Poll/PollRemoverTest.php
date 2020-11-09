@@ -6,7 +6,6 @@ namespace Podium\Tests\Functional\Poll;
 
 use Podium\Api\Events\RemoveEvent;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollRemover;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
@@ -35,10 +34,8 @@ class PollRemoverTest extends AppTestCase
         };
         Event::on(PollRemover::class, PollRemover::EVENT_AFTER_REMOVING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('delete')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('removePoll')->willReturn(true);
         $this->service->remove($post);
 
         self::assertTrue($this->eventsRaised[PollRemover::EVENT_BEFORE_REMOVING]);
@@ -59,10 +56,8 @@ class PollRemoverTest extends AppTestCase
         };
         Event::on(PollRemover::class, PollRemover::EVENT_AFTER_REMOVING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('delete')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('removePoll')->willReturn(false);
         $this->service->remove($post);
 
         self::assertTrue($this->eventsRaised[PollRemover::EVENT_BEFORE_REMOVING]);

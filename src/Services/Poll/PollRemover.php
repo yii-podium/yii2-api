@@ -51,9 +51,8 @@ final class PollRemover extends Component implements RemoverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $poll = $post->getPoll();
-            if (!$poll->delete()) {
-                throw new ServiceException($poll->getErrors());
+            if (!$post->removePoll()) {
+                throw new ServiceException($post->getErrors());
             }
 
             $transaction->commit();

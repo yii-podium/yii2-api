@@ -6,7 +6,6 @@ namespace Podium\Tests\Functional\Poll;
 
 use Podium\Api\Events\BuildEvent;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollBuilder;
 use Podium\Tests\AppTestCase;
 use yii\base\Event;
@@ -32,15 +31,13 @@ class PollBuilderTest extends AppTestCase
         Event::on(PollBuilder::class, PollBuilder::EVENT_BEFORE_CREATING, $beforeHandler);
         $afterHandler = function ($event) {
             $this->eventsRaised[PollBuilder::EVENT_AFTER_CREATING] = $event instanceof BuildEvent
-                && 99 === $event->repository->getId();
+                && 9 === $event->repository->getId();
         };
         Event::on(PollBuilder::class, PollBuilder::EVENT_AFTER_CREATING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('create')->willReturn(true);
-        $poll->method('getId')->willReturn(99);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('addPoll')->willReturn(true);
+        $post->method('getId')->willReturn(9);
 
         $this->service->create($post, []);
 
@@ -62,10 +59,8 @@ class PollBuilderTest extends AppTestCase
         };
         Event::on(PollBuilder::class, PollBuilder::EVENT_AFTER_CREATING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('create')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('addPoll')->willReturn(false);
 
         $this->service->create($post, []);
 
@@ -98,15 +93,13 @@ class PollBuilderTest extends AppTestCase
         Event::on(PollBuilder::class, PollBuilder::EVENT_BEFORE_EDITING, $beforeHandler);
         $afterHandler = function ($event) {
             $this->eventsRaised[PollBuilder::EVENT_AFTER_EDITING] = $event instanceof BuildEvent
-                && 101 === $event->repository->getId();
+                && 9 === $event->repository->getId();
         };
         Event::on(PollBuilder::class, PollBuilder::EVENT_AFTER_EDITING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('edit')->willReturn(true);
-        $poll->method('getId')->willReturn(101);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('editPoll')->willReturn(true);
+        $post->method('getId')->willReturn(9);
         $this->service->edit($post);
 
         self::assertTrue($this->eventsRaised[PollBuilder::EVENT_BEFORE_EDITING]);
@@ -127,10 +120,8 @@ class PollBuilderTest extends AppTestCase
         };
         Event::on(PollBuilder::class, PollBuilder::EVENT_AFTER_EDITING, $afterHandler);
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('edit')->willReturn(false);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('editPoll')->willReturn(false);
         $this->service->edit($post);
 
         self::assertTrue($this->eventsRaised[PollBuilder::EVENT_BEFORE_EDITING]);

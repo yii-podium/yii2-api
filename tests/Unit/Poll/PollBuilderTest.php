@@ -6,7 +6,6 @@ namespace Podium\Tests\Unit\Poll;
 
 use Exception;
 use Podium\Api\Interfaces\PollPostRepositoryInterface;
-use Podium\Api\Interfaces\PollRepositoryInterface;
 use Podium\Api\Services\Poll\PollBuilder;
 use Podium\Tests\AppTestCase;
 
@@ -24,11 +23,9 @@ class PollBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('create')->willReturn(false);
-        $poll->method('getErrors')->willReturn([1]);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('addPoll')->willReturn(false);
+        $post->method('getErrors')->willReturn([1]);
         $result = $this->service->create($post, []);
 
         self::assertFalse($result->getResult());
@@ -39,10 +36,8 @@ class PollBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('create')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('addPoll')->willReturn(true);
         $result = $this->service->create($post, []);
 
         self::assertTrue($result->getResult());
@@ -61,10 +56,8 @@ class PollBuilderTest extends AppTestCase
             'podium'
         );
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('create')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('addPoll')->willThrowException(new Exception('exc'));
         $result = $this->service->create($post, []);
 
         self::assertFalse($result->getResult());
@@ -75,11 +68,9 @@ class PollBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('rollBack');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('edit')->willReturn(false);
-        $poll->method('getErrors')->willReturn([1]);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('editPoll')->willReturn(false);
+        $post->method('getErrors')->willReturn([1]);
         $result = $this->service->edit($post);
 
         self::assertFalse($result->getResult());
@@ -90,10 +81,8 @@ class PollBuilderTest extends AppTestCase
     {
         $this->transaction->expects(self::once())->method('commit');
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('edit')->willReturn(true);
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('editPoll')->willReturn(true);
         $result = $this->service->edit($post);
 
         self::assertTrue($result->getResult());
@@ -112,10 +101,8 @@ class PollBuilderTest extends AppTestCase
             'podium'
         );
 
-        $poll = $this->createMock(PollRepositoryInterface::class);
-        $poll->method('edit')->willThrowException(new Exception('exc'));
         $post = $this->createMock(PollPostRepositoryInterface::class);
-        $post->method('getPoll')->willReturn($poll);
+        $post->method('editPoll')->willThrowException(new Exception('exc'));
         $result = $this->service->edit($post);
 
         self::assertFalse($result->getResult());
