@@ -11,6 +11,10 @@ class ServiceException extends Exception
 {
     private array $errorList;
 
+    /**
+     * @param string $message
+     * @param int $code
+     */
     public function __construct(array $errorList = [], $message = '', $code = 0, Throwable $previous = null)
     {
         $this->errorList = $errorList;
