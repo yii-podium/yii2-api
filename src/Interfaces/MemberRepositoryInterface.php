@@ -6,7 +6,7 @@ namespace Podium\Api\Interfaces;
 
 interface MemberRepositoryInterface extends RepositoryInterface
 {
-    public function hasRole(RepositoryInterface $subject = null, string $type = null): bool;
+    public function hasRole(RepositoryInterface $role, string $type = null): bool;
 
     public function ban(): bool;
 

@@ -47,8 +47,9 @@ class RoleDeciderTest extends TestCase
     public function testDeciderShouldDenyWhenMemberHasNoRole(): void
     {
         $member = $this->createMock(MemberRepositoryInterface::class);
-        $member->method('hasRole')->with(null, null)->willReturn(false);
+        $member->method('hasRole')->willReturn(false);
         $this->decider->setMember($member);
+        $this->decider->setSubject($this->createMock(RepositoryInterface::class));
 
         self::assertSame(Decision::DENY, $this->decider->decide()->getDecision());
     }
