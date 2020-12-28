@@ -20,8 +20,14 @@ class RoleDeciderTest extends TestCase
         $this->decider = new RoleDecider();
     }
 
+    public function testDeciderShouldAbstainWhenRoleIsNull(): void
+    {
+        self::assertSame(Decision::ABSTAIN, $this->decider->decide()->getDecision());
+    }
+
     public function testDeciderShouldDenyWhenMemberIsNull(): void
     {
+        $this->decider->setSubject($this->createMock(RepositoryInterface::class));
         self::assertSame(Decision::DENY, $this->decider->decide()->getDecision());
     }
 

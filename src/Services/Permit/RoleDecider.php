@@ -34,6 +34,10 @@ final class RoleDecider implements DeciderInterface
 
     public function decide(): PodiumDecision
     {
+        if (null === $this->subject) {
+            return PodiumDecision::abstain();
+        }
+
         if (null === $this->member) {
             return PodiumDecision::deny();
         }
