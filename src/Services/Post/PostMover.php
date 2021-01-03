@@ -69,17 +69,18 @@ final class PostMover extends Component implements MoverInterface
         try {
             /** @var ForumRepositoryInterface $threadParent */
             $threadParent = $thread->getParent();
+            /** @var ThreadRepositoryInterface $postParent */
+            $postParent = $post->getParent();
+            /** @var ForumRepositoryInterface $postGrandParent */
+            $postGrandParent = $postParent->getParent();
+
             if (!$post->move($thread)) {
                 throw new ServiceException($post->getErrors());
             }
 
-            /** @var ThreadRepositoryInterface $postParent */
-            $postParent = $post->getParent();
             if (!$postParent->updateCounters(-1)) {
                 throw new Exception('Error while updating old thread counters!');
             }
-            /** @var ForumRepositoryInterface $postGrandParent */
-            $postGrandParent = $postParent->getParent();
             if (!$postGrandParent->updateCounters(0, -1)) {
                 throw new Exception('Error while updating old forum counters!');
             }

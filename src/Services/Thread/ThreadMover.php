@@ -66,14 +66,15 @@ final class ThreadMover extends Component implements MoverInterface
         /** @var Transaction $transaction */
         $transaction = Yii::$app->db->beginTransaction();
         try {
+            /** @var ForumRepositoryInterface $threadParent */
+            $threadParent = $thread->getParent();
+
             if (!$thread->move($forum)) {
                 throw new ServiceException($thread->getErrors());
             }
 
             $postsCount = $thread->getPostsCount();
 
-            /** @var ForumRepositoryInterface $threadParent */
-            $threadParent = $thread->getParent();
             if (!$threadParent->updateCounters(-1, -$postsCount)) {
                 throw new Exception('Error while updating old forum counters!');
             }
